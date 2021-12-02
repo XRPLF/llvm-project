@@ -95,6 +95,11 @@ New checks
   Finds virtual classes whose destructor is neither public and virtual nor
   protected and non-virtual.
 
+- New :doc:`misc-hook-entry-points
+  <clang-tidy/checks/misc-hook-entry-points>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`misc-misleading-identifier <clang-tidy/checks/misc-misleading-identifier>` check.
 
   Reports identifier with unicode right-to-left characters.

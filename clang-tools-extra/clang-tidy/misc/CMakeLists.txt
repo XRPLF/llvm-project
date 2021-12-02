@@ -5,6 +5,7 @@ set(LLVM_LINK_COMPONENTS
 
 add_clang_library(clangTidyMiscModule
   DefinitionsInHeadersCheck.cpp
+  HookEntryPointsCheck.cpp
   MiscTidyModule.cpp
   MisleadingIdentifier.cpp
   MisplacedConstCheck.cpp

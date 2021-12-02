@@ -12,7 +12,7 @@ Clang-Tidy Checks
 .. csv-table::
    :header: "Name", "Offers fixes"
 
-   `abseil-cleanup-ctad <abseil-cleanup-ctad.html>`_, "Yes"
+   `abseil-cleanup-ctad <abseil-cleanup-ctad.html>`_,
    `abseil-duration-addition <abseil-duration-addition.html>`_, "Yes"
    `abseil-duration-comparison <abseil-duration-comparison.html>`_, "Yes"
    `abseil-duration-conversion-cast <abseil-duration-conversion-cast.html>`_, "Yes"
@@ -115,13 +115,12 @@ Clang-Tidy Checks
    `cert-dcl50-cpp <cert-dcl50-cpp.html>`_,
    `cert-dcl58-cpp <cert-dcl58-cpp.html>`_,
    `cert-env33-c <cert-env33-c.html>`_,
+   `cert-err33-c <cert-err33-c.html>`_,
    `cert-err34-c <cert-err34-c.html>`_,
    `cert-err52-cpp <cert-err52-cpp.html>`_,
    `cert-err58-cpp <cert-err58-cpp.html>`_,
    `cert-err60-cpp <cert-err60-cpp.html>`_,
-   `cert-exp42-c <cert-exp42-c.html>`_,
    `cert-flp30-c <cert-flp30-c.html>`_,
-   `cert-flp37-c <cert-flp37-c.html>`_,
    `cert-mem57-cpp <cert-mem57-cpp.html>`_,
    `cert-msc50-cpp <cert-msc50-cpp.html>`_,
    `cert-msc51-cpp <cert-msc51-cpp.html>`_,
@@ -212,7 +211,8 @@ Clang-Tidy Checks
    `llvmlibc-implementation-in-namespace <llvmlibc-implementation-in-namespace.html>`_,
    `llvmlibc-restrict-system-libc-headers <llvmlibc-restrict-system-libc-headers.html>`_, "Yes"
    `misc-definitions-in-headers <misc-definitions-in-headers.html>`_, "Yes"
-   `misc-misleading-identifier <misc-mileading-identifier.html>`_,
+   `misc-hook-entry-points <misc-hook-entry-points.html>`_, "Yes"
+   `misc-misleading-identifier <misc-misleading-identifier.html>`_,
    `misc-misplaced-const <misc-misplaced-const.html>`_,
    `misc-new-delete-overloads <misc-new-delete-overloads.html>`_,
    `misc-no-recursion <misc-no-recursion.html>`_,
@@ -336,13 +336,14 @@ Clang-Tidy Checks
    `cert-dcl03-c <cert-dcl03-c.html>`_, `misc-static-assert <misc-static-assert.html>`_, "Yes"
    `cert-dcl16-c <cert-dcl16-c.html>`_, `readability-uppercase-literal-suffix <readability-uppercase-literal-suffix.html>`_, "Yes"
    `cert-dcl37-c <cert-dcl37-c.html>`_, `bugprone-reserved-identifier <bugprone-reserved-identifier.html>`_, "Yes"
-   `cert-err33-c <cert-err33-c.html>`_, `bugprone-unused-return-value <bugprone-unused-return-value.html>`_,
    `cert-dcl51-cpp <cert-dcl51-cpp.html>`_, `bugprone-reserved-identifier <bugprone-reserved-identifier.html>`_, "Yes"
    `cert-dcl54-cpp <cert-dcl54-cpp.html>`_, `misc-new-delete-overloads <misc-new-delete-overloads.html>`_,
    `cert-dcl59-cpp <cert-dcl59-cpp.html>`_, `google-build-namespaces <google-build-namespaces.html>`_,
    `cert-err09-cpp <cert-err09-cpp.html>`_, `misc-throw-by-value-catch-by-reference <misc-throw-by-value-catch-by-reference.html>`_,
    `cert-err61-cpp <cert-err61-cpp.html>`_, `misc-throw-by-value-catch-by-reference <misc-throw-by-value-catch-by-reference.html>`_,
+   `cert-exp42-c <cert-exp42-c.html>`_, `bugprone-suspicious-memory-comparison <bugprone-suspicious-memory-comparison.html>`_,
    `cert-fio38-c <cert-fio38-c.html>`_, `misc-non-copyable-objects <misc-non-copyable-objects.html>`_,
+   `cert-flp37-c <cert-flp37-c.html>`_, `bugprone-suspicious-memory-comparison <bugprone-suspicious-memory-comparison.html>`_,
    `cert-msc30-c <cert-msc30-c.html>`_, `cert-msc50-cpp <cert-msc50-cpp.html>`_,
    `cert-msc32-c <cert-msc32-c.html>`_, `cert-msc51-cpp <cert-msc51-cpp.html>`_,
    `cert-oop11-cpp <cert-oop11-cpp.html>`_, `performance-move-constructor-init <performance-move-constructor-init.html>`_,
