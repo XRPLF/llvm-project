@@ -1,7 +1,7 @@
-.. title:: clang-tidy - misc-hook-entry-points
+.. title:: clang-tidy - hooks-entry-points
 
-misc-hook-entry-points
-======================
+hooks-entry-points
+==================
 
 Warns about extern function definitions with unexpected (that is,
 neither "hook" nor "cbak") names.

@@ -61,6 +61,7 @@ add_subdirectory(darwin)
 add_subdirectory(fuchsia)
 add_subdirectory(google)
 add_subdirectory(hicpp)
+add_subdirectory(hooks)
 add_subdirectory(linuxkernel)
 add_subdirectory(llvm)
 add_subdirectory(llvmlibc)
@@ -88,6 +89,7 @@ set(ALL_CLANG_TIDY_CHECKS
   clangTidyFuchsiaModule
   clangTidyGoogleModule
   clangTidyHICPPModule
+  clangTidyHooksModule
   clangTidyLinuxKernelModule
   clangTidyLLVMModule
   clangTidyLLVMLibcModule
@@ -122,7 +124,7 @@ if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
   set_target_properties(clang-tidy-headers PROPERTIES FOLDER "Misc")
   if(NOT LLVM_ENABLE_IDE)
     add_llvm_install_targets(install-clang-tidy-headers
-                             DEPENDS clang-tidy-headers
-                             COMPONENT clang-tidy-headers)
+			     DEPENDS clang-tidy-headers
+			     COMPONENT clang-tidy-headers)
   endif()
 endif()

@@ -14,7 +14,7 @@ using namespace clang::ast_matchers;
 
 namespace clang {
 namespace tidy {
-namespace misc {
+namespace hooks {
 
 void HookEntryPointsCheck::registerMatchers(MatchFinder *Finder) {
   Finder->addMatcher(functionDecl(isDefinition(), unless(isStaticStorageClass())).bind("functionDefinition"), this);
@@ -28,6 +28,6 @@ void HookEntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
   }
 }
 
-} // namespace misc
+} // namespace hooks
 } // namespace tidy
 } // namespace clang

@@ -6,14 +6,14 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_MISC_HOOKENTRYPOINTSCHECK_H
-#define LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_MISC_HOOKENTRYPOINTSCHECK_H
+#ifndef LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
+#define LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
 
 #include "../ClangTidyCheck.h"
 
 namespace clang {
 namespace tidy {
-namespace misc {
+namespace hooks {
 
 /// A Hook always implements and exports exactly two functions: cbak and hook.
 class HookEntryPointsCheck : public ClangTidyCheck {
@@ -24,8 +24,8 @@ public:
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
 };
 
-} // namespace misc
+} // namespace hooks
 } // namespace tidy
 } // namespace clang
 
-#endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_MISC_HOOKENTRYPOINTSCHECK_H
+#endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
