@@ -9,6 +9,7 @@
 #include "../ClangTidy.h"
 #include "../ClangTidyModule.h"
 #include "../ClangTidyModuleRegistry.h"
+#include "GuardInForCheck.h"
 #include "HookEntryPointsCheck.h"
 
 namespace clang {
@@ -20,6 +21,8 @@ public:
   void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
     CheckFactories.registerCheck<HookEntryPointsCheck>(
 	"hooks-entry-points");
+    CheckFactories.registerCheck<GuardInForCheck>(
+        "hooks-guard-in-for");
   }
 };
 

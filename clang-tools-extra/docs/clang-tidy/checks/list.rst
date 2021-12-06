@@ -200,6 +200,8 @@ Clang-Tidy Checks
    `hicpp-multiway-paths-covered <hicpp-multiway-paths-covered.html>`_,
    `hicpp-no-assembler <hicpp-no-assembler.html>`_,
    `hicpp-signed-bitwise <hicpp-signed-bitwise.html>`_,
+   `hooks-entry-points <hooks-entry-points.html>`_,
+   `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,
    `llvm-include-order <llvm-include-order.html>`_, "Yes"
@@ -211,7 +213,6 @@ Clang-Tidy Checks
    `llvmlibc-implementation-in-namespace <llvmlibc-implementation-in-namespace.html>`_,
    `llvmlibc-restrict-system-libc-headers <llvmlibc-restrict-system-libc-headers.html>`_, "Yes"
    `misc-definitions-in-headers <misc-definitions-in-headers.html>`_, "Yes"
-   `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
    `misc-misleading-identifier <misc-misleading-identifier.html>`_,
    `misc-misplaced-const <misc-misplaced-const.html>`_,
    `misc-new-delete-overloads <misc-new-delete-overloads.html>`_,
