@@ -3,4 +3,5 @@
 misc-hook-entry-points
 ======================
 
-FIXME: Describe what patterns does the check detect and why. Give examples.
+Warns about extern function definitions with unexpected (that is,
+neither "hook" nor "cbak") names.

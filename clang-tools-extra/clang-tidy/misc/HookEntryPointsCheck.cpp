@@ -24,7 +24,7 @@ void HookEntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
   const auto *Matched = Result.Nodes.getNodeAs<FunctionDecl>("functionDefinition");
   std::string Name = Matched->getDeclName().getAsString();
   if ((Name != "cbak") && (Name != "hook")) {
-    diag(Matched->getLocation(), "unknown exported function %0") << Name;
+    diag(Matched->getLocation(), "unknown exported function '%0'") << Name;
   }
 }
 
