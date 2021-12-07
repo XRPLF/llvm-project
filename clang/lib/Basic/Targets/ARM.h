@@ -123,6 +123,9 @@ public:
   StringRef getABI() const override;
   bool setABI(const std::string &Name) override;
 
+  bool validateBranchProtection(StringRef, BranchProtectionInfo &,
+                                StringRef &) const override;
+
   // FIXME: This should be based on Arch attributes, not CPU names.
   bool
   initFeatureMap(llvm::StringMap<bool> &Features, DiagnosticsEngine &Diags,
@@ -188,8 +191,8 @@ public:
 
   bool hasSjLjLowering() const override;
 
-  bool hasExtIntType() const override { return true; }
-  
+  bool hasBitIntType() const override { return true; }
+
   const char *getBFloat16Mangling() const override { return "u6__bf16"; };
 };
 

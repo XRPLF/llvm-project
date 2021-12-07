@@ -325,17 +325,17 @@ static bool SemaBuiltinOverflow(Sema &S, CallExpr *TheCall,
     }
   }
 
-  // Disallow signed ExtIntType args larger than 128 bits to mul function until
-  // we improve backend support.
+  // Disallow signed bit-precise integer args larger than 128 bits to mul
+  // function until we improve backend support.
   if (BuiltinID == Builtin::BI__builtin_mul_overflow) {
     for (unsigned I = 0; I < 3; ++I) {
       const auto Arg = TheCall->getArg(I);
       // Third argument will be a pointer.
       auto Ty = I < 2 ? Arg->getType() : Arg->getType()->getPointeeType();
-      if (Ty->isExtIntType() && Ty->isSignedIntegerType() &&
+      if (Ty->isBitIntType() && Ty->isSignedIntegerType() &&
           S.getASTContext().getIntWidth(Ty) > 128)
         return S.Diag(Arg->getBeginLoc(),
-                      diag::err_overflow_builtin_ext_int_max_size)
+                      diag::err_overflow_builtin_bit_int_max_size)
                << 128;
     }
   }
@@ -5297,6 +5297,7 @@ static bool isValidOrderingForOp(int64_t Ordering, AtomicExpr::AtomicOp Op) {
 
   case AtomicExpr::AO__c11_atomic_load:
   case AtomicExpr::AO__opencl_atomic_load:
+  case AtomicExpr::AO__hip_atomic_load:
   case AtomicExpr::AO__atomic_load_n:
   case AtomicExpr::AO__atomic_load:
     return OrderingCABI != llvm::AtomicOrderingCABI::release &&
@@ -5304,6 +5305,7 @@ static bool isValidOrderingForOp(int64_t Ordering, AtomicExpr::AtomicOp Op) {
 
   case AtomicExpr::AO__c11_atomic_store:
   case AtomicExpr::AO__opencl_atomic_store:
+  case AtomicExpr::AO__hip_atomic_store:
   case AtomicExpr::AO__atomic_store:
   case AtomicExpr::AO__atomic_store_n:
     return OrderingCABI != llvm::AtomicOrderingCABI::consume &&
@@ -5380,7 +5382,7 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
                 "need to update code for modified C11 atomics");
   bool IsOpenCL = Op >= AtomicExpr::AO__opencl_atomic_init &&
                   Op <= AtomicExpr::AO__opencl_atomic_fetch_max;
-  bool IsHIP = Op >= AtomicExpr::AO__hip_atomic_compare_exchange_strong &&
+  bool IsHIP = Op >= AtomicExpr::AO__hip_atomic_load &&
                Op <= AtomicExpr::AO__hip_atomic_fetch_max;
   bool IsC11 = (Op >= AtomicExpr::AO__c11_atomic_init &&
                Op <= AtomicExpr::AO__c11_atomic_fetch_min) ||
@@ -5399,6 +5401,7 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
 
   case AtomicExpr::AO__c11_atomic_load:
   case AtomicExpr::AO__opencl_atomic_load:
+  case AtomicExpr::AO__hip_atomic_load:
   case AtomicExpr::AO__atomic_load_n:
     Form = Load;
     break;
@@ -5409,6 +5412,7 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
 
   case AtomicExpr::AO__c11_atomic_store:
   case AtomicExpr::AO__opencl_atomic_store:
+  case AtomicExpr::AO__hip_atomic_store:
   case AtomicExpr::AO__atomic_store:
   case AtomicExpr::AO__atomic_store_n:
     Form = Copy;
@@ -5474,6 +5478,7 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
   case AtomicExpr::AO__hip_atomic_compare_exchange_strong:
   case AtomicExpr::AO__opencl_atomic_compare_exchange_strong:
   case AtomicExpr::AO__opencl_atomic_compare_exchange_weak:
+  case AtomicExpr::AO__hip_atomic_compare_exchange_weak:
     Form = C11CmpXchg;
     break;
 
@@ -5541,8 +5546,8 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
 
   // For an arithmetic operation, the implied arithmetic must be well-formed.
   if (Form == Arithmetic) {
-    // GCC does not enforce these rules for GNU atomics, but we do, because if
-    // we didn't it would be very confusing. FIXME:  For whom? How so?
+    // GCC does not enforce these rules for GNU atomics, but we do to help catch
+    // trivial type errors.
     auto IsAllowedValueType = [&](QualType ValType) {
       if (ValType->isIntegerType())
         return true;
@@ -5583,8 +5588,9 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
   if (!IsC11 && !AtomTy.isTriviallyCopyableType(Context) &&
       !AtomTy->isScalarType()) {
     // For GNU atomics, require a trivially-copyable type. This is not part of
-    // the GNU atomics specification, but we enforce it, because if we didn't it
-    // would be very confusing. FIXME:  For whom? How so?
+    // the GNU atomics specification but we enforce it for consistency with
+    // other atomics which generally all require a trivially-copyable type. This
+    // is because atomics just copy bits.
     Diag(ExprRange.getBegin(), diag::err_atomic_op_needs_trivial_copy)
         << Ptr->getType() << Ptr->getSourceRange();
     return ExprError();
@@ -5802,16 +5808,19 @@ ExprResult Sema::BuildAtomicExpr(SourceRange CallRange, SourceRange ExprRange,
   if ((Op == AtomicExpr::AO__c11_atomic_load ||
        Op == AtomicExpr::AO__c11_atomic_store ||
        Op == AtomicExpr::AO__opencl_atomic_load ||
-       Op == AtomicExpr::AO__opencl_atomic_store ) &&
+       Op == AtomicExpr::AO__hip_atomic_load ||
+       Op == AtomicExpr::AO__opencl_atomic_store ||
+       Op == AtomicExpr::AO__hip_atomic_store) &&
       Context.AtomicUsesUnsupportedLibcall(AE))
     Diag(AE->getBeginLoc(), diag::err_atomic_load_store_uses_lib)
         << ((Op == AtomicExpr::AO__c11_atomic_load ||
-             Op == AtomicExpr::AO__opencl_atomic_load)
+             Op == AtomicExpr::AO__opencl_atomic_load ||
+             Op == AtomicExpr::AO__hip_atomic_load)
                 ? 0
                 : 1);
 
-  if (ValType->isExtIntType()) {
-    Diag(Ptr->getExprLoc(), diag::err_atomic_builtin_ext_int_prohibit);
+  if (ValType->isBitIntType()) {
+    Diag(Ptr->getExprLoc(), diag::err_atomic_builtin_bit_int_prohibit);
     return ExprError();
   }
 
@@ -6208,11 +6217,11 @@ Sema::SemaBuiltinAtomicOverloaded(ExprResult TheCallResult) {
   // gracefully.
   TheCall->setType(ResultType);
 
-  // Prohibit use of _ExtInt with atomic builtins.
-  // The arguments would have already been converted to the first argument's
-  // type, so only need to check the first argument.
-  const auto *ExtIntValType = ValType->getAs<ExtIntType>();
-  if (ExtIntValType && !llvm::isPowerOf2_64(ExtIntValType->getNumBits())) {
+  // Prohibit problematic uses of bit-precise integer types with atomic
+  // builtins. The arguments would have already been converted to the first
+  // argument's type, so only need to check the first argument.
+  const auto *BitIntValType = ValType->getAs<BitIntType>();
+  if (BitIntValType && !llvm::isPowerOf2_64(BitIntValType->getNumBits())) {
     Diag(FirstArg->getExprLoc(), diag::err_atomic_builtin_ext_int_size);
     return ExprError();
   }
@@ -11240,7 +11249,7 @@ struct IntRange {
                         false/*NonNegative*/);
     }
 
-    if (const auto *EIT = dyn_cast<ExtIntType>(T))
+    if (const auto *EIT = dyn_cast<BitIntType>(T))
       return IntRange(EIT->getNumBits(), EIT->isUnsigned());
 
     const BuiltinType *BT = cast<BuiltinType>(T);
@@ -11266,7 +11275,7 @@ struct IntRange {
     if (const EnumType *ET = dyn_cast<EnumType>(T))
       T = C.getCanonicalType(ET->getDecl()->getIntegerType()).getTypePtr();
 
-    if (const auto *EIT = dyn_cast<ExtIntType>(T))
+    if (const auto *EIT = dyn_cast<BitIntType>(T))
       return IntRange(EIT->getNumBits(), EIT->isUnsigned());
 
     const BuiltinType *BT = cast<BuiltinType>(T);

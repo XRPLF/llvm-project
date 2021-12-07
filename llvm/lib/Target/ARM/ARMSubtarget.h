@@ -373,6 +373,8 @@ protected:
   /// HasLOB - if true, the processor supports the Low Overhead Branch extension
   bool HasLOB = false;
 
+  bool HasPACBTI = false;
+
   /// If true, the instructions "vmov.i32 d0, #0" and "vmov.i32 q0, #0" are
   /// particularly effective at zeroing a VFP register.
   bool HasZeroCycleZeroing = false;
@@ -532,6 +534,10 @@ protected:
   /// Selected instruction itineraries (one entry per itinerary class.)
   InstrItineraryData InstrItins;
 
+  /// NoBTIAtReturnTwice - Don't place a BTI instruction after
+  /// return-twice constructs (setjmp)
+  bool NoBTIAtReturnTwice = false;
+
   /// Options passed via command line that could influence the target
   const TargetOptions &Options;
 
@@ -671,6 +677,7 @@ public:
   bool hasCRC() const { return HasCRC; }
   bool hasRAS() const { return HasRAS; }
   bool hasLOB() const { return HasLOB; }
+  bool hasPACBTI() const { return HasPACBTI; }
   bool hasVirtualization() const { return HasVirtualization; }
 
   bool useNEONForSinglePrecisionFP() const {
@@ -945,6 +952,8 @@ public:
   bool hardenSlsRetBr() const { return HardenSlsRetBr; }
   bool hardenSlsBlr() const { return HardenSlsBlr; }
   bool hardenSlsNoComdat() const { return HardenSlsNoComdat; }
+
+  bool getNoBTIAtReturnTwice() const { return NoBTIAtReturnTwice; }
 };
 
 } // end namespace llvm

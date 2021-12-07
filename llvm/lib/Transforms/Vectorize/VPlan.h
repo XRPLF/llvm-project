@@ -794,6 +794,7 @@ public:
 private:
   typedef unsigned char OpcodeTy;
   OpcodeTy Opcode;
+  FastMathFlags FMF;
 
   /// Utility method serving execute(): generates a single instance of the
   /// modeled instruction.
@@ -806,13 +807,6 @@ public:
   VPInstruction(unsigned Opcode, ArrayRef<VPValue *> Operands)
       : VPRecipeBase(VPRecipeBase::VPInstructionSC, Operands),
         VPValue(VPValue::VPVInstructionSC, nullptr, this), Opcode(Opcode) {}
-
-  VPInstruction(unsigned Opcode, ArrayRef<VPInstruction *> Operands)
-      : VPRecipeBase(VPRecipeBase::VPInstructionSC, {}),
-        VPValue(VPValue::VPVInstructionSC, nullptr, this), Opcode(Opcode) {
-    for (auto *I : Operands)
-      addOperand(I->getVPSingleValue());
-  }
 
   VPInstruction(unsigned Opcode, std::initializer_list<VPValue *> Operands)
       : VPInstruction(Opcode, ArrayRef<VPValue *>(Operands)) {}
@@ -875,6 +869,9 @@ public:
       return true;
     }
   }
+
+  /// Set the fast-math flags.
+  void setFastMathFlags(FastMathFlags FMFNew);
 };
 
 /// VPWidenRecipe is a recipe for producing a copy of vector type its
@@ -1010,17 +1007,20 @@ class VPWidenIntOrFpInductionRecipe : public VPRecipeBase {
   PHINode *IV;
 
 public:
-  VPWidenIntOrFpInductionRecipe(PHINode *IV, VPValue *Start, Instruction *Cast,
-                                TruncInst *Trunc = nullptr)
+  VPWidenIntOrFpInductionRecipe(PHINode *IV, VPValue *Start,
+                                Instruction *Cast = nullptr)
       : VPRecipeBase(VPWidenIntOrFpInductionSC, {Start}), IV(IV) {
-    if (Trunc)
-      new VPValue(Trunc, this);
-    else
-      new VPValue(IV, this);
+    new VPValue(IV, this);
 
     if (Cast)
       new VPValue(Cast, this);
   }
+
+  VPWidenIntOrFpInductionRecipe(PHINode *IV, VPValue *Start, TruncInst *Trunc)
+      : VPRecipeBase(VPWidenIntOrFpInductionSC, {Start}), IV(IV) {
+    new VPValue(Trunc, this);
+  }
+
   ~VPWidenIntOrFpInductionRecipe() override = default;
 
   /// Method to support type inquiry through isa, cast, and dyn_cast.
@@ -2253,6 +2253,12 @@ public:
       return getOrAddVPValue(Op);
     };
     return map_range(Operands, Fn);
+  }
+
+  /// Returns true if \p VPV is uniform after vectorization.
+  bool isUniformAfterVectorization(VPValue *VPV) const {
+    auto RepR = dyn_cast_or_null<VPReplicateRecipe>(VPV->getDef());
+    return !VPV->getDef() || (RepR && RepR->isUniform());
   }
 
 private:

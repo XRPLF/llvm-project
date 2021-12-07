@@ -940,7 +940,6 @@ void Module::FindTypes_Impl(
     size_t max_matches,
     llvm::DenseSet<lldb_private::SymbolFile *> &searched_symbol_files,
     TypeMap &types) {
-  LLDB_SCOPED_TIMER();
   if (SymbolFile *symbols = GetSymbolFile())
     symbols->FindTypes(name, parent_decl_ctx, max_matches,
                        searched_symbol_files, types);
@@ -1346,9 +1345,6 @@ void Module::FindSymbolsWithNameAndType(ConstString name,
                                           SymbolContextList &sc_list) {
   // No need to protect this call using m_mutex all other method calls are
   // already thread safe.
-  LLDB_SCOPED_TIMERF(
-      "Module::FindSymbolsWithNameAndType (name = %s, type = %i)",
-      name.AsCString(), symbol_type);
   if (Symtab *symtab = GetSymtab()) {
     std::vector<uint32_t> symbol_indexes;
     symtab->FindAllSymbolsWithNameAndType(name, symbol_type, symbol_indexes);
@@ -1379,12 +1375,15 @@ void Module::PreloadSymbols() {
   if (!sym_file)
     return;
 
-  // Prime the symbol file first, since it adds symbols to the symbol table.
-  sym_file->PreloadSymbols();
-
-  // Now we can prime the symbol table.
+  // Load the object file symbol table and any symbols from the SymbolFile that
+  // get appended using SymbolFile::AddSymbols(...).
   if (Symtab *symtab = sym_file->GetSymtab())
     symtab->PreloadSymbols();
+
+  // Now let the symbol file preload its data and the symbol table will be
+  // available without needing to take the module lock.
+  sym_file->PreloadSymbols();
+
 }
 
 void Module::SetSymbolFileFileSpec(const FileSpec &file) {
