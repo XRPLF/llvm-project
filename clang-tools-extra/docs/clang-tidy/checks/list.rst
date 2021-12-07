@@ -201,7 +201,8 @@ Clang-Tidy Checks
    `hicpp-no-assembler <hicpp-no-assembler.html>`_,
    `hicpp-signed-bitwise <hicpp-signed-bitwise.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_,
-   `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
+   `hooks-guard-called <hooks-guard-called.html>`_, "Yes"
+   `hooks-guard-in-for <hooks-guard-in-for.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,
    `llvm-include-order <llvm-include-order.html>`_, "Yes"
