@@ -4,7 +4,6 @@ set(LLVM_LINK_COMPONENTS
   )
 
 add_clang_library(clangTidyHooksModule
-  EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
