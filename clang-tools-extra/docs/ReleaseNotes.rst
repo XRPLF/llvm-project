@@ -101,6 +101,11 @@ New checks
   Finds virtual classes whose destructor is neither public and virtual nor
   protected and non-virtual.
 
+- New :doc:`hooks-entry-points
+  <clang-tidy/checks/hooks-entry-points>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-guard-called
   <clang-tidy/checks/hooks-guard-called>` check.
 
