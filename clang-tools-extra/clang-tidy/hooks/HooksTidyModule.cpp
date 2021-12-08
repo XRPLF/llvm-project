@@ -9,6 +9,7 @@
 #include "../ClangTidy.h"
 #include "../ClangTidyModule.h"
 #include "../ClangTidyModuleRegistry.h"
+#include "EntryPointRecursionCheck.h"
 #include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
@@ -20,6 +21,8 @@ namespace hooks {
 class HooksModule : public ClangTidyModule {
 public:
   void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
+    CheckFactories.registerCheck<EntryPointRecursionCheck>(
+        "hooks-entry-point-recursion");
     CheckFactories.registerCheck<EntryPointsNegCheck>(
 	"hooks-entry-points-neg");
     CheckFactories.registerCheck<GuardCalledCheck>(
