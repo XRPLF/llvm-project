@@ -1,4 +1,4 @@
-//===--- HookEntryPointsCheck.cpp - clang-tidy ----------------------------===//
+//===--- EntryPointsNegCheck.cpp - clang-tidy ----------------------------===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -6,7 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include "HookEntryPointsCheck.h"
+#include "EntryPointsNegCheck.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 
@@ -16,11 +16,11 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-void HookEntryPointsCheck::registerMatchers(MatchFinder *Finder) {
+void EntryPointsNegCheck::registerMatchers(MatchFinder *Finder) {
   Finder->addMatcher(functionDecl(isDefinition(), unless(isStaticStorageClass())).bind("functionDefinition"), this);
 }
 
-void HookEntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
+void EntryPointsNegCheck::check(const MatchFinder::MatchResult &Result) {
   const auto *Matched = Result.Nodes.getNodeAs<FunctionDecl>("functionDefinition");
   std::string Name = Matched->getDeclName().getAsString();
   if ((Name != "cbak") && (Name != "hook")) {

@@ -92,7 +92,7 @@ Clang-Tidy Checks
    `bugprone-string-constructor <bugprone-string-constructor.html>`_, "Yes"
    `bugprone-string-integer-assignment <bugprone-string-integer-assignment.html>`_, "Yes"
    `bugprone-string-literal-with-embedded-nul <bugprone-string-literal-with-embedded-nul.html>`_,
-   `bugprone-stringview-nullptr <bugprone-stringview-nullptr.html>`_, "Yes"
+   `bugprone-stringview-nullptr <bugprone-stringview-nullptr.html>`_,
    `bugprone-suspicious-enum-usage <bugprone-suspicious-enum-usage.html>`_,
    `bugprone-suspicious-include <bugprone-suspicious-include.html>`_,
    `bugprone-suspicious-memory-comparison <bugprone-suspicious-memory-comparison.html>`_,
@@ -201,8 +201,8 @@ Clang-Tidy Checks
    `hicpp-multiway-paths-covered <hicpp-multiway-paths-covered.html>`_,
    `hicpp-no-assembler <hicpp-no-assembler.html>`_,
    `hicpp-signed-bitwise <hicpp-signed-bitwise.html>`_,
-   `hooks-entry-points <hooks-entry-points.html>`_,
-   `hooks-guard-called <hooks-guard-called.html>`_, "Yes"
+   `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
+   `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,
@@ -262,8 +262,8 @@ Clang-Tidy Checks
    `modernize-use-using <modernize-use-using.html>`_, "Yes"
    `mpi-buffer-deref <mpi-buffer-deref.html>`_, "Yes"
    `mpi-type-mismatch <mpi-type-mismatch.html>`_, "Yes"
+   `objc-assert-equals <objc-assert-equals.html>`_,
    `objc-avoid-nserror-init <objc-avoid-nserror-init.html>`_,
-   `objc-assert-equals <objc-assert-equals.html>`_, "Yes"
    `objc-dealloc-in-category <objc-dealloc-in-category.html>`_,
    `objc-forbidden-subclassing <objc-forbidden-subclassing.html>`_,
    `objc-missing-hash <objc-missing-hash.html>`_,

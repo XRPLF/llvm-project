@@ -9,9 +9,9 @@
 #include "../ClangTidy.h"
 #include "../ClangTidyModule.h"
 #include "../ClangTidyModuleRegistry.h"
+#include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
-#include "HookEntryPointsCheck.h"
 
 namespace clang {
 namespace tidy {
@@ -20,12 +20,12 @@ namespace hooks {
 class HooksModule : public ClangTidyModule {
 public:
   void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
-    CheckFactories.registerCheck<HookEntryPointsCheck>(
-	"hooks-entry-points");
+    CheckFactories.registerCheck<EntryPointsNegCheck>(
+	"hooks-entry-points-neg");
     CheckFactories.registerCheck<GuardCalledCheck>(
-        "hooks-guard-called");
+	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(
-        "hooks-guard-in-for");
+	"hooks-guard-in-for");
   }
 };
 

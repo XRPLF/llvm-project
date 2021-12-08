@@ -1,4 +1,4 @@
-//===--- HookEntryPointsCheck.h - clang-tidy --------------------*- C++ -*-===//
+//===--- EntryPointsNegCheck.h - clang-tidy --------------------*- C++ -*-===//
 //
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 // See https://llvm.org/LICENSE.txt for license information.
@@ -6,8 +6,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-#ifndef LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
-#define LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
+#ifndef LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_ENTRYPOINTSNEGCHECK_H
+#define LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_ENTRYPOINTSNEGCHECK_H
 
 #include "../ClangTidyCheck.h"
 
@@ -16,9 +16,9 @@ namespace tidy {
 namespace hooks {
 
 /// A Hook always implements and exports exactly two functions: cbak and hook.
-class HookEntryPointsCheck : public ClangTidyCheck {
+class EntryPointsNegCheck : public ClangTidyCheck {
 public:
-  HookEntryPointsCheck(StringRef Name, ClangTidyContext *Context)
+  EntryPointsNegCheck(StringRef Name, ClangTidyContext *Context)
       : ClangTidyCheck(Name, Context) {}
   void registerMatchers(ast_matchers::MatchFinder *Finder) override;
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
@@ -28,4 +28,4 @@ public:
 } // namespace tidy
 } // namespace clang
 
-#endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_HOOKENTRYPOINTSCHECK_H
+#endif // LLVM_CLANG_TOOLS_EXTRA_CLANG_TIDY_HOOKS_ENTRYPOINTSNEGCHECK_H
