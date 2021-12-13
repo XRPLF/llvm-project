@@ -201,8 +201,9 @@ Clang-Tidy Checks
    `hicpp-multiway-paths-covered <hicpp-multiway-paths-covered.html>`_,
    `hicpp-no-assembler <hicpp-no-assembler.html>`_,
    `hicpp-signed-bitwise <hicpp-signed-bitwise.html>`_,
-   `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_, "Yes"
+   `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
+   `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,

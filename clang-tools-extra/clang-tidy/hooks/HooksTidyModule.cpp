@@ -10,6 +10,7 @@
 #include "../ClangTidyModule.h"
 #include "../ClangTidyModuleRegistry.h"
 #include "EntryPointRecursionCheck.h"
+#include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
@@ -23,6 +24,8 @@ public:
   void addCheckFactories(ClangTidyCheckFactories &CheckFactories) override {
     CheckFactories.registerCheck<EntryPointRecursionCheck>(
         "hooks-entry-point-recursion");
+    CheckFactories.registerCheck<EntryPointsCheck>(
+        "hooks-entry-points");
     CheckFactories.registerCheck<EntryPointsNegCheck>(
 	"hooks-entry-points-neg");
     CheckFactories.registerCheck<GuardCalledCheck>(
