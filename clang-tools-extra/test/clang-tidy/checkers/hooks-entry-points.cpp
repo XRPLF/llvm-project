@@ -6,4 +6,4 @@ void f() {
 // The parameter is missing but this check doesn't check that.
 void cbak() {
 }
-// CHECK-MESSAGES: :[[@LINE-1]]:1: warning: missing function 'hook' [hooks-entry-points]
+// CHECK-MESSAGES: :[[@LINE+1]]:1: warning: missing function 'hook' [hooks-entry-points]
