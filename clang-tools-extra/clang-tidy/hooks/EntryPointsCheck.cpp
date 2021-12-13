@@ -70,16 +70,16 @@ AST_MATCHER_P(FunctionDecl, isLastWithoutNameBefore, const char *, ExpectedName)
 void EntryPointsCheck::registerMatchers(MatchFinder *Finder) {
   for (size_t i = 0; i < sizeof(Names) / sizeof(Names[0]); ++i) {
     const char *Name = Names[i];
-    Finder->addMatcher(functionDecl(isLastWithoutNameBefore(Name)).bind(getMatchName(Name)), this);
+    Finder->addMatcher(functionDecl(isLastWithoutNameBefore(Name), has(compoundStmt().bind(getMatchName(Name)))), this);
   }
 }
 
 void EntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
   for (size_t i = 0; i < sizeof(Names) / sizeof(Names[0]); ++i) {
     const char *Name = Names[i];
-    const auto *Matched = Result.Nodes.getNodeAs<FunctionDecl>(getMatchName(Name));
+    const auto *Matched = Result.Nodes.getNodeAs<CompoundStmt>(getMatchName(Name));
     if (Matched) {
-      diag(Matched->getLocation(), "missing function '%0'") << Name;
+      diag(Matched->getEndLoc(), "missing function '%0'") << Name;
     }
   }
 }
