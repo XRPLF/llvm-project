@@ -29,6 +29,8 @@ private:
   std::string getMatchName(const char *Name) const;
 
   static const char *Names[];
+
+  static const char *DefaultFunctions[];
 };
 
 } // namespace hooks

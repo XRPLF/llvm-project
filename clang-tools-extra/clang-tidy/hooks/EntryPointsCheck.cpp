@@ -19,6 +19,11 @@ namespace hooks {
 
 const char *EntryPointsCheck::Names[] = { "cbak", "hook" };
 
+const char *EntryPointsCheck::DefaultFunctions[] = {
+   "int64_t cbak(int64_t reserved) { return 0; }\n",
+   "int64_t hook(int64_t reserved ) { }\n"
+};
+
 void EntryPointsCheck::registerMatchers(MatchFinder *Finder) {
   for (size_t i = 0; i < sizeof(Names) / sizeof(Names[0]); ++i) {
     const char *Name = Names[i];
@@ -36,7 +41,8 @@ void EntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
       // have a valid location for clangd to show the diagnostics.
       ASTContext &Context = Matched->getASTContext();
       SourceManager &Manager = Context.getSourceManager();
-      diag(Manager.getLocForEndOfFile(Manager.getMainFileID()), "missing function '%0'") << Name;
+      SourceLocation End = Manager.getLocForEndOfFile(Manager.getMainFileID());
+      diag(End, "missing function '%0'") << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
     }
   }
 }
