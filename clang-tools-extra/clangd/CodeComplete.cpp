@@ -2199,7 +2199,9 @@ bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset) {
   if ((Content.endswith("<") || Content.endswith("\"") ||
        Content.endswith("/")) &&
       isIncludeFile(Content))
-    return true;
+    // for clangd running remotely, we don't want to allow directory
+    // traversal - at least not interactively...
+    return Content.find("..") == llvm::StringRef::npos;
 
   // Complete words. Give non-ascii characters the benefit of the doubt.
   return !Content.empty() && (isAsciiIdentifierContinue(Content.back()) ||
