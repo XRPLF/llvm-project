@@ -2184,6 +2184,17 @@ bool isIncludeFile(llvm::StringRef Line) {
   return false;
 }
 
+static bool mayBeRelativePath(llvm::StringRef Content) {
+  // searching for ".." is simpler, but doesn't match ".\."...
+  int DotCount = 0;
+  for (auto i = Content.begin(); i != Content.end(); ++i)
+    if (*i == '.')
+      if (++DotCount >= 2)
+	return true;
+
+  return false;
+}
+
 bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset) {
   // Look at last line before completion point only.
   Content = Content.take_front(Offset);
@@ -2201,7 +2212,7 @@ bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset) {
       isIncludeFile(Content))
     // for clangd running remotely, we don't want to allow directory
     // traversal - at least not interactively...
-    return Content.find("..") == llvm::StringRef::npos;
+    return !mayBeRelativePath(Content);
 
   // Complete words. Give non-ascii characters the benefit of the doubt.
   return !Content.empty() && (isAsciiIdentifierContinue(Content.back()) ||
