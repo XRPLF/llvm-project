@@ -18,6 +18,8 @@ namespace hooks {
 
 namespace {
 
+const uint64_t MAX_FOR_LIMIT = 10000;
+
 bool areSameVariable(const ValueDecl *First, const ValueDecl *Second) {
   return First && Second &&
     First->getCanonicalDecl() == Second->getCanonicalDecl();
@@ -43,9 +45,11 @@ public:
 
     if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
       llvm::APInt Value = ConstLimit->getValue();
-      uint64_t v = Value.getLimitedValue(10000);
-      GuardLimit = static_cast<int>(v) + 1;
-      Found = true;
+      uint64_t LimitedValue = Value.getLimitedValue(MAX_FOR_LIMIT);
+      if (LimitedValue < MAX_FOR_LIMIT) {
+	GuardLimit = static_cast<int>(LimitedValue) + 1;
+	Found = true;
+      }
     }
   }
 
