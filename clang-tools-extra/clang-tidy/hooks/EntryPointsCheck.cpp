@@ -21,7 +21,7 @@ const char *EntryPointsCheck::Names[] = { "cbak", "hook" };
 
 const char *EntryPointsCheck::DefaultFunctions[] = {
    "int64_t cbak(int64_t reserved) { return 0; }\n",
-   "int64_t hook(int64_t reserved ) { }\n"
+   "int64_t hook(int64_t reserved) { }\n"
 };
 
 void EntryPointsCheck::registerMatchers(MatchFinder *Finder) {
@@ -41,8 +41,15 @@ void EntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
       // have a valid location for clangd to show the diagnostics.
       ASTContext &Context = Matched->getASTContext();
       SourceManager &Manager = Context.getSourceManager();
-      SourceLocation End = Manager.getLocForEndOfFile(Manager.getMainFileID());
-      diag(End, "missing function '%0'") << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
+      FileID MainFileID = Manager.getMainFileID();
+
+      // definition can be missing only in a source file (not header)
+      const FileEntry *Entry = Manager.getFileEntryForID(MainFileID);
+      llvm::StringRef MainFileName = Entry->getName();
+      if (MainFileName.endswith_insensitive(".c")) {
+	SourceLocation End = Manager.getLocForEndOfFile(MainFileID);
+	diag(End, "missing function '%0'") << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
+      }
     }
   }
 }
