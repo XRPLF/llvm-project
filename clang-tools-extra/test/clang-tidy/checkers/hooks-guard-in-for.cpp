@@ -9,18 +9,20 @@ extern int64_t trace_num (const char *read_ptr, uint32_t read_len, int64_t numbe
 
 int64_t hook(int64_t reserved)
 {
+    // syntax for testing warning with a proposed fix is unclear...
+#if 0
     for (int i = 0; i < 2; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
     {
 	trace_num("two", 3, i);
     }
+#endif
 
     for (int i = 0; GUARD(3), i < 3; ++i)
     {
 	trace_num("three", 5, i);
     }
 
-    // Infinite looping certainly isn't allowed
+    // ...but infinite looping certainly isn't allowed
     for (;;);
 // CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
 
