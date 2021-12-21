@@ -48,7 +48,7 @@ void EntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
       llvm::StringRef MainFileName = Entry->getName();
       if (MainFileName.endswith_insensitive(".c")) {
 	SourceLocation End = Manager.getLocForEndOfFile(MainFileID);
-	diag(End, "missing function '%0'") << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
+	diag(End, "missing function '%0'", DiagnosticIDs::Error) << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
       }
     }
   }
