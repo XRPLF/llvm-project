@@ -33,10 +33,10 @@ namespace {
 struct LinalgComprehensiveModuleBufferize
     : public LinalgComprehensiveModuleBufferizeBase<
           LinalgComprehensiveModuleBufferize> {
-  LinalgComprehensiveModuleBufferize() {}
+  LinalgComprehensiveModuleBufferize() = default;
 
   LinalgComprehensiveModuleBufferize(
-      const LinalgComprehensiveModuleBufferize &p) {}
+      const LinalgComprehensiveModuleBufferize &p) = default;
 
   void runOnOperation() override;
 
@@ -56,7 +56,7 @@ struct LinalgComprehensiveModuleBufferize
     vector_ext::registerBufferizableOpInterfaceExternalModels(registry);
   }
 };
-} // end namespace
+} // namespace
 
 static void applyEnablingTransformations(ModuleOp moduleOp) {
   RewritePatternSet patterns(moduleOp.getContext());
@@ -89,6 +89,7 @@ void LinalgComprehensiveModuleBufferize::runOnOperation() {
   options.allowUnknownOps = allowUnknownOps;
   options.analysisFuzzerSeed = analysisFuzzerSeed;
   options.testAnalysisOnly = testAnalysisOnly;
+  options.printConflicts = printConflicts;
 
   // Enable InitTensorOp elimination.
   options.addPostAnalysisStep<
@@ -96,7 +97,8 @@ void LinalgComprehensiveModuleBufferize::runOnOperation() {
   // TODO: Find a way to enable this step automatically when bufferizing tensor
   // dialect ops.
   options.addPostAnalysisStep<tensor_ext::InplaceInsertSliceOpAnalysis>();
-  options.addPostAnalysisStep<scf_ext::AssertDestinationPassingStyle>();
+  if (!allowReturnMemref)
+    options.addPostAnalysisStep<scf_ext::AssertDestinationPassingStyle>();
 
   ModuleOp moduleOp = getOperation();
   applyEnablingTransformations(moduleOp);

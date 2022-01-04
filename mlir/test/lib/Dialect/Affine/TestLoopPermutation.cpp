@@ -32,7 +32,7 @@ struct TestLoopPermutation
     return "Tests affine loop permutation utility";
   }
   TestLoopPermutation() = default;
-  TestLoopPermutation(const TestLoopPermutation &pass){};
+  TestLoopPermutation(const TestLoopPermutation &pass) : PassWrapper(pass){};
 
   void runOnFunction() override;
 
@@ -44,7 +44,7 @@ private:
                                 llvm::cl::OneOrMore, llvm::cl::CommaSeparated};
 };
 
-} // end anonymous namespace
+} // namespace
 
 void TestLoopPermutation::runOnFunction() {
 

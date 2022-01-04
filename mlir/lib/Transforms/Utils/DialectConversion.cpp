@@ -147,7 +147,7 @@ private:
   /// Current value mappings.
   BlockAndValueMapping mapping;
 };
-} // end anonymous namespace
+} // namespace
 
 Value ConversionValueMapping::lookupOrDefault(Value from,
                                               Type desiredType) const {
@@ -252,7 +252,7 @@ public:
     op->setLoc(loc);
     op->setAttrs(attrs);
     op->setOperands(operands);
-    for (auto it : llvm::enumerate(successors))
+    for (const auto &it : llvm::enumerate(successors))
       op->setSuccessor(it.value(), it.index());
   }
 
@@ -408,7 +408,7 @@ private:
   /// The original output type. This is only used for argument conversions.
   Type origOutputType;
 };
-} // end anonymous namespace
+} // namespace
 
 /// Build an unresolved materialization operation given an output type and set
 /// of input operands.
@@ -593,7 +593,7 @@ struct ArgConverter {
   /// An ordered set of unresolved materializations during conversion.
   SmallVectorImpl<UnresolvedMaterialization> &unresolvedMaterializations;
 };
-} // end anonymous namespace
+} // namespace
 
 //===----------------------------------------------------------------------===//
 // Rewrite Application
@@ -1018,8 +1018,8 @@ struct ConversionPatternRewriterImpl {
   llvm::ScopedPrinter logger{llvm::dbgs()};
 #endif
 };
-} // end namespace detail
-} // end namespace mlir
+} // namespace detail
+} // namespace mlir
 
 /// Detach any operations nested in the given operation from their parent
 /// blocks, and erase the given operation. This can be used when the nested
@@ -1256,7 +1256,7 @@ LogicalResult ConversionPatternRewriterImpl::remapValues(
   remapped.reserve(llvm::size(values));
 
   SmallVector<Type, 1> legalTypes;
-  for (auto it : llvm::enumerate(values)) {
+  for (const auto &it : llvm::enumerate(values)) {
     Value operand = it.value();
     Type origType = operand.getType();
 
@@ -1492,7 +1492,7 @@ LogicalResult ConversionPatternRewriterImpl::notifyMatchFailure(
 ConversionPatternRewriter::ConversionPatternRewriter(MLIRContext *ctx)
     : PatternRewriter(ctx),
       impl(new detail::ConversionPatternRewriterImpl(*this)) {}
-ConversionPatternRewriter::~ConversionPatternRewriter() {}
+ConversionPatternRewriter::~ConversionPatternRewriter() = default;
 
 void ConversionPatternRewriter::replaceOpWithIf(
     Operation *op, ValueRange newValues, bool *allUsesReplaced,
@@ -1931,7 +1931,7 @@ OperationLegalizer::legalizeWithFold(Operation *op,
     Operation *cstOp = rewriterImpl.createdOps[i];
     if (failed(legalize(cstOp, rewriter))) {
       LLVM_DEBUG(logFailure(rewriterImpl.logger,
-                            "generated constant '{0}' was illegal",
+                            "failed to legalize generated constant '{0}'",
                             cstOp->getName()));
       rewriterImpl.resetState(curState);
       return failure();
@@ -2106,7 +2106,7 @@ LogicalResult OperationLegalizer::legalizePatternCreatedOperations(
     Operation *op = impl.createdOps[i];
     if (failed(legalize(op, rewriter))) {
       LLVM_DEBUG(logFailure(impl.logger,
-                            "generated operation '{0}'({1}) was illegal",
+                            "failed to legalize generated operation '{0}'({1})",
                             op->getName(), op));
       return failure();
     }
@@ -2120,9 +2120,9 @@ LogicalResult OperationLegalizer::legalizePatternRootUpdates(
   for (int i = state.numRootUpdates, e = newState.numRootUpdates; i != e; ++i) {
     Operation *op = impl.rootUpdates[i].getOperation();
     if (failed(legalize(op, rewriter))) {
-      LLVM_DEBUG(logFailure(impl.logger,
-                            "operation updated in-place '{0}' was illegal",
-                            op->getName()));
+      LLVM_DEBUG(logFailure(
+          impl.logger, "failed to legalize operation updated in-place '{0}'",
+          op->getName()));
       return failure();
     }
   }
@@ -2396,7 +2396,7 @@ private:
   /// *not* to be legalizable to the target.
   DenseSet<Operation *> *trackedOps;
 };
-} // end anonymous namespace
+} // namespace
 
 LogicalResult OperationConverter::convert(ConversionPatternRewriter &rewriter,
                                           Operation *op) {
@@ -3086,7 +3086,7 @@ struct FunctionLikeSignatureConversion : public ConversionPattern {
     return success();
   }
 };
-} // end anonymous namespace
+} // namespace
 
 void mlir::populateFunctionLikeTypeConversionPattern(
     StringRef functionLikeOpName, RewritePatternSet &patterns,

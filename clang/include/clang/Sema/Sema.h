@@ -1324,12 +1324,15 @@ public:
 
     bool isImmediateFunctionContext() const {
       return Context == ExpressionEvaluationContext::ImmediateFunctionContext ||
-             InImmediateFunctionContext;
+             (Context == ExpressionEvaluationContext::DiscardedStatement &&
+              InImmediateFunctionContext);
     }
 
     bool isDiscardedStatementContext() const {
       return Context == ExpressionEvaluationContext::DiscardedStatement ||
-             InDiscardedStatement;
+             (Context ==
+                  ExpressionEvaluationContext::ImmediateFunctionContext &&
+              InDiscardedStatement);
     }
   };
 
@@ -1362,10 +1365,10 @@ public:
     };
 
   private:
-    llvm::PointerIntPair<CXXMethodDecl*, 2> Pair;
+    llvm::PointerIntPair<CXXMethodDecl *, 2> Pair;
 
   public:
-    SpecialMemberOverloadResult() : Pair() {}
+    SpecialMemberOverloadResult() {}
     SpecialMemberOverloadResult(CXXMethodDecl *MD)
         : Pair(MD, MD->isDeleted() ? NoMemberOrDeleted : Success) {}
 
@@ -2218,6 +2221,17 @@ private:
   Module *getCurrentModule() const {
     return ModuleScopes.empty() ? nullptr : ModuleScopes.back().Module;
   }
+
+  /// Helper function to judge if we are in module purview.
+  /// Return false if we are not in a module.
+  bool isCurrentModulePurview() const {
+    return getCurrentModule() ? getCurrentModule()->isModulePurview() : false;
+  }
+
+  /// Enter the scope of the global module.
+  Module *PushGlobalModuleFragment(SourceLocation BeginLoc, bool IsImplicit);
+  /// Leave the scope of the global module.
+  void PopGlobalModuleFragment();
 
   VisibleModuleSet VisibleModules;
 
@@ -7506,7 +7520,7 @@ public:
     RequiredTemplateKind(SourceLocation TemplateKWLoc = SourceLocation())
         : TemplateKW(TemplateKWLoc) {}
     /// Template name is unconditionally required.
-    RequiredTemplateKind(TemplateNameIsRequiredTag) : TemplateKW() {}
+    RequiredTemplateKind(TemplateNameIsRequiredTag) {}
 
     SourceLocation getTemplateKeywordLoc() const {
       return TemplateKW.getValueOr(SourceLocation());
@@ -11176,6 +11190,9 @@ public:
   /// Called on well-formed 'capture' clause.
   OMPClause *ActOnOpenMPCaptureClause(SourceLocation StartLoc,
                                       SourceLocation EndLoc);
+  /// Called on well-formed 'compare' clause.
+  OMPClause *ActOnOpenMPCompareClause(SourceLocation StartLoc,
+                                      SourceLocation EndLoc);
   /// Called on well-formed 'seq_cst' clause.
   OMPClause *ActOnOpenMPSeqCstClause(SourceLocation StartLoc,
                                      SourceLocation EndLoc);
@@ -12520,18 +12537,18 @@ public:
   /// signatures that were considered.
   ///
   /// FIXME: rename to GuessCallArgumentType to reduce confusion.
-  QualType ProduceCallSignatureHelp(Scope *S, Expr *Fn, ArrayRef<Expr *> Args,
+  QualType ProduceCallSignatureHelp(Expr *Fn, ArrayRef<Expr *> Args,
                                     SourceLocation OpenParLoc);
-  QualType ProduceConstructorSignatureHelp(Scope *S, QualType Type,
-                                           SourceLocation Loc,
+  QualType ProduceConstructorSignatureHelp(QualType Type, SourceLocation Loc,
                                            ArrayRef<Expr *> Args,
-                                           SourceLocation OpenParLoc);
-  QualType ProduceCtorInitMemberSignatureHelp(Scope *S, Decl *ConstructorDecl,
-                                              CXXScopeSpec SS,
-                                              ParsedType TemplateTypeTy,
-                                              ArrayRef<Expr *> ArgExprs,
-                                              IdentifierInfo *II,
-                                              SourceLocation OpenParLoc);
+                                           SourceLocation OpenParLoc,
+                                           bool Braced);
+  QualType ProduceCtorInitMemberSignatureHelp(
+      Decl *ConstructorDecl, CXXScopeSpec SS, ParsedType TemplateTypeTy,
+      ArrayRef<Expr *> ArgExprs, IdentifierInfo *II, SourceLocation OpenParLoc,
+      bool Braced);
+  QualType ProduceTemplateArgumentSignatureHelp(
+      TemplateTy, ArrayRef<ParsedTemplateArgument>, SourceLocation LAngleLoc);
   void CodeCompleteInitializer(Scope *S, Decl *D);
   /// Trigger code completion for a record of \p BaseType. \p InitExprs are
   /// expressions in the initializer list seen so far and \p D is the current
@@ -12769,8 +12786,8 @@ private:
   bool CheckPPCMMAType(QualType Type, SourceLocation TypeLoc);
 
   bool SemaBuiltinElementwiseMath(CallExpr *TheCall);
-  bool SemaBuiltinElementwiseMathOneArg(CallExpr *TheCall);
-  bool SemaBuiltinReduceMath(CallExpr *TheCall);
+  bool PrepareBuiltinElementwiseMathOneArgCall(CallExpr *TheCall);
+  bool PrepareBuiltinReduceMathOneArgCall(CallExpr *TheCall);
 
   // Matrix builtin handling.
   ExprResult SemaBuiltinMatrixTranspose(CallExpr *TheCall,
@@ -13044,7 +13061,7 @@ private:
     ValueDecl *MD;
     CharUnits Alignment;
 
-    MisalignedMember() : E(), RD(), MD(), Alignment() {}
+    MisalignedMember() : E(), RD(), MD() {}
     MisalignedMember(Expr *E, RecordDecl *RD, ValueDecl *MD,
                      CharUnits Alignment)
         : E(E), RD(RD), MD(MD), Alignment(Alignment) {}
@@ -13125,6 +13142,9 @@ public:
   /// Adds Callee to DeviceCallGraph if we don't know if its caller will be
   /// codegen'ed yet.
   bool checkSYCLDeviceFunction(SourceLocation Loc, FunctionDecl *Callee);
+  void deepTypeCheckForSYCLDevice(SourceLocation UsedAt,
+                                  llvm::DenseSet<QualType> Visited,
+                                  ValueDecl *DeclToCheck);
 };
 
 /// RAII object that enters a new expression evaluation context.

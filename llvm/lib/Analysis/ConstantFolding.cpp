@@ -352,6 +352,9 @@ Constant *llvm::ConstantFoldLoadThroughBitcast(Constant *C, Type *DestTy,
                                          const DataLayout &DL) {
   do {
     Type *SrcTy = C->getType();
+    if (SrcTy == DestTy)
+      return C;
+
     TypeSize DestSize = DL.getTypeSizeInBits(DestTy);
     TypeSize SrcSize = DL.getTypeSizeInBits(SrcTy);
     if (!TypeSize::isKnownGE(SrcSize, DestSize))
@@ -705,7 +708,8 @@ Constant *llvm::ConstantFoldLoadFromConstPtr(Constant *C, Type *Ty,
   // is all undef or zero, we know what it loads.
   if (auto *GV = dyn_cast<GlobalVariable>(getUnderlyingObject(C))) {
     if (GV->isConstant() && GV->hasDefinitiveInitializer()) {
-      if (GV->getInitializer()->isNullValue())
+      if (GV->getInitializer()->isNullValue() && !Ty->isX86_MMXTy() &&
+          !Ty->isX86_AMXTy())
         return Constant::getNullValue(Ty);
       if (isa<UndefValue>(GV->getInitializer()))
         return UndefValue::get(Ty);
@@ -881,7 +885,7 @@ Constant *SymbolicallyEvaluateGEP(const GEPOperator *GEP,
     InnermostGEP = GEP;
     InBounds &= GEP->isInBounds();
 
-    SmallVector<Value *, 4> NestedOps(GEP->op_begin() + 1, GEP->op_end());
+    SmallVector<Value *, 4> NestedOps(llvm::drop_begin(GEP->operands()));
 
     // Do not try the incorporate the sub-GEP if some index is not a number.
     bool AllConstantInt = true;
@@ -1167,10 +1171,11 @@ Constant *llvm::ConstantFoldInstOperands(Instruction *I,
   return ConstantFoldInstOperandsImpl(I, I->getOpcode(), Ops, DL, TLI);
 }
 
-Constant *llvm::ConstantFoldCompareInstOperands(unsigned Predicate,
+Constant *llvm::ConstantFoldCompareInstOperands(unsigned IntPredicate,
                                                 Constant *Ops0, Constant *Ops1,
                                                 const DataLayout &DL,
                                                 const TargetLibraryInfo *TLI) {
+  CmpInst::Predicate Predicate = (CmpInst::Predicate)IntPredicate;
   // fold: icmp (inttoptr x), null         -> icmp x, 0
   // fold: icmp null, (inttoptr x)         -> icmp 0, x
   // fold: icmp (ptrtoint x), 0            -> icmp x, null
@@ -1244,10 +1249,30 @@ Constant *llvm::ConstantFoldCompareInstOperands(unsigned Predicate,
         Predicate == ICmpInst::ICMP_EQ ? Instruction::And : Instruction::Or;
       return ConstantFoldBinaryOpOperands(OpC, LHS, RHS, DL);
     }
+
+    // Convert pointer comparison (base+offset1) pred (base+offset2) into
+    // offset1 pred offset2, for the case where the offset is inbounds. This
+    // only works for equality and unsigned comparison, as inbounds permits
+    // crossing the sign boundary. However, the offset comparison itself is
+    // signed.
+    if (Ops0->getType()->isPointerTy() && !ICmpInst::isSigned(Predicate)) {
+      unsigned IndexWidth = DL.getIndexTypeSizeInBits(Ops0->getType());
+      APInt Offset0(IndexWidth, 0);
+      Value *Stripped0 =
+          Ops0->stripAndAccumulateInBoundsConstantOffsets(DL, Offset0);
+      APInt Offset1(IndexWidth, 0);
+      Value *Stripped1 =
+          Ops1->stripAndAccumulateInBoundsConstantOffsets(DL, Offset1);
+      if (Stripped0 == Stripped1)
+        return ConstantExpr::getCompare(
+            ICmpInst::getSignedPredicate(Predicate),
+            ConstantInt::get(CE0->getContext(), Offset0),
+            ConstantInt::get(CE0->getContext(), Offset1));
+    }
   } else if (isa<ConstantExpr>(Ops1)) {
     // If RHS is a constant expression, but the left side isn't, swap the
     // operands and try again.
-    Predicate = ICmpInst::getSwappedPredicate((ICmpInst::Predicate)Predicate);
+    Predicate = ICmpInst::getSwappedPredicate(Predicate);
     return ConstantFoldCompareInstOperands(Predicate, Ops1, Ops0, DL, TLI);
   }
 
@@ -1341,23 +1366,6 @@ Constant *llvm::ConstantFoldCastOperand(unsigned Opcode, Constant *C,
   case Instruction::BitCast:
     return FoldBitCast(C, DestTy, DL);
   }
-}
-
-Constant *llvm::ConstantFoldLoadThroughGEPConstantExpr(Constant *C,
-                                                       ConstantExpr *CE,
-                                                       Type *Ty,
-                                                       const DataLayout &DL) {
-  if (!CE->getOperand(1)->isNullValue())
-    return nullptr;  // Do not allow stepping over the value!
-
-  // Loop over all of the operands, tracking down which value we are
-  // addressing.
-  for (unsigned i = 2, e = CE->getNumOperands(); i != e; ++i) {
-    C = C->getAggregateElement(CE->getOperand(i));
-    if (!C)
-      return nullptr;
-  }
-  return ConstantFoldLoadThroughBitcast(C, Ty, DL);
 }
 
 //===----------------------------------------------------------------------===//
@@ -1774,15 +1782,8 @@ static bool mayFoldConstrained(ConstrainedFPIntrinsic *CI,
 
   // If the operation does not change exception status flags, it is safe
   // to fold.
-  if (St == APFloat::opStatus::opOK) {
-    // When FP exceptions are not ignored, intrinsic call will not be
-    // eliminated, because it is considered as having side effect. But we
-    // know that its evaluation does not raise exceptions, so side effect
-    // is absent. To allow removing the call, mark it as not accessing memory.
-    if (EB && *EB != fp::ExceptionBehavior::ebIgnore)
-      CI->addFnAttr(Attribute::ReadNone);
+  if (St == APFloat::opStatus::opOK)
     return true;
-  }
 
   // If evaluation raised FP exception, the result can depend on rounding
   // mode. If the latter is unknown, folding is not possible.

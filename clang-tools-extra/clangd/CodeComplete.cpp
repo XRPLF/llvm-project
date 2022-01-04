@@ -37,6 +37,7 @@
 #include "index/Symbol.h"
 #include "index/SymbolOrigin.h"
 #include "support/Logger.h"
+#include "support/Markup.h"
 #include "support/Threading.h"
 #include "support/ThreadsafeFS.h"
 #include "support/Trace.h"
@@ -155,6 +156,21 @@ toCompletionItemKind(CodeCompletionResult::ResultKind ResKind,
     return CompletionItemKind::Snippet;
   }
   llvm_unreachable("Unhandled CodeCompletionResult::ResultKind.");
+}
+
+// FIXME: find a home for this (that can depend on both markup and Protocol).
+MarkupContent renderDoc(const markup::Document &Doc, MarkupKind Kind) {
+  MarkupContent Result;
+  Result.kind = Kind;
+  switch (Kind) {
+  case MarkupKind::PlainText:
+    Result.value.append(Doc.asPlainText());
+    break;
+  case MarkupKind::Markdown:
+    Result.value.append(Doc.asMarkdown());
+    break;
+  }
+  return Result;
 }
 
 // Identifier code completion result.
@@ -879,14 +895,12 @@ struct ScoredSignature {
 // part of it.
 int paramIndexForArg(const CodeCompleteConsumer::OverloadCandidate &Candidate,
                      int Arg) {
-  int NumParams = 0;
+  int NumParams = Candidate.getNumParams();
   if (const auto *F = Candidate.getFunction()) {
-    NumParams = F->getNumParams();
     if (F->isVariadic())
       ++NumParams;
   } else if (auto *T = Candidate.getFunctionType()) {
     if (auto *Proto = T->getAs<FunctionProtoType>()) {
-      NumParams = Proto->getNumParams();
       if (Proto->isVariadic())
         ++NumParams;
     }
@@ -897,15 +911,18 @@ int paramIndexForArg(const CodeCompleteConsumer::OverloadCandidate &Candidate,
 class SignatureHelpCollector final : public CodeCompleteConsumer {
 public:
   SignatureHelpCollector(const clang::CodeCompleteOptions &CodeCompleteOpts,
+                         MarkupKind DocumentationFormat,
                          const SymbolIndex *Index, SignatureHelp &SigHelp)
       : CodeCompleteConsumer(CodeCompleteOpts), SigHelp(SigHelp),
         Allocator(std::make_shared<clang::GlobalCodeCompletionAllocator>()),
-        CCTUInfo(Allocator), Index(Index) {}
+        CCTUInfo(Allocator), Index(Index),
+        DocumentationFormat(DocumentationFormat) {}
 
   void ProcessOverloadCandidates(Sema &S, unsigned CurrentArg,
                                  OverloadCandidate *Candidates,
                                  unsigned NumCandidates,
-                                 SourceLocation OpenParLoc) override {
+                                 SourceLocation OpenParLoc,
+                                 bool Braced) override {
     assert(!OpenParLoc.isInvalid());
     SourceManager &SrcMgr = S.getSourceManager();
     OpenParLoc = SrcMgr.getFileLoc(OpenParLoc);
@@ -945,8 +962,9 @@ public:
             paramIndexForArg(Candidate, SigHelp.activeParameter);
       }
 
-      const auto *CCS = Candidate.CreateSignatureString(
-          CurrentArg, S, *Allocator, CCTUInfo, true);
+      const auto *CCS =
+          Candidate.CreateSignatureString(CurrentArg, S, *Allocator, CCTUInfo,
+                                          /*IncludeBriefComment=*/true, Braced);
       assert(CCS && "Expected the CodeCompletionString to be non-null");
       ScoredSignatures.push_back(processOverloadCandidate(
           Candidate, *CCS,
@@ -969,9 +987,9 @@ public:
         if (!S.Documentation.empty())
           FetchedDocs[S.ID] = std::string(S.Documentation);
       });
-      log("SigHelp: requested docs for {0} symbols from the index, got {1} "
-          "symbols with non-empty docs in the response",
-          IndexRequest.IDs.size(), FetchedDocs.size());
+      vlog("SigHelp: requested docs for {0} symbols from the index, got {1} "
+           "symbols with non-empty docs in the response",
+           IndexRequest.IDs.size(), FetchedDocs.size());
     }
 
     llvm::sort(ScoredSignatures, [](const ScoredSignature &L,
@@ -998,6 +1016,9 @@ public:
           return R.Quality.Kind != OC::CK_Function;
         case OC::CK_FunctionTemplate:
           return false;
+        case OC::CK_Template:
+          assert(false && "Never see templates and other overloads mixed");
+          return false;
         }
         llvm_unreachable("Unknown overload candidate type.");
       }
@@ -1009,8 +1030,12 @@ public:
     for (auto &SS : ScoredSignatures) {
       auto IndexDocIt =
           SS.IDForDoc ? FetchedDocs.find(SS.IDForDoc) : FetchedDocs.end();
-      if (IndexDocIt != FetchedDocs.end())
-        SS.Signature.documentation = IndexDocIt->second;
+      if (IndexDocIt != FetchedDocs.end()) {
+        markup::Document SignatureComment;
+        parseDocumentation(IndexDocIt->second, SignatureComment);
+        SS.Signature.documentation =
+            renderDoc(SignatureComment, DocumentationFormat);
+      }
 
       SigHelp.signatures.push_back(std::move(SS.Signature));
     }
@@ -1071,7 +1096,9 @@ private:
     SignatureQualitySignals Signal;
     const char *ReturnType = nullptr;
 
-    Signature.documentation = formatDocumentation(CCS, DocComment);
+    markup::Document OverloadComment;
+    parseDocumentation(formatDocumentation(CCS, DocComment), OverloadComment);
+    Signature.documentation = renderDoc(OverloadComment, DocumentationFormat);
     Signal.Kind = Candidate.getKind();
 
     for (const auto &Chunk : CCS) {
@@ -1110,7 +1137,7 @@ private:
     Result.Signature = std::move(Signature);
     Result.Quality = Signal;
     const FunctionDecl *Func = Candidate.getFunction();
-    if (Func && Result.Signature.documentation.empty()) {
+    if (Func && Result.Signature.documentation.value.empty()) {
       // Computing USR caches linkage, which may change after code completion.
       if (!hasUnstableLinkage(Func))
         Result.IDForDoc = clangd::getSymbolID(Func);
@@ -1122,6 +1149,7 @@ private:
   std::shared_ptr<clang::GlobalCodeCompletionAllocator> Allocator;
   CodeCompletionTUInfo CCTUInfo;
   const SymbolIndex *Index;
+  MarkupKind DocumentationFormat;
 }; // SignatureHelpCollector
 
 // Used only for completion of C-style comments in function call (i.e.
@@ -1137,19 +1165,25 @@ public:
   void ProcessOverloadCandidates(Sema &S, unsigned CurrentArg,
                                  OverloadCandidate *Candidates,
                                  unsigned NumCandidates,
-                                 SourceLocation OpenParLoc) override {
+                                 SourceLocation OpenParLoc,
+                                 bool Braced) override {
     assert(CurrentArg <= (unsigned)std::numeric_limits<int>::max() &&
            "too many arguments");
 
     for (unsigned I = 0; I < NumCandidates; ++I) {
       OverloadCandidate Candidate = Candidates[I];
-      auto *Func = Candidate.getFunction();
-      if (!Func || Func->getNumParams() <= CurrentArg)
+      NamedDecl *Param = nullptr;
+      if (auto *Func = Candidate.getFunction()) {
+        if (CurrentArg < Func->getNumParams())
+          Param = Func->getParamDecl(CurrentArg);
+      } else if (auto *Template = Candidate.getTemplate()) {
+        if (CurrentArg < Template->getTemplateParameters()->size())
+          Param = Template->getTemplateParameters()->getParam(CurrentArg);
+      }
+
+      if (!Param)
         continue;
-      auto *PVD = Func->getParamDecl(CurrentArg);
-      if (!PVD)
-        continue;
-      auto *Ident = PVD->getIdentifier();
+      auto *Ident = Param->getIdentifier();
       if (!Ident)
         continue;
       auto Name = Ident->getName();
@@ -1272,7 +1306,7 @@ bool semaCodeComplete(std::unique_ptr<CodeCompleteConsumer> Consumer,
   // Force them to be deserialized so SemaCodeComplete sees them.
   loadMainFilePreambleMacros(Clang->getPreprocessor(), Input.Preamble);
   if (Includes)
-    Clang->getPreprocessor().addPPCallbacks(Includes->collect(*Clang));
+    Includes->collect(*Clang);
   if (llvm::Error Err = Action.Execute()) {
     log("Execute() failed when running codeComplete for {0}: {1}",
         Input.FileName, toString(std::move(Err)));
@@ -2020,7 +2054,8 @@ CodeCompleteResult codeComplete(PathRef FileName, Position Pos,
 
 SignatureHelp signatureHelp(PathRef FileName, Position Pos,
                             const PreambleData &Preamble,
-                            const ParseInputs &ParseInput) {
+                            const ParseInputs &ParseInput,
+                            MarkupKind DocumentationFormat) {
   auto Offset = positionToOffset(ParseInput.Contents, Pos);
   if (!Offset) {
     elog("Signature help position was invalid {0}", Offset.takeError());
@@ -2033,8 +2068,8 @@ SignatureHelp signatureHelp(PathRef FileName, Position Pos,
   Options.IncludeCodePatterns = false;
   Options.IncludeBriefComments = false;
   semaCodeComplete(
-      std::make_unique<SignatureHelpCollector>(Options, ParseInput.Index,
-                                               Result),
+      std::make_unique<SignatureHelpCollector>(Options, DocumentationFormat,
+                                               ParseInput.Index, Result),
       Options,
       {FileName, *Offset, Preamble,
        PreamblePatch::createFullPatch(FileName, ParseInput, Preamble),
@@ -2073,21 +2108,6 @@ bool isIndexedForCodeCompletion(const NamedDecl &ND, ASTContext &ASTCtx) {
     return InTopLevelScope(*EnumDecl) && !EnumDecl->isScoped();
 
   return false;
-}
-
-// FIXME: find a home for this (that can depend on both markup and Protocol).
-static MarkupContent renderDoc(const markup::Document &Doc, MarkupKind Kind) {
-  MarkupContent Result;
-  Result.kind = Kind;
-  switch (Kind) {
-  case MarkupKind::PlainText:
-    Result.value.append(Doc.asPlainText());
-    break;
-  case MarkupKind::Markdown:
-    Result.value.append(Doc.asMarkdown());
-    break;
-  }
-  return Result;
 }
 
 CompletionItem CodeCompletion::render(const CodeCompleteOptions &Opts) const {

@@ -74,6 +74,12 @@ WhitespaceManager::addReplacement(const tooling::Replacement &Replacement) {
   return Replaces.add(Replacement);
 }
 
+bool WhitespaceManager::inputUsesCRLF(StringRef Text, bool DefaultToCRLF) {
+  size_t LF = Text.count('\n');
+  size_t CR = Text.count('\r') * 2;
+  return LF == CR ? DefaultToCRLF : CR > LF;
+}
+
 void WhitespaceManager::replaceWhitespaceInToken(
     const FormatToken &Tok, unsigned Offset, unsigned ReplaceChars,
     StringRef PreviousPostfix, StringRef CurrentPrefix, bool InPPDirective,
@@ -1282,9 +1288,12 @@ void WhitespaceManager::generateChanges() {
                                  C.EscapedNewlineColumn);
       else
         appendNewlineText(ReplacementText, C.NewlinesBefore);
+      // FIXME: This assert should hold if we computed the column correctly.
+      // assert((int)C.StartOfTokenColumn >= C.Spaces);
       appendIndentText(
           ReplacementText, C.Tok->IndentLevel, std::max(0, C.Spaces),
-          C.StartOfTokenColumn - std::max(0, C.Spaces), C.IsAligned);
+          std::max((int)C.StartOfTokenColumn, C.Spaces) - std::max(0, C.Spaces),
+          C.IsAligned);
       ReplacementText.append(C.CurrentLinePrefix);
       storeReplacement(C.OriginalWhitespaceRange, ReplacementText);
     }

@@ -286,7 +286,7 @@ void ScheduleDAGSDNodes::ClusterNeighboringLoads(SDNode *Node) {
   // Cluster loads by adding MVT::Glue outputs and inputs. This also
   // ensure they are scheduled in order of increasing addresses.
   SDNode *Lead = Loads[0];
-  SDValue InGlue = SDValue(nullptr, 0);
+  SDValue InGlue;
   if (AddGlue(Lead, InGlue, true, DAG))
     InGlue = SDValue(Lead, Lead->getNumValues() - 1);
   for (unsigned I = 1, E = Loads.size(); I != E; ++I) {
@@ -721,10 +721,7 @@ void ScheduleDAGSDNodes::dumpSchedule() const {
 ///
 void ScheduleDAGSDNodes::VerifyScheduledSequence(bool isBottomUp) {
   unsigned ScheduledNodes = ScheduleDAG::VerifyScheduledDAG(isBottomUp);
-  unsigned Noops = 0;
-  for (unsigned i = 0, e = Sequence.size(); i != e; ++i)
-    if (!Sequence[i])
-      ++Noops;
+  unsigned Noops = llvm::count(Sequence, nullptr);
   assert(Sequence.size() - Noops == ScheduledNodes &&
          "The number of nodes scheduled doesn't match the expected number!");
 }

@@ -66,8 +66,12 @@ void GenericCycle<ContextT>::getExitBlocks(
 }
 
 /// \brief Helper class for computing cycle information.
-template <typename ContextT> class GenericCycleInfo<ContextT>::Compute {
-  GenericCycleInfo &Info;
+template <typename ContextT> class GenericCycleInfoCompute {
+  using BlockT = typename ContextT::BlockT;
+  using CycleInfoT = GenericCycleInfo<ContextT>;
+  using CycleT = typename CycleInfoT::CycleT;
+
+  CycleInfoT &Info;
 
   struct DFSInfo {
     unsigned Start = 0; // DFS start; positive if block is found
@@ -86,13 +90,11 @@ template <typename ContextT> class GenericCycleInfo<ContextT>::Compute {
   DenseMap<BlockT *, DFSInfo> BlockDFSInfo;
   SmallVector<BlockT *, 8> BlockPreorder;
 
-  friend struct GraphTraits<ContractedDomSubTree>;
-
-  Compute(const Compute &) = delete;
-  Compute &operator=(const Compute &) = delete;
+  GenericCycleInfoCompute(const GenericCycleInfoCompute &) = delete;
+  GenericCycleInfoCompute &operator=(const GenericCycleInfoCompute &) = delete;
 
 public:
-  Compute(GenericCycleInfo &Info) : Info(Info) {}
+  GenericCycleInfoCompute(CycleInfoT &Info) : Info(Info) {}
 
   void run(BlockT *EntryBlock);
 
@@ -132,7 +134,7 @@ void GenericCycleInfo<ContextT>::moveToNewParent(CycleT *NewParent,
 
 /// \brief Main function of the cycle info computations.
 template <typename ContextT>
-void GenericCycleInfo<ContextT>::Compute::run(BlockT *EntryBlock) {
+void GenericCycleInfoCompute<ContextT>::run(BlockT *EntryBlock) {
   LLVM_DEBUG(errs() << "Entry block: " << Info.Context.print(EntryBlock)
                     << "\n");
   dfs(EntryBlock);
@@ -234,7 +236,7 @@ void GenericCycleInfo<ContextT>::Compute::run(BlockT *EntryBlock) {
 
 /// \brief Recompute depth values of \p SubTree and all descendants.
 template <typename ContextT>
-void GenericCycleInfo<ContextT>::Compute::updateDepth(CycleT *SubTree) {
+void GenericCycleInfoCompute<ContextT>::updateDepth(CycleT *SubTree) {
   for (CycleT *Cycle : depth_first(SubTree))
     Cycle->Depth = Cycle->ParentCycle ? Cycle->ParentCycle->Depth + 1 : 1;
 }
@@ -243,7 +245,7 @@ void GenericCycleInfo<ContextT>::Compute::updateDepth(CycleT *SubTree) {
 ///
 /// Fills BlockDFSInfo with start/end counters and BlockPreorder.
 template <typename ContextT>
-void GenericCycleInfo<ContextT>::Compute::dfs(BlockT *EntryBlock) {
+void GenericCycleInfoCompute<ContextT>::dfs(BlockT *EntryBlock) {
   SmallVector<unsigned, 8> DFSTreeStack;
   SmallVector<BlockT *, 8> TraverseStack;
   unsigned Counter = 0;
@@ -300,7 +302,7 @@ template <typename ContextT> void GenericCycleInfo<ContextT>::clear() {
 /// \brief Compute the cycle info for a function.
 template <typename ContextT>
 void GenericCycleInfo<ContextT>::compute(FunctionT &F) {
-  Compute Compute(*this);
+  GenericCycleInfoCompute<ContextT> Compute(*this);
   Context.setFunction(F);
 
   LLVM_DEBUG(errs() << "Computing cycles for function: " << F.getName()

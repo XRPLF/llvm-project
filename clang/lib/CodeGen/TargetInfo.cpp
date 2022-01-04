@@ -431,7 +431,7 @@ static Address emitMergePHI(CodeGenFunction &CGF,
   PHI->addIncoming(Addr1.getPointer(), Block1);
   PHI->addIncoming(Addr2.getPointer(), Block2);
   CharUnits Align = std::min(Addr1.getAlignment(), Addr2.getAlignment());
-  return Address(PHI, Align);
+  return Address(PHI, Addr1.getElementType(), Align);
 }
 
 TargetCodeGenInfo::~TargetCodeGenInfo() = default;
@@ -4034,7 +4034,7 @@ static Address EmitX86_64VAArgFromMemory(CodeGenFunction &CGF,
   CGF.Builder.CreateStore(overflow_arg_area, overflow_arg_area_p);
 
   // AMD64-ABI 3.5.7p5: Step 11. Return the fetched type.
-  return Address(Res, Align);
+  return Address(Res, LTy, Align);
 }
 
 Address X86_64ABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
@@ -4147,7 +4147,7 @@ Address X86_64ABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
     RegAddr = CGF.Builder.CreateElementBitCast(Tmp, LTy);
   } else if (neededInt) {
     RegAddr = Address(CGF.Builder.CreateGEP(CGF.Int8Ty, RegSaveArea, gp_offset),
-                      CharUnits::fromQuantity(8));
+                      CGF.Int8Ty, CharUnits::fromQuantity(8));
     RegAddr = CGF.Builder.CreateElementBitCast(RegAddr, LTy);
 
     // Copy to a temporary if necessary to ensure the appropriate alignment.
@@ -4165,7 +4165,7 @@ Address X86_64ABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
 
   } else if (neededSSE == 1) {
     RegAddr = Address(CGF.Builder.CreateGEP(CGF.Int8Ty, RegSaveArea, fp_offset),
-                      CharUnits::fromQuantity(16));
+                      CGF.Int8Ty, CharUnits::fromQuantity(16));
     RegAddr = CGF.Builder.CreateElementBitCast(RegAddr, LTy);
   } else {
     assert(neededSSE == 2 && "Invalid number of needed registers!");
@@ -4177,7 +4177,7 @@ Address X86_64ABIInfo::EmitVAArg(CodeGenFunction &CGF, Address VAListAddr,
     // all the SSE registers to the RSA.
     Address RegAddrLo = Address(CGF.Builder.CreateGEP(CGF.Int8Ty, RegSaveArea,
                                                       fp_offset),
-                                CharUnits::fromQuantity(16));
+                                CGF.Int8Ty, CharUnits::fromQuantity(16));
     Address RegAddrHi =
       CGF.Builder.CreateConstInBoundsByteGEP(RegAddrLo,
                                              CharUnits::fromQuantity(16));
@@ -8693,7 +8693,7 @@ Address HexagonABIInfo::EmitVAArgForHexagonLinux(CodeGenFunction &CGF,
                             llvm::ConstantInt::get(CGF.Int32Ty, ArgSize),
                             "__new_saved_reg_area_pointer");
 
-  llvm::Value *UsingStack = 0;
+  llvm::Value *UsingStack = nullptr;
   UsingStack = CGF.Builder.CreateICmpSGT(__new_saved_reg_area_pointer,
                                          __saved_reg_area_end_pointer);
 
@@ -9362,7 +9362,9 @@ AMDGPUTargetCodeGenInfo::getGlobalVarAddressSpace(CodeGenModule &CGM,
   if (AddrSpace != LangAS::Default)
     return AddrSpace;
 
-  if (CGM.isTypeConstant(D->getType(), false)) {
+  // Only promote to address space 4 if VarDecl has constant initialization.
+  if (CGM.isTypeConstant(D->getType(), false) &&
+      D->hasConstantInitialization()) {
     if (auto ConstAS = CGM.getTarget().getConstantAddressSpace())
       return ConstAS.getValue();
   }
@@ -10228,12 +10230,23 @@ public:
 private:
   void setCCs();
 };
+
+class SPIRVABIInfo : public CommonSPIRABIInfo {
+public:
+  SPIRVABIInfo(CodeGenTypes &CGT) : CommonSPIRABIInfo(CGT) {}
+  void computeInfo(CGFunctionInfo &FI) const override;
+
+private:
+  ABIArgInfo classifyKernelArgumentType(QualType Ty) const;
+};
 } // end anonymous namespace
 namespace {
 class CommonSPIRTargetCodeGenInfo : public TargetCodeGenInfo {
 public:
   CommonSPIRTargetCodeGenInfo(CodeGen::CodeGenTypes &CGT)
       : TargetCodeGenInfo(std::make_unique<CommonSPIRABIInfo>(CGT)) {}
+  CommonSPIRTargetCodeGenInfo(std::unique_ptr<ABIInfo> ABIInfo)
+      : TargetCodeGenInfo(std::move(ABIInfo)) {}
 
   LangAS getASTAllocaAddressSpace() const override {
     return getLangASFromTargetAS(
@@ -10242,24 +10255,76 @@ public:
 
   unsigned getOpenCLKernelCallingConv() const override;
 };
-
+class SPIRVTargetCodeGenInfo : public CommonSPIRTargetCodeGenInfo {
+public:
+  SPIRVTargetCodeGenInfo(CodeGen::CodeGenTypes &CGT)
+      : CommonSPIRTargetCodeGenInfo(std::make_unique<SPIRVABIInfo>(CGT)) {}
+  void setCUDAKernelCallingConvention(const FunctionType *&FT) const override;
+};
 } // End anonymous namespace.
+
 void CommonSPIRABIInfo::setCCs() {
   assert(getRuntimeCC() == llvm::CallingConv::C);
   RuntimeCC = llvm::CallingConv::SPIR_FUNC;
 }
 
+ABIArgInfo SPIRVABIInfo::classifyKernelArgumentType(QualType Ty) const {
+  if (getContext().getLangOpts().HIP) {
+    // Coerce pointer arguments with default address space to CrossWorkGroup
+    // pointers for HIPSPV. When the language mode is HIP, the SPIRTargetInfo
+    // maps cuda_device to SPIR-V's CrossWorkGroup address space.
+    llvm::Type *LTy = CGT.ConvertType(Ty);
+    auto DefaultAS = getContext().getTargetAddressSpace(LangAS::Default);
+    auto GlobalAS = getContext().getTargetAddressSpace(LangAS::cuda_device);
+    if (LTy->isPointerTy() && LTy->getPointerAddressSpace() == DefaultAS) {
+      LTy = llvm::PointerType::get(
+          cast<llvm::PointerType>(LTy)->getElementType(), GlobalAS);
+      return ABIArgInfo::getDirect(LTy, 0, nullptr, false);
+    }
+  }
+  return classifyArgumentType(Ty);
+}
+
+void SPIRVABIInfo::computeInfo(CGFunctionInfo &FI) const {
+  // The logic is same as in DefaultABIInfo with an exception on the kernel
+  // arguments handling.
+  llvm::CallingConv::ID CC = FI.getCallingConvention();
+
+  if (!getCXXABI().classifyReturnType(FI))
+    FI.getReturnInfo() = classifyReturnType(FI.getReturnType());
+
+  for (auto &I : FI.arguments()) {
+    if (CC == llvm::CallingConv::SPIR_KERNEL) {
+      I.info = classifyKernelArgumentType(I.type);
+    } else {
+      I.info = classifyArgumentType(I.type);
+    }
+  }
+}
+
 namespace clang {
 namespace CodeGen {
 void computeSPIRKernelABIInfo(CodeGenModule &CGM, CGFunctionInfo &FI) {
-  DefaultABIInfo SPIRABI(CGM.getTypes());
-  SPIRABI.computeInfo(FI);
+  if (CGM.getTarget().getTriple().isSPIRV())
+    SPIRVABIInfo(CGM.getTypes()).computeInfo(FI);
+  else
+    CommonSPIRABIInfo(CGM.getTypes()).computeInfo(FI);
 }
 }
 }
 
 unsigned CommonSPIRTargetCodeGenInfo::getOpenCLKernelCallingConv() const {
   return llvm::CallingConv::SPIR_KERNEL;
+}
+
+void SPIRVTargetCodeGenInfo::setCUDAKernelCallingConvention(
+    const FunctionType *&FT) const {
+  // Convert HIP kernels to SPIR-V kernels.
+  if (getABIInfo().getContext().getLangOpts().HIP) {
+    FT = getABIInfo().getContext().adjustFunctionType(
+        FT, FT->getExtInfo().withCallingConv(CC_OpenCLKernel));
+    return;
+  }
 }
 
 static bool appendType(SmallStringEnc &Enc, QualType QType,
@@ -11327,9 +11392,10 @@ const TargetCodeGenInfo &CodeGenModule::getTargetCodeGenInfo() {
     return SetCGInfo(new ARCTargetCodeGenInfo(Types));
   case llvm::Triple::spir:
   case llvm::Triple::spir64:
+    return SetCGInfo(new CommonSPIRTargetCodeGenInfo(Types));
   case llvm::Triple::spirv32:
   case llvm::Triple::spirv64:
-    return SetCGInfo(new CommonSPIRTargetCodeGenInfo(Types));
+    return SetCGInfo(new SPIRVTargetCodeGenInfo(Types));
   case llvm::Triple::ve:
     return SetCGInfo(new VETargetCodeGenInfo(Types));
   }

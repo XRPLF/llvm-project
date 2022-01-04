@@ -73,6 +73,9 @@ Improvements to clang-tidy
 - Added support for `NOLINTBEGIN` ... `NOLINTEND` comments to suppress
   Clang-Tidy warnings over multiple lines.
 
+- Generalized the `modernize-use-default-member-init` check to handle non-default
+  constructors.
+
 New checks
 ^^^^^^^^^^
 
@@ -168,6 +171,16 @@ Changes in existing checks
 
 - Fixed a false positive in :doc:`fuchsia-trailing-return
   <clang-tidy/checks/fuchsia-trailing-return>` for C++17 deduction guides.
+  
+- Fixed a false positive in :doc:`bugprone-throw-keyword-missing
+  <clang-tidy/checks/bugprone-throw-keyword-missing>` when creating an exception object
+  using placement new
+
+- :doc:`cppcoreguidelines-narrowing-conversions <clang-tidy/checks/cppcoreguidelines-narrowing-conversions>`
+  check now supports a `WarnOnIntegerToFloatingPointNarrowingConversion`
+  option to control whether to warn on narrowing integer to floating-point
+  conversions.
+
 
 Removed checks
 ^^^^^^^^^^^^^^
@@ -192,5 +205,5 @@ Improvements to pp-trace
 
 The improvements are...
 
-Clang-tidy visual studio plugin
+Clang-tidy Visual Studio plugin
 -------------------------------
