@@ -1541,8 +1541,6 @@ std::vector<Fix> ClangdLSPServer::getFixes(llvm::StringRef File,
 // of simplicity here.
 bool ClangdLSPServer::shouldRunCompletion(
     const CompletionParams &Params) const {
-  if (Params.context.triggerKind != CompletionTriggerKind::TriggerCharacter)
-    return true;
   auto Code = Server->getDraft(Params.textDocument.uri.file());
   if (!Code)
     return true; // completion code will log the error for untracked doc.
@@ -1553,7 +1551,7 @@ bool ClangdLSPServer::shouldRunCompletion(
          Params.position, Params.textDocument.uri.file());
     return true;
   }
-  return allowImplicitCompletion(*Code, *Offset);
+  return allowImplicitCompletion(*Code, *Offset, Params.context.triggerKind == CompletionTriggerKind::TriggerCharacter);
 }
 
 void ClangdLSPServer::onDiagnosticsReady(PathRef File, llvm::StringRef Version,

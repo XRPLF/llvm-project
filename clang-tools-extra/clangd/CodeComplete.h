@@ -317,7 +317,8 @@ CompletionPrefix guessCompletionPrefix(llvm::StringRef Content,
 
 // Whether it makes sense to complete at the point based on typed characters.
 // For instance, we implicitly trigger at `a->^` but not at `a>^`.
-bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset);
+bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset,
+			     bool TriggeredByCharacter);
 
 } // namespace clangd
 } // namespace clang

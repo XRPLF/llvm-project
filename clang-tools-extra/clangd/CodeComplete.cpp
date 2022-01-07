@@ -2204,6 +2204,14 @@ bool isIncludeFile(llvm::StringRef Line) {
   return false;
 }
 
+static bool containsIncludeDelimiter(llvm::StringRef Content) {
+  for (auto i = Content.begin(); i != Content.end(); ++i)
+    if ((*i == '<') || (*i == '\"') || (*i == '/'))
+      return true;
+
+  return false;
+}
+
 static bool mayBeRelativePath(llvm::StringRef Content) {
   // searching for ".." is simpler, but doesn't match ".\."...
   int DotCount = 0;
@@ -2215,7 +2223,7 @@ static bool mayBeRelativePath(llvm::StringRef Content) {
   return false;
 }
 
-bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset) {
+bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset, bool TriggeredByCharacter) {
   // Look at last line before completion point only.
   Content = Content.take_front(Offset);
   auto Pos = Content.rfind('\n');
@@ -2223,16 +2231,20 @@ bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset) {
     Content = Content.substr(Pos + 1);
 
   // Complete after scope operators.
-  if (Content.endswith(".") || Content.endswith("->") ||
-      Content.endswith("::") || Content.endswith("/*"))
+  if (TriggeredByCharacter &&
+      (Content.endswith(".") || Content.endswith("->") ||
+       Content.endswith("::") || Content.endswith("/*")))
     return true;
-  // Complete after `#include <` and #include `<foo/`.
-  if ((Content.endswith("<") || Content.endswith("\"") ||
-       Content.endswith("/")) &&
-      isIncludeFile(Content))
-    // for clangd running remotely, we don't want to allow directory
-    // traversal - at least not interactively...
+
+  // Complete after `#include <` and #include `<foo/`.  For clangd
+  // running remotely, we don't want to allow directory traversal (at
+  // least not interactively), so the condition is relaxed to match
+  // (hopefully) all includes that could be completed.
+  if (containsIncludeDelimiter(Content) && isIncludeFile(Content))
     return !mayBeRelativePath(Content);
+
+  if (!TriggeredByCharacter)
+    return true;
 
   // Complete words. Give non-ascii characters the benefit of the doubt.
   return !Content.empty() && (isAsciiIdentifierContinue(Content.back()) ||
