@@ -14,6 +14,7 @@
 #include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
+#include "ReserveLimitCheck.h"
 
 namespace clang {
 namespace tidy {
@@ -32,6 +33,8 @@ public:
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(
 	"hooks-guard-in-for");
+    CheckFactories.registerCheck<ReserveLimitCheck>(
+        "hooks-reserve-limit");
   }
 };
 
