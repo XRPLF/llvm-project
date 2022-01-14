@@ -11,11 +11,15 @@ int64_t hook(int64_t reserved)
     // repeated calls to etxn_reserve aren't correct either, but
     // that's a different check...
     etxn_reserve(1000);
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: etxn_reserve may not reserve more than 255 transactions [hooks-reserve-limit]
+// CHECK-MESSAGES: :[[@LINE-1]]:18: warning: etxn_reserve may not reserve more than 255 transactions [hooks-reserve-limit]
 
-    etxn_reserve(0);
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: etxn_reserve need not be called to reserve 0 transactions [hooks-reserve-limit]
+    etxn_reserve(0u);
+// CHECK-MESSAGES: :[[@LINE-1]]:18: warning: etxn_reserve need not be called to reserve 0 transactions [hooks-reserve-limit]
 
     // variable argument cannot be checked at compile time
     etxn_reserve(reserved);
+
+    // constant expression is preserved in AST - IOW checking it is
+    // technically possible but non-trivial
+    etxn_reserve(1000 + 1);
 }
