@@ -76,55 +76,36 @@ static SourceLocation condFindSemicolon(SourceLocation Loc, const ASTContext &Co
 }
 
 void ReserveLimitCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve")).bind("declaration")), anyOf(has(implicitCastExpr(has(integerLiteral().bind("signedConst")))), has(integerLiteral().bind("unsignedConst")))).bind("call"), this);
+  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve")).bind("declaration")), hasArgument(0, integerLiteral().bind("constReserve"))).bind("call"), this);
 }
 
 void ReserveLimitCheck::check(const MatchFinder::MatchResult &Result) {
-  const char *Literals[] = { "signedConst", "unsignedConst" };
-
-  // if the call has both signed and unsigned arguments, it is wrong
-  // (because etxn_reserve only takes a single parameter); we might
-  // still output limit diagnostics for both of them, but not when
-  // proposing to remove the whole call
-  for (size_t i = 0; i < sizeof(Literals) / sizeof(Literals[0]); ++i) {
-    const IntegerLiteral *ConstReserve = Result.Nodes.getNodeAs<IntegerLiteral>(Literals[i]);
-    if (ConstReserve) {
-      llvm::APInt Value = ConstReserve->getValue();
-      uint64_t LimitedValue = Value.getLimitedValue();
-      if (!LimitedValue) {
-	// call removal is only proposed when the call is a standalone
-	// statement (e.g. not inside a bigger expression, if
-	// condition etc.)
-	const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-	const CallExpr *Child = Result.Nodes.getNodeAs<CallExpr>("call");
-	ASTContext &Context = Declaration->getASTContext();
-	auto Parents = Context.getParents(*Child);
-	if (Parents.size() == 1) {
-	  const CompoundStmt *ParentStatement = Parents[0].get<CompoundStmt>();
-	  if (ParentStatement) {
-	    SourceLocation End(condFindSemicolon(Child->getEndLoc(), Context));
-	    if (End.isValid()) {
-	      SourceRange CallRange(Child->getBeginLoc(), End);
-	      diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
-	      return;
-	    }
-	  }
+  const IntegerLiteral *ConstReserve = Result.Nodes.getNodeAs<IntegerLiteral>("constReserve");
+  llvm::APInt Value = ConstReserve->getValue();
+  uint64_t LimitedValue = Value.getLimitedValue();
+  if (!LimitedValue) {
+    // call removal is only proposed when the call is a standalone
+    // statement (e.g. not inside a bigger expression, if
+    // condition etc.)
+    const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
+    const CallExpr *Child = Result.Nodes.getNodeAs<CallExpr>("call");
+    ASTContext &Context = Declaration->getASTContext();
+    auto Parents = Context.getParents(*Child);
+    if (Parents.size() == 1) {
+      const CompoundStmt *ParentStatement = Parents[0].get<CompoundStmt>();
+      if (ParentStatement) {
+	SourceLocation End(condFindSemicolon(Child->getEndLoc(), Context));
+	if (End.isValid()) {
+	  SourceRange CallRange(Child->getBeginLoc(), End);
+	  diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
+	  return;
 	}
-
-	diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions");
       }
     }
-  }
 
-  for (size_t i = 0; i < sizeof(Literals) / sizeof(Literals[0]); ++i) {
-    const IntegerLiteral *ConstReserve = Result.Nodes.getNodeAs<IntegerLiteral>(Literals[i]);
-    if (ConstReserve) {
-      llvm::APInt Value = ConstReserve->getValue();
-      uint64_t LimitedValue = Value.getLimitedValue();
-      if (LimitedValue > MAX_EMIT) {
-	diag(ConstReserve->getLocation(), "etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
-      }
-    }
+    diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions");
+  } else if (LimitedValue > MAX_EMIT) {
+    diag(ConstReserve->getLocation(), "etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
   }
 }
 
