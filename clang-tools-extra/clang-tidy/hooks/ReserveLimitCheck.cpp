@@ -97,15 +97,15 @@ void ReserveLimitCheck::check(const MatchFinder::MatchResult &Result) {
 	SourceLocation End(condFindSemicolon(Child->getEndLoc(), Context));
 	if (End.isValid()) {
 	  SourceRange CallRange(Child->getBeginLoc(), End);
-	  diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
+	  diag(ConstReserve->getLocation(), "function etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
 	  return;
 	}
       }
     }
 
-    diag(ConstReserve->getLocation(), "etxn_reserve need not be called to reserve 0 transactions");
+    diag(ConstReserve->getLocation(), "function etxn_reserve need not be called to reserve 0 transactions");
   } else if (LimitedValue > MAX_EMIT) {
-    diag(ConstReserve->getLocation(), "etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
+    diag(ConstReserve->getLocation(), "function etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
   }
 }
 
