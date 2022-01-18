@@ -206,6 +206,7 @@ Clang-Tidy Checks
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
+   `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,

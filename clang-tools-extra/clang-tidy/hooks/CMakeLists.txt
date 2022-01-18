@@ -10,6 +10,7 @@ add_clang_library(clangTidyHooksModule
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
   HooksTidyModule.cpp
+  RaddrConvPureCheck.cpp
   ReserveLimitCheck.cpp
 
   LINK_LIBS

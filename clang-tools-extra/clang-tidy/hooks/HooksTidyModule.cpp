@@ -14,6 +14,7 @@
 #include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
+#include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
 
 namespace clang {
@@ -33,6 +34,8 @@ public:
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(
 	"hooks-guard-in-for");
+    CheckFactories.registerCheck<RaddrConvPureCheck>(
+        "hooks-raddr-conv-pure");
     CheckFactories.registerCheck<ReserveLimitCheck>(
         "hooks-reserve-limit");
   }

@@ -124,6 +124,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-raddr-conv-pure
+  <clang-tidy/checks/hooks-raddr-conv-pure>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-reserve-limit
   <clang-tidy/checks/hooks-reserve-limit>` check.
 
