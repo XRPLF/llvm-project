@@ -7,10 +7,9 @@
 //===----------------------------------------------------------------------===//
 
 #include "ReserveLimitCheck.h"
+#include "../utils/LexerUtils.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
-#include "clang/Lex/Lexer.h"
-#include <assert.h>
 
 using namespace clang::ast_matchers;
 
@@ -18,38 +17,8 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-// copied from BracesAroundStatementsCheck.cpp
-static tok::TokenKind getTokenKind(SourceLocation Loc, const SourceManager &SM,
-				   const ASTContext *Context) {
-  Token Tok;
-  SourceLocation Beginning =
-      Lexer::GetBeginningOfToken(Loc, SM, Context->getLangOpts());
-  const bool Invalid =
-      Lexer::getRawToken(Beginning, Tok, SM, Context->getLangOpts());
-  assert(!Invalid && "Expected a valid token.");
-
-  if (Invalid)
-    return tok::NUM_TOKENS;
-
-  return Tok.getKind();
-}
-
-static SourceLocation
-forwardSkipWhitespaceAndComments(SourceLocation Loc, const SourceManager &SM,
-				 const ASTContext *Context) {
-  assert(Loc.isValid());
-  for (;;) {
-    while (isWhitespace(*SM.getCharacterData(Loc)))
-      Loc = Loc.getLocWithOffset(1);
-
-    tok::TokenKind TokKind = getTokenKind(Loc, SM, Context);
-    if (TokKind != tok::comment)
-      return Loc;
-
-    // Fast-forward current token.
-    Loc = Lexer::getLocForEndOfToken(Loc, 0, SM, Context->getLangOpts());
-  }
-}
+using utils::lexer::getTokenKind;
+using utils::lexer::forwardSkipWhitespaceAndComments;
 
 static SourceLocation condFindSemicolon(SourceLocation Loc, const ASTContext &Context) {
   if (!Loc.isValid())

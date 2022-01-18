@@ -112,6 +112,15 @@ llvm::Optional<Token> getQualifyingToken(tok::TokenKind TK,
 SourceLocation getUnifiedEndLoc(const Stmt &S, const SourceManager &SM,
                                 const LangOptions &LangOpts);
 
+// copied from BracesAroundStatementsCheck.cpp
+tok::TokenKind getTokenKind(SourceLocation Loc, const SourceManager &SM,
+                           const ASTContext *Context);
+
+// copied from BracesAroundStatementsCheck.cpp
+SourceLocation forwardSkipWhitespaceAndComments(SourceLocation Loc,
+						const SourceManager &SM,
+						const ASTContext *Context);
+
 } // namespace lexer
 } // namespace utils
 } // namespace tidy

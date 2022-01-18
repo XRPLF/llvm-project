@@ -213,6 +213,38 @@ SourceLocation getUnifiedEndLoc(const Stmt &S, const SourceManager &SM,
   return S.getEndLoc();
 }
 
+tok::TokenKind getTokenKind(SourceLocation Loc, const SourceManager &SM,
+			    const ASTContext *Context) {
+  Token Tok;
+  SourceLocation Beginning =
+      Lexer::GetBeginningOfToken(Loc, SM, Context->getLangOpts());
+  const bool Invalid =
+      Lexer::getRawToken(Beginning, Tok, SM, Context->getLangOpts());
+  assert(!Invalid && "Expected a valid token.");
+
+  if (Invalid)
+    return tok::NUM_TOKENS;
+
+  return Tok.getKind();
+}
+
+SourceLocation
+forwardSkipWhitespaceAndComments(SourceLocation Loc, const SourceManager &SM,
+				 const ASTContext *Context) {
+  assert(Loc.isValid());
+  for (;;) {
+    while (isWhitespace(*SM.getCharacterData(Loc)))
+      Loc = Loc.getLocWithOffset(1);
+
+    tok::TokenKind TokKind = getTokenKind(Loc, SM, Context);
+    if (TokKind != tok::comment)
+      return Loc;
+
+    // Fast-forward current token.
+    Loc = Lexer::getLocForEndOfToken(Loc, 0, SM, Context->getLangOpts());
+  }
+}
+
 } // namespace lexer
 } // namespace utils
 } // namespace tidy
