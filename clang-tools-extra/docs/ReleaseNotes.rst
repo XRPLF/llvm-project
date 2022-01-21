@@ -104,6 +104,11 @@ New checks
   Finds virtual classes whose destructor is neither public and virtual nor
   protected and non-virtual.
 
+- New :doc:`hooks-account-buf-len
+  <clang-tidy/checks/hooks-account-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-entry-point-recursion
   <clang-tidy/checks/hooks-entry-point-recursion>` check.
 
