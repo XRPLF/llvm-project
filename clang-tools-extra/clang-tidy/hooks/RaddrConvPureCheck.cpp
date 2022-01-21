@@ -93,9 +93,9 @@ void RaddrConvPureCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
     callExpr(callee(functionDecl(hasName("util_accid")).bind("declaration")),
 	     hasArgument(0, cStyleCastExpr(hasDescendant(declRefExpr(to(varDecl().bind("outputBuffer")))))),
-	     hasArgument(1, sizeOfExpr(hasDescendant(declRefExpr(to(varDecl().bind("sizedBuffer")))))),
+	     hasArgument(1, expr().bind("bufferSize")),
 	     hasArgument(2, cStyleCastExpr(hasDescendant(stringLiteral().bind("inputLiteral")))),
-	     hasArgument(3, sizeOfExpr(hasDescendant(stringLiteral().bind("sizedLiteral")))));
+	     hasArgument(3, expr().bind("literalSize")));
 
   Finder->addMatcher(compoundStmt(has(declStmt(has(varDecl(has(CallExpr)))).bind("declarationStatement"))), this);
   Finder->addMatcher(compoundStmt(has(binaryOperator(hasOperatorName("="), hasRHS(CallExpr)).bind("assignmentExpression"))), this);
@@ -104,15 +104,17 @@ void RaddrConvPureCheck::registerMatchers(MatchFinder *Finder) {
 
 void RaddrConvPureCheck::check(const MatchFinder::MatchResult &Result) {
   const StringLiteral *InputLiteral = Result.Nodes.getNodeAs<StringLiteral>("inputLiteral");
-  const StringLiteral *SizedLiteral = Result.Nodes.getNodeAs<StringLiteral>("inputLiteral");
+  const Expr *LiteralSize = Result.Nodes.getNodeAs<Expr>("literalSize");
   const VarDecl *OutputBuffer = Result.Nodes.getNodeAs<VarDecl>("outputBuffer");
-  const VarDecl *SizedBuffer = Result.Nodes.getNodeAs<VarDecl>("sizedBuffer");
-  if ((InputLiteral->getString() == SizedLiteral->getString()) && (OutputBuffer->getCanonicalDecl() == SizedBuffer->getCanonicalDecl())) {
+  const Expr *BufferSize = Result.Nodes.getNodeAs<Expr>("bufferSize");
+  const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
+  ASTContext &Context = Declaration->getASTContext();
+  Optional<llvm::APSInt> LiteralSizeValue = LiteralSize->getIntegerConstantExpr(Context);
+  Optional<llvm::APSInt> BufferSizeValue = BufferSize->getIntegerConstantExpr(Context);
+  if (LiteralSizeValue && BufferSizeValue) {
     const DeclStmt *DeclarationStatement = Result.Nodes.getNodeAs<DeclStmt>("declarationStatement");
     const BinaryOperator *BinOp = Result.Nodes.getNodeAs<BinaryOperator>("assignmentExpression");
     const IfStmt *IfStatement = Result.Nodes.getNodeAs<IfStmt>("ifStatement");
-    const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-    ASTContext &Context = Declaration->getASTContext();
     SourceLocation End;
 
     if (DeclarationStatement) {

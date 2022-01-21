@@ -33,21 +33,26 @@ int64_t hook(int64_t reserved)
 	rollback(SBUF("Firewall: Could not decode blacklist account id."), 200);
 // CHECK-MESSAGES: :[[@LINE-2]]:48: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
-    // no message unless the argument is sizeof - this is probably
-    // implementable (ideally by resolving the sizeof to 20 and
-    // checking the expected size) but not implemented...
-    ret = util_accid(
-	(uint32_t)(carbon_accid),
-	20,
-	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
-	sizeof("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"));
+    return ret;
+}
 
-    // ditto for the input argument
+// for some reason, AST doesn't match if there are too many calls to
+// util_accid in a single function...
+int64_t hook2(int64_t reserved)
+{
+    uint8_t carbon_accid[20];
+    int64_t ret = util_accid(
+	(uint32_t)(carbon_accid), 20,
+	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"), 34);
+// CHECK-MESSAGES: :[[@LINE-1]]:13: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
+
+    // no message unless the size argument is constant - changing
+    // input size changes the input...
     ret = util_accid(
 	(uint32_t)(carbon_accid),
 	sizeof(carbon_accid),
 	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
-	34);
+	reserved);
 
     return ret;
 }

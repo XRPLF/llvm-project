@@ -27,7 +27,7 @@ public:
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
 
 private:
-  static const uint64_t MAX_EMIT = 255; // value copied from rippled source
+  const uint64_t MAX_EMIT = 255; // value copied from rippled source
 };
 
 } // namespace hooks
