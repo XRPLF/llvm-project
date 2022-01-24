@@ -18,7 +18,7 @@ namespace hooks {
 
 namespace {
 
-const uint64_t MAX_FOR_LIMIT = 10000;
+const int64_t MAX_FOR_LIMIT = 10000;
 
 bool areSameVariable(const ValueDecl *First, const ValueDecl *Second) {
   return First && Second &&
@@ -35,20 +35,27 @@ public:
   InnerCallback():Found(false), FoundCond(false), GuardLimit(0) { }
 
   virtual void run(const MatchFinder::MatchResult &Result) override {
+    const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>("constInit");
     const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>("incVarName");
     const VarDecl *CondVar = Result.Nodes.getNodeAs<VarDecl>("condVarName");
     const VarDecl *InitVar = Result.Nodes.getNodeAs<VarDecl>("initVarName");
     const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>("condOp");
-    const IntegerLiteral *ConstLimit = Result.Nodes.getNodeAs<IntegerLiteral>("constLimit");
+    const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>("constLimit");
     CondLoc = CondOp->getBeginLoc();
     FoundCond = true;
 
     if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
-      llvm::APInt Value = ConstLimit->getValue();
-      uint64_t LimitedValue = Value.getLimitedValue(MAX_FOR_LIMIT);
-      if (LimitedValue < MAX_FOR_LIMIT) {
-	GuardLimit = static_cast<int>(LimitedValue) + 1;
-	Found = true;
+      assert(Result.Context);
+      ASTContext &Context = *(Result.Context);
+      Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
+      Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
+      if (ConstInitValue && ConstLimitValue) {
+	llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
+	int64_t LimitedValue = Value.getExtValue();
+	if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
+	  GuardLimit = static_cast<int>(LimitedValue) + 1;
+	  Found = true;
+	}
       }
     }
   }
@@ -75,7 +82,7 @@ void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
   StatementMatcher LoopMatcher =
     forStmt(isExpansionInMainFile(),
 	    hasLoopInit(declStmt(
-		hasSingleDecl(varDecl(hasInitializer(integerLiteral(equals(0))))
+		hasSingleDecl(varDecl(hasInitializer(expr().bind("constInit")))
 				  .bind("initVarName")))),
 	    hasIncrement(unaryOperator(
 		hasOperatorName("++"),
@@ -85,7 +92,7 @@ void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
 		hasOperatorName("<"),
 		hasLHS(ignoringParenImpCasts(declRefExpr(
 		    to(varDecl(hasType(isInteger())).bind("condVarName"))))),
-		hasRHS(integerLiteral().bind("constLimit"))).bind("condOp")));
+		hasRHS(expr().bind("constLimit"))).bind("condOp")));
 
   MatchFinder Finder;
   InnerCallback StrictMatch;
