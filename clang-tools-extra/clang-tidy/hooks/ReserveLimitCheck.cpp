@@ -73,9 +73,9 @@ void ReserveLimitCheck::check(const MatchFinder::MatchResult &Result) {
 	}
       }
 
-      diag(Argument->getBeginLoc(), "function etxn_reserve need not be called to reserve 0 transactions");
+      diag(Argument->getBeginLoc(), "function etxn_reserve need not be called to reserve 0 transactions") << SourceRange(Argument->getBeginLoc(), Argument->getEndLoc());
     } else if (LimitedValue > MAX_EMIT) {
-      diag(Argument->getBeginLoc(), "function etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
+      diag(Argument->getBeginLoc(), "function etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT << SourceRange(Argument->getBeginLoc(), Argument->getEndLoc());
     }
   }
 }
