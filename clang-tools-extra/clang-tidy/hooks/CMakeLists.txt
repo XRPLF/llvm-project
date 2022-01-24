@@ -10,6 +10,7 @@ add_clang_library(clangTidyHooksModule
   EntryPointsNegCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
+  GuardInWhileCheck.cpp
   HooksTidyModule.cpp
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp

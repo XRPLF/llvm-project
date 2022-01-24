@@ -15,6 +15,7 @@
 #include "EntryPointsNegCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
+#include "GuardInWhileCheck.h"
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
@@ -38,6 +39,8 @@ public:
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(
 	"hooks-guard-in-for");
+    CheckFactories.registerCheck<GuardInWhileCheck>(
+        "hooks-guard-in-while");
     CheckFactories.registerCheck<RaddrConvBufLenCheck>(
         "hooks-raddr-conv-buf-len");
     CheckFactories.registerCheck<RaddrConvPureCheck>(

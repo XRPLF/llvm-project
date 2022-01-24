@@ -129,6 +129,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-guard-in-while
+  <clang-tidy/checks/hooks-guard-in-while>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-raddr-conv-buf-len
   <clang-tidy/checks/hooks-raddr-conv-buf-len>` check.
 
