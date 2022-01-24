@@ -10,6 +10,7 @@
 #include "../utils/LexerUtils.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
+#include <assert.h>
 
 using namespace clang::ast_matchers;
 
@@ -91,7 +92,7 @@ static std::string makeFix(llvm::StringRef BufferName) {
 
 void RaddrConvPureCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
-    callExpr(callee(functionDecl(hasName("util_accid")).bind("declaration")),
+    callExpr(callee(functionDecl(hasName("util_accid"))),
 	     hasArgument(0, cStyleCastExpr(hasDescendant(declRefExpr(to(varDecl().bind("outputBuffer")))))),
 	     hasArgument(1, expr().bind("bufferSize")),
 	     hasArgument(2, cStyleCastExpr(hasDescendant(stringLiteral().bind("inputLiteral")))),
@@ -107,8 +108,9 @@ void RaddrConvPureCheck::check(const MatchFinder::MatchResult &Result) {
   const Expr *LiteralSize = Result.Nodes.getNodeAs<Expr>("literalSize");
   const VarDecl *OutputBuffer = Result.Nodes.getNodeAs<VarDecl>("outputBuffer");
   const Expr *BufferSize = Result.Nodes.getNodeAs<Expr>("bufferSize");
-  const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-  ASTContext &Context = Declaration->getASTContext();
+
+  assert(Result.Context);
+  ASTContext &Context = *(Result.Context);
   Optional<llvm::APSInt> LiteralSizeValue = LiteralSize->getIntegerConstantExpr(Context);
   Optional<llvm::APSInt> BufferSizeValue = BufferSize->getIntegerConstantExpr(Context);
   if (LiteralSizeValue && BufferSizeValue) {

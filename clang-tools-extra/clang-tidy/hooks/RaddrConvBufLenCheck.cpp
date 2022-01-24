@@ -9,6 +9,7 @@
 #include "RaddrConvBufLenCheck.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
+#include <assert.h>
 
 using namespace clang::ast_matchers;
 
@@ -18,7 +19,7 @@ namespace hooks {
 
 void RaddrConvBufLenCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
-    callExpr(callee(functionDecl(hasName("util_accid")).bind("declaration")),
+    callExpr(callee(functionDecl(hasName("util_accid"))),
 	     hasArgument(1, expr().bind("outputSize")),
 	     hasArgument(3, expr().bind("inputSize")));
 
@@ -28,8 +29,9 @@ void RaddrConvBufLenCheck::registerMatchers(MatchFinder *Finder) {
 void RaddrConvBufLenCheck::check(const MatchFinder::MatchResult &Result) {
   const Expr *InputSize = Result.Nodes.getNodeAs<Expr>("inputSize");
   const Expr *OutputSize = Result.Nodes.getNodeAs<Expr>("outputSize");
-  const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-  ASTContext &Context = Declaration->getASTContext();
+
+  assert(Result.Context);
+  ASTContext &Context = *(Result.Context);
   Optional<llvm::APSInt> InputSizeValue = InputSize->getIntegerConstantExpr(Context);
   Optional<llvm::APSInt> OutputSizeValue = OutputSize->getIntegerConstantExpr(Context);
 

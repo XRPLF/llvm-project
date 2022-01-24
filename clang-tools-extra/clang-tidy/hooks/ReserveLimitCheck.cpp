@@ -10,6 +10,7 @@
 #include "../utils/LexerUtils.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
+#include <assert.h>
 
 using namespace clang::ast_matchers;
 
@@ -45,13 +46,14 @@ static SourceLocation condFindSemicolon(SourceLocation Loc, const ASTContext &Co
 }
 
 void ReserveLimitCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve")).bind("declaration")), hasArgument(0, expr().bind("argument"))).bind("call"), this);
+  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve"))), hasArgument(0, expr().bind("argument"))).bind("call"), this);
 }
 
 void ReserveLimitCheck::check(const MatchFinder::MatchResult &Result) {
   const Expr *Argument = Result.Nodes.getNodeAs<Expr>("argument");
-  const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-  ASTContext &Context = Declaration->getASTContext();
+
+  assert(Result.Context);
+  ASTContext &Context = *(Result.Context);
   Optional<llvm::APSInt> ArgumentValue = Argument->getIntegerConstantExpr(Context);
   if (ArgumentValue) {
     llvm::APSInt LimitedValue = *ArgumentValue;
