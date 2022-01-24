@@ -45,36 +45,38 @@ static SourceLocation condFindSemicolon(SourceLocation Loc, const ASTContext &Co
 }
 
 void ReserveLimitCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve")).bind("declaration")), hasArgument(0, integerLiteral().bind("constReserve"))).bind("call"), this);
+  Finder->addMatcher(callExpr(callee(functionDecl(hasName("etxn_reserve")).bind("declaration")), hasArgument(0, expr().bind("argument"))).bind("call"), this);
 }
 
 void ReserveLimitCheck::check(const MatchFinder::MatchResult &Result) {
-  const IntegerLiteral *ConstReserve = Result.Nodes.getNodeAs<IntegerLiteral>("constReserve");
-  llvm::APInt Value = ConstReserve->getValue();
-  uint64_t LimitedValue = Value.getLimitedValue();
-  if (!LimitedValue) {
-    // call removal is only proposed when the call is a standalone
-    // statement (e.g. not inside a bigger expression, if
-    // condition etc.)
-    const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
-    const CallExpr *Child = Result.Nodes.getNodeAs<CallExpr>("call");
-    ASTContext &Context = Declaration->getASTContext();
-    auto Parents = Context.getParents(*Child);
-    if (Parents.size() == 1) {
-      const CompoundStmt *ParentStatement = Parents[0].get<CompoundStmt>();
-      if (ParentStatement) {
-	SourceLocation End(condFindSemicolon(Child->getEndLoc(), Context));
-	if (End.isValid()) {
-	  SourceRange CallRange(Child->getBeginLoc(), End);
-	  diag(ConstReserve->getLocation(), "function etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
-	  return;
+  const Expr *Argument = Result.Nodes.getNodeAs<Expr>("argument");
+  const FunctionDecl *Declaration = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
+  ASTContext &Context = Declaration->getASTContext();
+  Optional<llvm::APSInt> ArgumentValue = Argument->getIntegerConstantExpr(Context);
+  if (ArgumentValue) {
+    llvm::APSInt LimitedValue = *ArgumentValue;
+    if (!LimitedValue) {
+      // call removal is only proposed when the call is a standalone
+      // statement (e.g. not inside a bigger expression, if condition
+      // etc.)
+      const CallExpr *Child = Result.Nodes.getNodeAs<CallExpr>("call");
+      auto Parents = Context.getParents(*Child);
+      if (Parents.size() == 1) {
+	const CompoundStmt *ParentStatement = Parents[0].get<CompoundStmt>();
+	if (ParentStatement) {
+	  SourceLocation End(condFindSemicolon(Child->getEndLoc(), Context));
+	  if (End.isValid()) {
+	    SourceRange CallRange(Child->getBeginLoc(), End);
+	    diag(Argument->getBeginLoc(), "function etxn_reserve need not be called to reserve 0 transactions") << FixItHint::CreateRemoval(CallRange);
+	    return;
+	  }
 	}
       }
-    }
 
-    diag(ConstReserve->getLocation(), "function etxn_reserve need not be called to reserve 0 transactions");
-  } else if (LimitedValue > MAX_EMIT) {
-    diag(ConstReserve->getLocation(), "function etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
+      diag(Argument->getBeginLoc(), "function etxn_reserve need not be called to reserve 0 transactions");
+    } else if (LimitedValue > MAX_EMIT) {
+      diag(Argument->getBeginLoc(), "function etxn_reserve may not reserve more than %0 transactions") << MAX_EMIT;
+    }
   }
 }
 

@@ -19,7 +19,7 @@ int64_t hook(int64_t reserved)
     // variable argument cannot be checked at compile time
     etxn_reserve(reserved);
 
-    // constant expression is preserved in AST - IOW checking it is
-    // technically possible but non-trivial
+    // constant expression now works too
     etxn_reserve(1000 + 1);
+// CHECK-MESSAGES: :[[@LINE-1]]:18: warning: function etxn_reserve may not reserve more than 255 transactions [hooks-reserve-limit]
 }
