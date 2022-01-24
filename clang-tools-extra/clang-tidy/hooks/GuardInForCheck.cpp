@@ -101,10 +101,13 @@ void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
 
   if (StrictMatch.Found) {
     assert(StrictMatch.FoundCond);
-    diag(StrictMatch.CondLoc, "for loop does not call '_g'") << FixItHint::CreateInsertion(StrictMatch.CondLoc, StrictMatch.getFix());
+    diag(StrictMatch.CondLoc, "for loop does not call '_g'") <<
+      SourceRange(Matched->getBeginLoc(), Matched->getRParenLoc()) <<
+      FixItHint::CreateInsertion(StrictMatch.CondLoc, StrictMatch.getFix());
   } else {
     SourceLocation Loc = StrictMatch.FoundCond ? StrictMatch.CondLoc : Matched->getBeginLoc();
-    diag(Loc, "for loop does not call '_g'");
+    diag(Loc, "for loop does not call '_g'") <<
+      SourceRange(Matched->getBeginLoc(), Matched->getRParenLoc());
   }
 }
 

@@ -35,7 +35,14 @@ int64_t hook(int64_t reserved)
     for (int i = 0; 2 > i; ++i)
 // CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
     {
-	trace_num("one", 3, i);
+	trace_num("four", 3, i);
+    }
+
+    int i;
+    for (i = 1; i < 3; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
+    {
+	trace_num("five", 3, i);
     }
 
     return 0;
