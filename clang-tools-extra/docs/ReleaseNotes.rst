@@ -109,6 +109,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-account-conv-buf-len
+  <clang-tidy/checks/hooks-account-conv-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-entry-point-recursion
   <clang-tidy/checks/hooks-entry-point-recursion>` check.
 
