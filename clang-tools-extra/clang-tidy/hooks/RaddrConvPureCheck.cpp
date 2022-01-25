@@ -7,7 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "RaddrConvPureCheck.h"
-#include "../utils/LexerUtils.h"
+#include "../utils/PureUtils.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include <assert.h>
@@ -18,77 +18,9 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-using utils::lexer::getTokenKind;
-using utils::lexer::forwardSkipWhitespaceAndComments;
-
-static SourceLocation checkLocationForFix(SourceLocation TargetLoc, const ASTContext &Context, const SourceManager &SM) {
-  if (!TargetLoc.isValid())
-    return TargetLoc;
-
-  SourceLocation EndLoc = Lexer::getLocForEndOfToken(TargetLoc, 0, SM, Context.getLangOpts());
-  if (!EndLoc.isValid())
-    return TargetLoc;
-
-  const char *Begin = SM.getCharacterData(TargetLoc);
-  const char *End = SM.getCharacterData(EndLoc);
-  llvm::StringRef TestToken(Begin, End - Begin);
-  if (!TestToken.compare("trace")) // fix apparently already applied
-    return SourceLocation();
-
-  return TargetLoc;
-}
-
-static SourceLocation condSkipDeclaration(SourceLocation Loc, const ASTContext &Context) {
-  if (!Loc.isValid())
-    return Loc;
-
-  SourceLocation NextLoc = Loc.getLocWithOffset(1);
-  if (!NextLoc.isValid())
-    return NextLoc;
-
-  const SourceManager &SM = Context.getSourceManager();
-  SourceLocation EndLoc = forwardSkipWhitespaceAndComments(NextLoc, SM, &Context);
-  return checkLocationForFix(EndLoc, Context, SM);
-}
-
-static SourceLocation condSkipStatement(SourceLocation Loc, const ASTContext &Context) {
-  SourceLocation InvalidLoc;
-  if (!Loc.isValid())
-    return InvalidLoc;
-
-  SourceLocation NextLoc = Loc.getLocWithOffset(1);
-  if (!NextLoc.isValid())
-    return InvalidLoc;
-
-  const SourceManager &SM = Context.getSourceManager();
-  SourceLocation SemiLoc = forwardSkipWhitespaceAndComments(NextLoc, SM, &Context);
-  if (SemiLoc.isInvalid())
-    return InvalidLoc;
-
-  tok::TokenKind TokKind = getTokenKind(SemiLoc, SM, &Context);
-  if (TokKind != tok::semi)
-    return InvalidLoc;
-
-  SourceLocation AfterLoc = Lexer::getLocForEndOfToken(SemiLoc, 0, SM, Context.getLangOpts());
-  if (!AfterLoc.isValid())
-    return InvalidLoc;
-
-  SourceLocation EndLoc = AfterLoc.getLocWithOffset(1);
-  return checkLocationForFix(EndLoc, Context, SM);
-}
-
-static std::string makeFix(llvm::StringRef BufferName) {
-  std::string Fix("trace((uint32_t)\"");
-  Fix += BufferName;
-  Fix += "\", sizeof(\"";
-  Fix += BufferName;
-  Fix += "\"), (uint32_t)";
-  Fix += BufferName;
-  Fix += ", sizeof(";
-  Fix += BufferName;
-  Fix += "), 1);\n";
-  return Fix;
-}
+using utils::pure::condSkipDeclaration;
+using utils::pure::condSkipStatement;
+using utils::pure::makeTraceFix;
 
 void RaddrConvPureCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
@@ -128,7 +60,7 @@ void RaddrConvPureCheck::check(const MatchFinder::MatchResult &Result) {
     }
 
     if (End.isValid()) {
-      std::string Fix = makeFix(OutputBuffer->getName());
+      std::string Fix = makeTraceFix(OutputBuffer->getName(), 1);
       diag(InputLiteral->getBeginLoc(), "output of util_accid can be precomputed") << FixItHint::CreateInsertion(End, Fix);
     }
   }
