@@ -213,6 +213,7 @@ Clang-Tidy Checks
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
+   `hooks-verify-buf-len <hooks-verify-buf-len.html>`_, "Yes"
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,
    `llvm-include-order <llvm-include-order.html>`_, "Yes"

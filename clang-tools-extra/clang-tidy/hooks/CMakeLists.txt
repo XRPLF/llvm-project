@@ -17,6 +17,7 @@ add_clang_library(clangTidyHooksModule
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp
   ReserveLimitCheck.cpp
+  VerifyBufLenCheck.cpp
 
   LINK_LIBS
   clangTidy

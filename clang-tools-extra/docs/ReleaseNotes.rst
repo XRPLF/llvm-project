@@ -159,6 +159,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-verify-buf-len
+  <clang-tidy/checks/hooks-verify-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`misc-misleading-identifier <clang-tidy/checks/misc-misleading-identifier>` check.
 
   Reports identifier with unicode right-to-left characters.

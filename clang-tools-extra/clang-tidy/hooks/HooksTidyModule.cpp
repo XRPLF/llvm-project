@@ -21,6 +21,7 @@
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
+#include "VerifyBufLenCheck.h"
 
 namespace clang {
 namespace tidy {
@@ -53,6 +54,8 @@ public:
         "hooks-raddr-conv-pure");
     CheckFactories.registerCheck<ReserveLimitCheck>(
         "hooks-reserve-limit");
+    CheckFactories.registerCheck<VerifyBufLenCheck>(
+        "hooks-verify-buf-len");
   }
 };
 
