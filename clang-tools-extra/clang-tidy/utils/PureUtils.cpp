@@ -65,7 +65,7 @@ SourceLocation condSkipStatement(SourceLocation Loc, const ASTContext &Context) 
 
   tok::TokenKind TokKind = getTokenKind(SemiLoc, SM, &Context);
   if (TokKind != tok::semi) // happens for if statements
-    return SemiLoc;
+    return checkLocationForFix(SemiLoc, Context, SM);
 
   SourceLocation AfterLoc = Lexer::getLocForEndOfToken(SemiLoc, 0, SM, Context.getLangOpts());
   if (!AfterLoc.isValid())
