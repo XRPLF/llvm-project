@@ -27,16 +27,16 @@ void RaddrConvPureCheck::registerMatchers(MatchFinder *Finder) {
     callExpr(callee(functionDecl(hasName("util_accid"))),
 	     hasArgument(0, cStyleCastExpr(hasDescendant(declRefExpr(to(varDecl().bind("outputBuffer")))))),
 	     hasArgument(1, expr().bind("bufferSize")),
-	     hasArgument(2, cStyleCastExpr(hasDescendant(stringLiteral().bind("inputLiteral")))),
-	     hasArgument(3, expr().bind("literalSize")));
+	     hasArgument(2, cStyleCastExpr(hasDescendant(stringLiteral()))),
+	     hasArgument(3, expr().bind("literalSize"))).bind("call");
 
   Finder->addMatcher(compoundStmt(has(declStmt(has(varDecl(has(CallExpr)))).bind("declarationStatement"))), this);
   Finder->addMatcher(compoundStmt(has(binaryOperator(hasOperatorName("="), hasRHS(CallExpr)).bind("assignmentExpression"))), this);
   Finder->addMatcher(compoundStmt(has(ifStmt(has(binaryOperator(has(CallExpr)))).bind("ifStatement"))), this);
+  Finder->addMatcher(compoundStmt(has(CallExpr)), this);
 }
 
 void RaddrConvPureCheck::check(const MatchFinder::MatchResult &Result) {
-  const StringLiteral *InputLiteral = Result.Nodes.getNodeAs<StringLiteral>("inputLiteral");
   const Expr *LiteralSize = Result.Nodes.getNodeAs<Expr>("literalSize");
   const VarDecl *OutputBuffer = Result.Nodes.getNodeAs<VarDecl>("outputBuffer");
   const Expr *BufferSize = Result.Nodes.getNodeAs<Expr>("bufferSize");
@@ -46,22 +46,22 @@ void RaddrConvPureCheck::check(const MatchFinder::MatchResult &Result) {
   Optional<llvm::APSInt> LiteralSizeValue = LiteralSize->getIntegerConstantExpr(Context);
   Optional<llvm::APSInt> BufferSizeValue = BufferSize->getIntegerConstantExpr(Context);
   if (LiteralSizeValue && BufferSizeValue) {
-    const DeclStmt *DeclarationStatement = Result.Nodes.getNodeAs<DeclStmt>("declarationStatement");
-    const BinaryOperator *BinOp = Result.Nodes.getNodeAs<BinaryOperator>("assignmentExpression");
-    const IfStmt *IfStatement = Result.Nodes.getNodeAs<IfStmt>("ifStatement");
+    const CallExpr *Call = Result.Nodes.getNodeAs<CallExpr>("call");
     SourceLocation End;
 
-    if (DeclarationStatement) {
+    if (const DeclStmt *DeclarationStatement = Result.Nodes.getNodeAs<DeclStmt>("declarationStatement")) {
       End = condSkipDeclaration(DeclarationStatement->getEndLoc(), Context);
-    } else if (BinOp) {
+    } else if (const BinaryOperator *BinOp = Result.Nodes.getNodeAs<BinaryOperator>("assignmentExpression")) {
       End = condSkipStatement(BinOp->getEndLoc(), Context);
-    } else if (IfStatement) {
+    } else if (const IfStmt *IfStatement = Result.Nodes.getNodeAs<IfStmt>("ifStatement")) {
       End = condSkipStatement(IfStatement->getEndLoc(), Context);
+    } else {
+      End = condSkipStatement(Call->getEndLoc(), Context);
     }
 
     if (End.isValid()) {
       std::string Fix = makeTraceFix(OutputBuffer->getName(), 1);
-      diag(InputLiteral->getBeginLoc(), "output of util_accid can be precomputed") << FixItHint::CreateInsertion(End, Fix);
+      diag(Call->getBeginLoc(), "output of util_accid can be precomputed") << FixItHint::CreateInsertion(End, Fix);
     }
   }
 }

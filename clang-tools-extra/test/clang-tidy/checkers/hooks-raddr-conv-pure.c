@@ -19,19 +19,19 @@ int64_t hook(int64_t reserved)
 	sizeof(carbon_accid),
 	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
 	sizeof("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"));
-// CHECK-MESSAGES: :[[@LINE-2]]:13: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
+// CHECK-MESSAGES: :[[@LINE-5]]:19: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
     ret = util_accid(
 	(uint32_t)(carbon_accid),
 	sizeof(carbon_accid),
 	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
 	sizeof("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"));
-// CHECK-MESSAGES: :[[@LINE-2]]:13: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
+// CHECK-MESSAGES: :[[@LINE-5]]:11: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
     uint8_t blacklist_accid[20];
     if (util_accid(SBUF(blacklist_accid), SBUF(BLACKLIST_ACCOUNT)) != 20)
 	rollback(SBUF("Firewall: Could not decode blacklist account id."), 200);
-// CHECK-MESSAGES: :[[@LINE-2]]:48: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
+// CHECK-MESSAGES: :[[@LINE-2]]:9: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
     return ret;
 }
@@ -44,7 +44,7 @@ int64_t hook2(int64_t reserved)
     int64_t ret = util_accid(
 	(uint32_t)(carbon_accid), 20,
 	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"), 34);
-// CHECK-MESSAGES: :[[@LINE-1]]:13: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
+// CHECK-MESSAGES: :[[@LINE-3]]:19: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
     // no message unless the size argument is constant - changing
     // input size changes the input...
@@ -53,6 +53,13 @@ int64_t hook2(int64_t reserved)
 	sizeof(carbon_accid),
 	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
 	reserved);
+
+    util_accid(
+	(uint32_t)(carbon_accid),
+	sizeof(carbon_accid),
+	(uint32_t)("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"),
+	sizeof("rfCarbonVNTuXckX6x2qTMFmFSnm6dEWGX"));
+// CHECK-MESSAGES: :[[@LINE-5]]:5: warning: output of util_accid can be precomputed [hooks-raddr-conv-pure]
 
     return ret;
 }
