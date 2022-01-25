@@ -8,10 +8,6 @@ int64_t util_raddr(
     uint32_t read_ptr,
     uint32_t read_len);
 
-extern int64_t rollback(uint32_t read_ptr,  uint32_t read_len,   int64_t error_code);
-
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-
 int64_t hook(int64_t reserved)
 {
     uint8_t raddr_out[40];
@@ -31,9 +27,10 @@ int64_t hook(int64_t reserved)
 
     util_raddr(raddr_out, sizeof(raddr_out), 0, 0);
 
-    if (util_raddr(raddr_out, sizeof(raddr_out), acc_id, sizeof(acc_id)) == bytes_written)
+    if (util_raddr(raddr_out, sizeof(raddr_out), acc_id, sizeof(acc_id)) < 0) {
 // CHECK-MESSAGES: :[[@LINE-1]]:9: warning: output of util_raddr can be precomputed [hooks-account-conv-pure]
-	rollback(SBUF("Could not encode account id."), 200);
+      ++bytes_written;
+    }
 
     return bytes_written;
 }
