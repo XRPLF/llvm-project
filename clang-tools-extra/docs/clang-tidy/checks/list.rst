@@ -202,7 +202,8 @@ Clang-Tidy Checks
    `hicpp-no-assembler <hicpp-no-assembler.html>`_,
    `hicpp-signed-bitwise <hicpp-signed-bitwise.html>`_,
    `hooks-account-buf-len <hooks-account-buf-len.html>`_,
-   `hooks-account-conv-buf-len <hooks-account-conv-buf-len.html>`_, "Yes"
+   `hooks-account-conv-buf-len <hooks-account-conv-buf-len.html>`_,
+   `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"

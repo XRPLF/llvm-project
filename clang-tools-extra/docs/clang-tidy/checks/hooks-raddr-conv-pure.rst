@@ -10,4 +10,4 @@ account-id from the raddr.
 
 This check warns about calls of `util_accid` with constant input and
 proposes to add a tracing statement showing the computed value (so
-that the user can use it to replace the call ).
+that the user can use it to replace the call).

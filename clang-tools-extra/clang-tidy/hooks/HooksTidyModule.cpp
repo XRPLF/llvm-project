@@ -11,6 +11,7 @@
 #include "../ClangTidyModuleRegistry.h"
 #include "AccountBufLenCheck.h"
 #include "AccountConvBufLenCheck.h"
+#include "AccountConvPureCheck.h"
 #include "EntryPointRecursionCheck.h"
 #include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
@@ -32,6 +33,8 @@ public:
         "hooks-account-buf-len");
     CheckFactories.registerCheck<AccountConvBufLenCheck>(
         "hooks-account-conv-buf-len");
+    CheckFactories.registerCheck<AccountConvPureCheck>(
+        "hooks-account-conv-pure");
     CheckFactories.registerCheck<EntryPointRecursionCheck>(
         "hooks-entry-point-recursion");
     CheckFactories.registerCheck<EntryPointsCheck>(

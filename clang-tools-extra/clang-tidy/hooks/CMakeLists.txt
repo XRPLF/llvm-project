@@ -6,6 +6,7 @@ set(LLVM_LINK_COMPONENTS
 add_clang_library(clangTidyHooksModule
   AccountBufLenCheck.cpp
   AccountConvBufLenCheck.cpp
+  AccountConvPureCheck.cpp
   EntryPointRecursionCheck.cpp
   EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp
