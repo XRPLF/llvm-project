@@ -18,6 +18,7 @@
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
 #include "GuardInWhileCheck.h"
+#include "HashBufLenCheck.h"
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
@@ -48,6 +49,8 @@ public:
 	"hooks-guard-in-for");
     CheckFactories.registerCheck<GuardInWhileCheck>(
         "hooks-guard-in-while");
+    CheckFactories.registerCheck<HashBufLenCheck>(
+        "hooks-hash-buf-len");
     CheckFactories.registerCheck<RaddrConvBufLenCheck>(
         "hooks-raddr-conv-buf-len");
     CheckFactories.registerCheck<RaddrConvPureCheck>(

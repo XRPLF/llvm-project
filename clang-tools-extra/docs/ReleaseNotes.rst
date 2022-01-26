@@ -144,6 +144,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-hash-buf-len
+  <clang-tidy/checks/hooks-hash-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-raddr-conv-buf-len
   <clang-tidy/checks/hooks-raddr-conv-buf-len>` check.
 

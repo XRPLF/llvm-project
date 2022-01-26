@@ -13,6 +13,7 @@ add_clang_library(clangTidyHooksModule
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
   GuardInWhileCheck.cpp
+  HashBufLenCheck.cpp
   HooksTidyModule.cpp
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp
