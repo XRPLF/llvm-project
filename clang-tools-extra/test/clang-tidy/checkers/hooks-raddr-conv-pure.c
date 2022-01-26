@@ -5,7 +5,7 @@
 extern int64_t util_accid(uint32_t write_ptr, uint32_t write_len,
 			  uint32_t read_ptr,  uint32_t read_len);
 
-extern int64_t rollback(uint32_t read_ptr,  uint32_t read_len,   int64_t error_code);
+extern int64_t rollback(uint32_t read_ptr, uint32_t read_len, int64_t error_code);
 
 #define BLACKLIST_ACCOUNT "rno8D3qi5VrBvxTUE7nsem5kcJDnQUooQy"
 
