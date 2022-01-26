@@ -15,6 +15,7 @@ add_clang_library(clangTidyHooksModule
   GuardInWhileCheck.cpp
   HashBufLenCheck.cpp
   HooksTidyModule.cpp
+  KeyletBufLenCheck.cpp
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp
   ReserveLimitCheck.cpp
