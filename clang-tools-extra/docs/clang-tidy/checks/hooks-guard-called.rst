@@ -3,4 +3,4 @@
 hooks-guard-called
 ==================
 
-Every hook needs to import guard function and use it at least once.
+Every hook needs to import the guard function `_g` and use it at least once.
