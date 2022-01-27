@@ -7,6 +7,7 @@ add_clang_library(clangTidyHooksModule
   AccountBufLenCheck.cpp
   AccountConvBufLenCheck.cpp
   AccountConvPureCheck.cpp
+  ArrayBufLenCheck.cpp
   EntryPointRecursionCheck.cpp
   EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp

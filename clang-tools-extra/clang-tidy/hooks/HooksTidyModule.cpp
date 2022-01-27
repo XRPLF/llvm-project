@@ -12,6 +12,7 @@
 #include "AccountBufLenCheck.h"
 #include "AccountConvBufLenCheck.h"
 #include "AccountConvPureCheck.h"
+#include "ArrayBufLenCheck.h"
 #include "EntryPointRecursionCheck.h"
 #include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
@@ -38,6 +39,8 @@ public:
         "hooks-account-conv-buf-len");
     CheckFactories.registerCheck<AccountConvPureCheck>(
         "hooks-account-conv-pure");
+    CheckFactories.registerCheck<ArrayBufLenCheck>(
+        "hooks-array-buf-len");
     CheckFactories.registerCheck<EntryPointRecursionCheck>(
         "hooks-entry-point-recursion");
     CheckFactories.registerCheck<EntryPointsCheck>(

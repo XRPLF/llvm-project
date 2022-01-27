@@ -119,6 +119,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-array-buf-len
+  <clang-tidy/checks/hooks-array-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-entry-point-recursion
   <clang-tidy/checks/hooks-entry-point-recursion>` check.
 
