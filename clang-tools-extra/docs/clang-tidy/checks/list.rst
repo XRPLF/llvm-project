@@ -204,10 +204,11 @@ Clang-Tidy Checks
    `hooks-account-buf-len <hooks-account-buf-len.html>`_,
    `hooks-account-conv-buf-len <hooks-account-conv-buf-len.html>`_,
    `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
-   `hooks-array-buf-len <hooks-array-buf-len.html>`_, "Yes"
+   `hooks-array-buf-len <hooks-array-buf-len.html>`_,
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
+   `hooks-field-buf-len <hooks-field-buf-len.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,

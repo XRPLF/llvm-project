@@ -16,6 +16,7 @@
 #include "EntryPointRecursionCheck.h"
 #include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
+#include "FieldBufLenCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
 #include "GuardInWhileCheck.h"
@@ -47,6 +48,8 @@ public:
         "hooks-entry-points");
     CheckFactories.registerCheck<EntryPointsNegCheck>(
 	"hooks-entry-points-neg");
+    CheckFactories.registerCheck<FieldBufLenCheck>(
+        "hooks-field-buf-len");
     CheckFactories.registerCheck<GuardCalledCheck>(
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(
