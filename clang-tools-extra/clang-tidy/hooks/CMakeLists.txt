@@ -11,6 +11,7 @@ add_clang_library(clangTidyHooksModule
   EntryPointRecursionCheck.cpp
   EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp
+  FieldAddBufLenCheck.cpp
   FieldBufLenCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp

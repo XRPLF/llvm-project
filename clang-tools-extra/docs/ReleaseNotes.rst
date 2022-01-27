@@ -134,6 +134,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-field-add-buf-len
+  <clang-tidy/checks/hooks-field-add-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-field-buf-len
   <clang-tidy/checks/hooks-field-buf-len>` check.
 
