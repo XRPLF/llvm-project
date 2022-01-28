@@ -18,6 +18,7 @@
 #include "EntryPointsNegCheck.h"
 #include "FieldAddBufLenCheck.h"
 #include "FieldBufLenCheck.h"
+#include "FieldDelBufLenCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
 #include "GuardInWhileCheck.h"
@@ -53,6 +54,8 @@ public:
         "hooks-field-add-buf-len");
     CheckFactories.registerCheck<FieldBufLenCheck>(
         "hooks-field-buf-len");
+    CheckFactories.registerCheck<FieldDelBufLenCheck>(
+        "hooks-field-del-buf-len");
     CheckFactories.registerCheck<GuardCalledCheck>(
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(

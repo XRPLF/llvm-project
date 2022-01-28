@@ -13,6 +13,7 @@ add_clang_library(clangTidyHooksModule
   EntryPointsNegCheck.cpp
   FieldAddBufLenCheck.cpp
   FieldBufLenCheck.cpp
+  FieldDelBufLenCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
   GuardInWhileCheck.cpp
