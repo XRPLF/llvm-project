@@ -207,10 +207,11 @@ Clang-Tidy Checks
    `hooks-array-buf-len <hooks-array-buf-len.html>`_,
    `hooks-burden-prereq <hooks-burden-prereq.html>`_,
    `hooks-detail-buf-len <hooks-detail-buf-len.html>`_,
-   `hooks-detail-prereq <hooks-detail-prereq.html>`_, "Yes"
+   `hooks-detail-prereq <hooks-detail-prereq.html>`_,
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
+   `hooks-fee-prereq <hooks-fee-prereq.html>`_, "Yes"
    `hooks-field-add-buf-len <hooks-field-add-buf-len.html>`_,
    `hooks-field-buf-len <hooks-field-buf-len.html>`_,
    `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,

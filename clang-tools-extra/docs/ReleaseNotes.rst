@@ -149,6 +149,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-fee-prereq
+  <clang-tidy/checks/hooks-fee-prereq>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-field-add-buf-len
   <clang-tidy/checks/hooks-field-add-buf-len>` check.
 
