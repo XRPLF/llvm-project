@@ -210,7 +210,7 @@ Clang-Tidy Checks
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
    `hooks-field-add-buf-len <hooks-field-add-buf-len.html>`_,
    `hooks-field-buf-len <hooks-field-buf-len.html>`_,
-   `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_, "Yes"
+   `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,
@@ -219,6 +219,7 @@ Clang-Tidy Checks
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
+   `hooks-validate-buf-len <hooks-validate-buf-len.html>`_, "Yes"
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,

@@ -189,6 +189,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-validate-buf-len
+  <clang-tidy/checks/hooks-validate-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-verify-buf-len
   <clang-tidy/checks/hooks-verify-buf-len>` check.
 
