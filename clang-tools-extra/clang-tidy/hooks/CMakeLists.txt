@@ -11,6 +11,7 @@ add_clang_library(clangTidyHooksModule
   BurdenPrereqCheck.cpp
   DetailBufLenCheck.cpp
   DetailPrereqCheck.cpp
+  EmitPrereqCheck.cpp
   EntryPointRecursionCheck.cpp
   EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp

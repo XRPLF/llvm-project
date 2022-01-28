@@ -16,6 +16,7 @@
 #include "BurdenPrereqCheck.h"
 #include "DetailBufLenCheck.h"
 #include "DetailPrereqCheck.h"
+#include "EmitPrereqCheck.h"
 #include "EntryPointRecursionCheck.h"
 #include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
@@ -55,6 +56,8 @@ public:
         "hooks-detail-buf-len");
     CheckFactories.registerCheck<DetailPrereqCheck>(
         "hooks-detail-prereq");
+    CheckFactories.registerCheck<EmitPrereqCheck>(
+        "hooks-emit-prereq");
     CheckFactories.registerCheck<EntryPointRecursionCheck>(
         "hooks-entry-point-recursion");
     CheckFactories.registerCheck<EntryPointsCheck>(
