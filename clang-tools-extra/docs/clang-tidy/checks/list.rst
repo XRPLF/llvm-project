@@ -205,6 +205,7 @@ Clang-Tidy Checks
    `hooks-account-conv-buf-len <hooks-account-conv-buf-len.html>`_,
    `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
    `hooks-array-buf-len <hooks-array-buf-len.html>`_,
+   `hooks-burden-prereq <hooks-burden-prereq.html>`_, "Yes"
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"
@@ -219,7 +220,7 @@ Clang-Tidy Checks
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
-   `hooks-validate-buf-len <hooks-validate-buf-len.html>`_, "Yes"
+   `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
    `llvm-header-guard <llvm-header-guard.html>`_,

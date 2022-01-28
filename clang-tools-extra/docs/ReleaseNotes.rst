@@ -124,6 +124,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-burden-prereq
+  <clang-tidy/checks/hooks-burden-prereq>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-entry-point-recursion
   <clang-tidy/checks/hooks-entry-point-recursion>` check.
 

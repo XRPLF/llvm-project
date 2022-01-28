@@ -8,6 +8,7 @@ add_clang_library(clangTidyHooksModule
   AccountConvBufLenCheck.cpp
   AccountConvPureCheck.cpp
   ArrayBufLenCheck.cpp
+  BurdenPrereqCheck.cpp
   EntryPointRecursionCheck.cpp
   EntryPointsCheck.cpp
   EntryPointsNegCheck.cpp
