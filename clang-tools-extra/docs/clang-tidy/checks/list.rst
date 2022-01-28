@@ -205,7 +205,8 @@ Clang-Tidy Checks
    `hooks-account-conv-buf-len <hooks-account-conv-buf-len.html>`_,
    `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
    `hooks-array-buf-len <hooks-array-buf-len.html>`_,
-   `hooks-burden-prereq <hooks-burden-prereq.html>`_, "Yes"
+   `hooks-burden-prereq <hooks-burden-prereq.html>`_,
+   `hooks-detail-buf-len <hooks-detail-buf-len.html>`_, "Yes"
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
    `hooks-entry-points <hooks-entry-points.html>`_, "Yes"

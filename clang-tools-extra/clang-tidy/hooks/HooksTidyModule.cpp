@@ -14,6 +14,7 @@
 #include "AccountConvPureCheck.h"
 #include "ArrayBufLenCheck.h"
 #include "BurdenPrereqCheck.h"
+#include "DetailBufLenCheck.h"
 #include "EntryPointRecursionCheck.h"
 #include "EntryPointsCheck.h"
 #include "EntryPointsNegCheck.h"
@@ -48,6 +49,8 @@ public:
         "hooks-array-buf-len");
     CheckFactories.registerCheck<BurdenPrereqCheck>(
         "hooks-burden-prereq");
+    CheckFactories.registerCheck<DetailBufLenCheck>(
+        "hooks-detail-buf-len");
     CheckFactories.registerCheck<EntryPointRecursionCheck>(
         "hooks-entry-point-recursion");
     CheckFactories.registerCheck<EntryPointsCheck>(
