@@ -139,6 +139,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-emit-buf-len
+  <clang-tidy/checks/hooks-emit-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-emit-prereq
   <clang-tidy/checks/hooks-emit-prereq>` check.
 
