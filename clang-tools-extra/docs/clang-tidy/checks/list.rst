@@ -208,7 +208,7 @@ Clang-Tidy Checks
    `hooks-burden-prereq <hooks-burden-prereq.html>`_,
    `hooks-detail-buf-len <hooks-detail-buf-len.html>`_,
    `hooks-detail-prereq <hooks-detail-prereq.html>`_,
-   `hooks-emit-buf-len <hooks-emit-buf-len.html>`_, "Yes"
+   `hooks-emit-buf-len <hooks-emit-buf-len.html>`_,
    `hooks-emit-prereq <hooks-emit-prereq.html>`_,
    `hooks-entry-point-recursion <hooks-entry-point-recursion.html>`_,
    `hooks-entry-points-neg <hooks-entry-points-neg.html>`_,
@@ -217,6 +217,7 @@ Clang-Tidy Checks
    `hooks-field-add-buf-len <hooks-field-add-buf-len.html>`_,
    `hooks-field-buf-len <hooks-field-buf-len.html>`_,
    `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,
+   `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,

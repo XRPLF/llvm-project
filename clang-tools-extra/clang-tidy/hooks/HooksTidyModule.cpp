@@ -25,6 +25,7 @@
 #include "FieldAddBufLenCheck.h"
 #include "FieldBufLenCheck.h"
 #include "FieldDelBufLenCheck.h"
+#include "FloatPureCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
 #include "GuardInWhileCheck.h"
@@ -75,6 +76,8 @@ public:
         "hooks-field-buf-len");
     CheckFactories.registerCheck<FieldDelBufLenCheck>(
         "hooks-field-del-buf-len");
+    CheckFactories.registerCheck<FloatPureCheck>(
+        "hooks-float-pure");
     CheckFactories.registerCheck<GuardCalledCheck>(
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(

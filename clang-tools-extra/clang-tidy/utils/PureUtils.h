@@ -18,11 +18,13 @@ namespace tidy {
 namespace utils {
 namespace pure {
 
-SourceLocation condSkipDeclaration(SourceLocation Loc, const ASTContext &Context);
+SourceLocation condSkipDeclaration(SourceLocation Loc, const ASTContext &Context, const char *TraceMethod="trace");
 
-SourceLocation condSkipStatement(SourceLocation Loc, const ASTContext &Context);
+SourceLocation condSkipStatement(SourceLocation Loc, const ASTContext &Context, const char *TraceMethod="trace");
 
 std::string makeTraceFix(llvm::StringRef BufferName, int HexFlag);
+
+std::string makeTraceFloatFix(llvm::StringRef BufferName);
 
 } // namespace pure
 } // namespace utils

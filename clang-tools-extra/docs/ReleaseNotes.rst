@@ -179,6 +179,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-float-pure
+  <clang-tidy/checks/hooks-float-pure>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-guard-called
   <clang-tidy/checks/hooks-guard-called>` check.
 
