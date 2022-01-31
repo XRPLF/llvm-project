@@ -25,6 +25,7 @@
 #include "FieldAddBufLenCheck.h"
 #include "FieldBufLenCheck.h"
 #include "FieldDelBufLenCheck.h"
+#include "FloatArithPureCheck.h"
 #include "FloatOnePureCheck.h"
 #include "FloatPureCheck.h"
 #include "GuardCalledCheck.h"
@@ -77,6 +78,8 @@ public:
         "hooks-field-buf-len");
     CheckFactories.registerCheck<FieldDelBufLenCheck>(
         "hooks-field-del-buf-len");
+    CheckFactories.registerCheck<FloatArithPureCheck>(
+        "hooks-float-arith-pure");
     CheckFactories.registerCheck<FloatOnePureCheck>(
         "hooks-float-one-pure");
     CheckFactories.registerCheck<FloatPureCheck>(

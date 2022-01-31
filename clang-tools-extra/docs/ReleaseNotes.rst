@@ -179,6 +179,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-float-arith-pure
+  <clang-tidy/checks/hooks-float-arith-pure>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-float-one-pure
   <clang-tidy/checks/hooks-float-one-pure>` check.
 
