@@ -217,6 +217,7 @@ Clang-Tidy Checks
    `hooks-field-add-buf-len <hooks-field-add-buf-len.html>`_,
    `hooks-field-buf-len <hooks-field-buf-len.html>`_,
    `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,
+   `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"

@@ -20,6 +20,7 @@ add_clang_library(clangTidyHooksModule
   FieldAddBufLenCheck.cpp
   FieldBufLenCheck.cpp
   FieldDelBufLenCheck.cpp
+  FloatOnePureCheck.cpp
   FloatPureCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
