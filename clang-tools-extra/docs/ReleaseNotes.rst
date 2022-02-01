@@ -184,6 +184,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-float-compare-pure
+  <clang-tidy/checks/hooks-float-compare-pure>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-float-one-pure
   <clang-tidy/checks/hooks-float-one-pure>` check.
 
