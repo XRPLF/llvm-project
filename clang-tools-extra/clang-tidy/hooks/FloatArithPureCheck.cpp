@@ -27,7 +27,7 @@ void FloatArithPureCheck::registerCall(MatchFinder *Finder, T CallExpr) {
   Finder->addMatcher(declStmt(has(varDecl(has(CallExpr)).bind("variable"))).bind("declarationStatement"), this);
   Finder->addMatcher(binaryOperator(hasOperatorName("="), hasLHS(declRefExpr().bind("reference")), hasRHS(CallExpr)).bind("assignmentExpression"), this);
   // nested calls get warning w/o fix
-  Finder->addMatcher(callExpr(has(CallExpr)).bind("variable"), this);
+  Finder->addMatcher(callExpr(has(CallExpr)), this);
 }
 
 void FloatArithPureCheck::registerMatchers(MatchFinder *Finder) {
