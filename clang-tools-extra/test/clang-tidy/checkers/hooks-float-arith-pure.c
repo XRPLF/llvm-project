@@ -20,8 +20,6 @@ extern int64_t float_exponent(int64_t float1);
 
 extern int64_t float_sign(int64_t float1);
 
-extern int64_t float_int(int64_t float1, uint32_t decimal_places, uint32_t abs);
-
 #define LIQ_COLLATERALIZATION_NUMERATOR 5
 #define LIQ_COLLATERALIZATION_DENOMINATOR 6
 
