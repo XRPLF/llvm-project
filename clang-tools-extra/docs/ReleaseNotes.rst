@@ -189,6 +189,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-float-manip-pure
+  <clang-tidy/checks/hooks-float-manip-pure>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-float-one-pure
   <clang-tidy/checks/hooks-float-one-pure>` check.
 
