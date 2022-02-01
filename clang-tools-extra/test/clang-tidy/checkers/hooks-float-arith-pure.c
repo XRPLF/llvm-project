@@ -58,6 +58,7 @@ int64_t hook(int64_t reserved)
 
     int64_t one = float_invert(0x54838d7ea4c68000ll);
 // CHECK-MESSAGES: :[[@LINE-1]]:19: warning: output of float_invert can be precomputed [hooks-float-arith-pure]
+// CHECK-FIXES: trace_num((uint32_t)"one", sizeof("one"), (int64_t)one);
 
     int64_t exponent = float_exponent(0x54838d7ea4c68000ll);
 // CHECK-MESSAGES: :[[@LINE-1]]:24: warning: output of float_exponent can be precomputed [hooks-float-arith-pure]
