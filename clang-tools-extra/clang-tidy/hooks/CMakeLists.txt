@@ -22,6 +22,7 @@ add_clang_library(clangTidyHooksModule
   FieldDelBufLenCheck.cpp
   FloatArithPureCheck.cpp
   FloatComparePureCheck.cpp
+  FloatIntPureCheck.cpp
   FloatManipPureCheck.cpp
   FloatOnePureCheck.cpp
   FloatPureCheck.cpp

@@ -27,6 +27,7 @@
 #include "FieldDelBufLenCheck.h"
 #include "FloatArithPureCheck.h"
 #include "FloatComparePureCheck.h"
+#include "FloatIntPureCheck.h"
 #include "FloatManipPureCheck.h"
 #include "FloatOnePureCheck.h"
 #include "FloatPureCheck.h"
@@ -84,6 +85,8 @@ public:
         "hooks-float-arith-pure");
     CheckFactories.registerCheck<FloatComparePureCheck>(
         "hooks-float-compare-pure");
+    CheckFactories.registerCheck<FloatIntPureCheck>(
+        "hooks-float-int-pure");
     CheckFactories.registerCheck<FloatManipPureCheck>(
         "hooks-float-manip-pure");
     CheckFactories.registerCheck<FloatOnePureCheck>(

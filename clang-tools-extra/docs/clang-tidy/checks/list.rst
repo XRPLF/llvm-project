@@ -219,6 +219,7 @@ Clang-Tidy Checks
    `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,
    `hooks-float-arith-pure <hooks-float-arith-pure.html>`_, "Yes"
    `hooks-float-compare-pure <hooks-float-compare-pure.html>`_,
+   `hooks-float-int-pure <hooks-float-int-pure.html>`_, "Yes"
    `hooks-float-manip-pure <hooks-float-manip-pure.html>`_, "Yes"
    `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
