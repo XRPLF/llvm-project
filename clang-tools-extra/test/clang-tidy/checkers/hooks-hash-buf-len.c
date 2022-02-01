@@ -21,8 +21,11 @@ int64_t hook(int64_t reserved)
         rollback(SBUF("Notary: Could not compute sha512 over the submitted txn."), 5);
 // CHECK-MESSAGES: :[[@LINE-2]]:25: warning: output buffer of util_sha512h needs 32 bytes for the hash [hooks-hash-buf-len]
 
-    // an error but too complicated for this check
-    util_sha512h(hash, 32, digest, 96);
+    // an error, but too complicated for this check
+    hook_hash(hash, 32);
+
+    hook_hash(hash, 3);
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: output buffer of hook_hash needs 32 bytes for the hash [hooks-hash-buf-len]
 
     return reserved;
 }

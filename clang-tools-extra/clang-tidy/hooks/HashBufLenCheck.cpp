@@ -19,7 +19,7 @@ namespace hooks {
 
 void HashBufLenCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
-    callExpr(callee(functionDecl(hasName("util_sha512h"))),
+    callExpr(callee(functionDecl(hasAnyName("hook_hash", "util_sha512h")).bind("declaration")),
 	     hasArgument(1, expr().bind("outputSize")));
 
   Finder->addMatcher(CallExpr, this);
@@ -32,7 +32,10 @@ void HashBufLenCheck::check(const MatchFinder::MatchResult &Result) {
   Optional<llvm::APSInt> OutputSizeValue = OutputSize->getIntegerConstantExpr(*(Result.Context));
 
   if (OutputSizeValue && (*OutputSizeValue < HASH_SIZE)) {
-    diag(OutputSize->getBeginLoc(), "output buffer of util_sha512h needs %0 bytes for the hash") << HASH_SIZE;
+    const FunctionDecl *Matched = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
+    std::string FunctionName = Matched->getDeclName().getAsString();
+    diag(OutputSize->getBeginLoc(), "output buffer of %0 needs %1 bytes for the hash") <<
+      FunctionName << HASH_SIZE;
   }
 }
 

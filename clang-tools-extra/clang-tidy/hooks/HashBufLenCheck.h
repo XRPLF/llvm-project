@@ -15,7 +15,7 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-/// Function util_sha512h has fixed-size hash output.
+/// Functions util_sha512h and hook_hash have fixed-size hash output.
 class HashBufLenCheck : public ClangTidyCheck {
 public:
   HashBufLenCheck(StringRef Name, ClangTidyContext *Context)
