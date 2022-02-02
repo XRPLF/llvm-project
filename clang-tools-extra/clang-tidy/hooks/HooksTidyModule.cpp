@@ -40,6 +40,7 @@
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
 #include "SlotHashBufLenCheck.h"
+#include "SlotKeyletBufLenCheck.h"
 #include "SlotLimitCheck.h"
 #include "ValidateBufLenCheck.h"
 #include "VerifyBufLenCheck.h"
@@ -113,6 +114,8 @@ public:
         "hooks-reserve-limit");
     CheckFactories.registerCheck<SlotHashBufLenCheck>(
         "hooks-slot-hash-buf-len");
+    CheckFactories.registerCheck<SlotKeyletBufLenCheck>(
+        "hooks-slot-keylet-buf-len");
     CheckFactories.registerCheck<SlotLimitCheck>(
         "hooks-slot-limit");
     CheckFactories.registerCheck<ValidateBufLenCheck>(
