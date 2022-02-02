@@ -264,6 +264,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-slot-sub-limit
+  <clang-tidy/checks/hooks-slot-sub-limit>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-validate-buf-len
   <clang-tidy/checks/hooks-validate-buf-len>` check.
 

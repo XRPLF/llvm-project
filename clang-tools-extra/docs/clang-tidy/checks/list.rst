@@ -232,8 +232,9 @@ Clang-Tidy Checks
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
    `hooks-slot-hash-buf-len <hooks-slot-hash-buf-len.html>`_,
-   `hooks-slot-keylet-buf-len <hooks-slot-keylet-buf-len.html>`_, "Yes"
+   `hooks-slot-keylet-buf-len <hooks-slot-keylet-buf-len.html>`_,
    `hooks-slot-limit <hooks-slot-limit.html>`_,
+   `hooks-slot-sub-limit <hooks-slot-sub-limit.html>`_, "Yes"
    `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
