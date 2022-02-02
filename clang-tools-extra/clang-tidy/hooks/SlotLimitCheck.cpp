@@ -19,10 +19,15 @@ namespace hooks {
 
 void SlotLimitCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
-    callExpr(callee(functionDecl(hasName("slot"))),
+    callExpr(callee(functionDecl(hasName("slot")).bind("declaration")),
 	     hasArgument(2, expr().bind("argument")));
 
+  const auto CallExpr2 =
+    callExpr(callee(functionDecl(hasAnyName("slot_clear", "slot_count")).bind("declaration")),
+	     hasArgument(0, expr().bind("argument")));
+
   Finder->addMatcher(CallExpr, this);
+  Finder->addMatcher(CallExpr2, this);
 }
 
 void SlotLimitCheck::check(const MatchFinder::MatchResult &Result) {
@@ -34,7 +39,10 @@ void SlotLimitCheck::check(const MatchFinder::MatchResult &Result) {
   if (ArgumentValue) {
     llvm::APSInt LimitedValue = *ArgumentValue;
     if ((LimitedValue < 0) || (LimitedValue > MAX_SLOT_NO)) {
-      diag(Argument->getBeginLoc(), "function slot may not access more than %0 slots") << MAX_SLOT_NO;
+      const FunctionDecl *Matched = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
+      std::string FunctionName = Matched->getDeclName().getAsString();
+      diag(Argument->getBeginLoc(), "function %0 may not access more than %1 slots") <<
+	FunctionName << MAX_SLOT_NO;
     }
   }
 }

@@ -4,6 +4,10 @@
 
 extern int64_t slot(uint32_t write_ptr, uint32_t write_len, uint32_t slot);
 
+extern int64_t slot_clear(uint32_t slot);
+
+extern int64_t slot_count(uint32_t slot);
+
 #define SBUF(str) (uint32_t)(str), sizeof(str)
 
 int64_t hook(int64_t reserved)
@@ -13,6 +17,11 @@ int64_t hook(int64_t reserved)
 
     result = slot(SBUF(buf), -1);
 // CHECK-MESSAGES: :[[@LINE-1]]:30: warning: function slot may not access more than 255 slots [hooks-slot-limit]
+
+    slot_clear(1000);
+// CHECK-MESSAGES: :[[@LINE-1]]:16: warning: function slot_clear may not access more than 255 slots [hooks-slot-limit]
+
+    slot_count(1);
 
     return reserved;
 }
