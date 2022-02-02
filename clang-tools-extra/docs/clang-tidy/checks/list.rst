@@ -219,7 +219,7 @@ Clang-Tidy Checks
    `hooks-field-del-buf-len <hooks-field-del-buf-len.html>`_,
    `hooks-float-arith-pure <hooks-float-arith-pure.html>`_, "Yes"
    `hooks-float-compare-pure <hooks-float-compare-pure.html>`_,
-   `hooks-float-int-pure <hooks-float-int-pure.html>`_, "Yes"
+   `hooks-float-int-pure <hooks-float-int-pure.html>`_,
    `hooks-float-manip-pure <hooks-float-manip-pure.html>`_, "Yes"
    `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
@@ -231,6 +231,7 @@ Clang-Tidy Checks
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
+   `hooks-slot-limit <hooks-slot-limit.html>`_, "Yes"
    `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,

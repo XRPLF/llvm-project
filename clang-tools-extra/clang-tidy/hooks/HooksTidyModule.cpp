@@ -39,6 +39,7 @@
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
+#include "SlotLimitCheck.h"
 #include "ValidateBufLenCheck.h"
 #include "VerifyBufLenCheck.h"
 
@@ -109,6 +110,8 @@ public:
         "hooks-raddr-conv-pure");
     CheckFactories.registerCheck<ReserveLimitCheck>(
         "hooks-reserve-limit");
+    CheckFactories.registerCheck<SlotLimitCheck>(
+        "hooks-slot-limit");
     CheckFactories.registerCheck<ValidateBufLenCheck>(
         "hooks-validate-buf-len");
     CheckFactories.registerCheck<VerifyBufLenCheck>(
