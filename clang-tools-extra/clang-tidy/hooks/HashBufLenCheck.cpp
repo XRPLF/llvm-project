@@ -19,7 +19,7 @@ namespace hooks {
 
 void HashBufLenCheck::registerMatchers(MatchFinder *Finder) {
   const auto CallExpr =
-    callExpr(callee(functionDecl(hasAnyName("hook_hash", "util_sha512h")).bind("declaration")),
+    callExpr(callee(functionDecl(hasAnyName("hook_hash", "ledger_last_hash", "nonce", "util_sha512h")).bind("declaration")),
 	     hasArgument(1, expr().bind("outputSize")));
 
   Finder->addMatcher(CallExpr, this);

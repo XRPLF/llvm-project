@@ -27,5 +27,10 @@ int64_t hook(int64_t reserved)
     hook_hash(hash, 3);
 // CHECK-MESSAGES: :[[@LINE-1]]:21: warning: output buffer of hook_hash needs 32 bytes for the hash [hooks-hash-buf-len]
 
+    ledger_last_hash(SBUF(hash));
+// CHECK-MESSAGES: :[[@LINE-1]]:22: warning: output buffer of ledger_last_hash needs 32 bytes for the hash [hooks-hash-buf-len]
+
+    nonce(SBUF(digest));
+
     return reserved;
 }
