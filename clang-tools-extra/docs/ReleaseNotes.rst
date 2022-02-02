@@ -249,6 +249,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-slot-hash-buf-len
+  <clang-tidy/checks/hooks-slot-hash-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-slot-limit
   <clang-tidy/checks/hooks-slot-limit>` check.
 
