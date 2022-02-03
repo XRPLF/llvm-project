@@ -44,6 +44,7 @@
 #include "SlotLimitCheck.h"
 #include "SlotSubLimitCheck.h"
 #include "SlotTypeLimitCheck.h"
+#include "StateBufLenCheck.h"
 #include "ValidateBufLenCheck.h"
 #include "VerifyBufLenCheck.h"
 
@@ -124,6 +125,8 @@ public:
         "hooks-slot-sub-limit");
     CheckFactories.registerCheck<SlotTypeLimitCheck>(
         "hooks-slot-type-limit");
+    CheckFactories.registerCheck<StateBufLenCheck>(
+        "hooks-state-buf-len");
     CheckFactories.registerCheck<ValidateBufLenCheck>(
         "hooks-validate-buf-len");
     CheckFactories.registerCheck<VerifyBufLenCheck>(
