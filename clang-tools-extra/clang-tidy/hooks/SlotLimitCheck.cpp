@@ -38,7 +38,8 @@ void SlotLimitCheck::check(const MatchFinder::MatchResult &Result) {
   Optional<llvm::APSInt> ArgumentValue = Argument->getIntegerConstantExpr(Context);
   if (ArgumentValue) {
     llvm::APSInt LimitedValue = *ArgumentValue;
-    if ((LimitedValue < 0) || (LimitedValue > MAX_SLOT_NO)) {
+    // none of the matched functions allows 0
+    if ((LimitedValue < 1) || (LimitedValue > MAX_SLOT_NO)) {
       const FunctionDecl *Matched = Result.Nodes.getNodeAs<FunctionDecl>("declaration");
       std::string FunctionName = Matched->getDeclName().getAsString();
       diag(Argument->getBeginLoc(), "function %0 may not access more than %1 slots") <<

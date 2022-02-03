@@ -25,7 +25,7 @@ int64_t hook(int64_t reserved)
 
     slot_count(1);
 
-    slot_size(2 * 255);
+    slot_size(0);
 // CHECK-MESSAGES: :[[@LINE-1]]:15: warning: function slot_size may not access more than 255 slots [hooks-slot-limit]
 
     return reserved;

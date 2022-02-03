@@ -41,7 +41,8 @@ void SlotHashBufLenCheck::check(const MatchFinder::MatchResult &Result) {
 
   if (SlotValue) {
     llvm::APSInt LimitedValue = *SlotValue;
-    if ((LimitedValue < 0) || (LimitedValue > MAX_SLOT_NO)) {
+    // 0 not allowed
+    if ((LimitedValue < 1) || (LimitedValue > MAX_SLOT_NO)) {
       diag(Slot->getBeginLoc(), "function slot_id may not access more than %0 slots") << MAX_SLOT_NO;
     }
   }

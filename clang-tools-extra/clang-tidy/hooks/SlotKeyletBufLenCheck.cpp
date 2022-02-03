@@ -44,6 +44,7 @@ void SlotKeyletBufLenCheck::check(const MatchFinder::MatchResult &Result) {
 
   if (SlotValue) {
     llvm::APSInt LimitedValue = *SlotValue;
+    // 0 means allocate new slot
     if ((LimitedValue < 0) || (LimitedValue > MAX_SLOT_NO)) {
       diag(Slot->getBeginLoc(), "function slot_set may not access more than %0 slots") << MAX_SLOT_NO;
     }
