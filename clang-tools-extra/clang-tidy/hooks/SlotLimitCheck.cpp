@@ -23,7 +23,7 @@ void SlotLimitCheck::registerMatchers(MatchFinder *Finder) {
 	     hasArgument(2, expr().bind("argument")));
 
   const auto CallExpr2 =
-    callExpr(callee(functionDecl(hasAnyName("slot_clear", "slot_count", "slot_size")).bind("declaration")),
+    callExpr(callee(functionDecl(hasAnyName("slot_clear", "slot_count", "slot_float", "slot_size")).bind("declaration")),
 	     hasArgument(0, expr().bind("argument")));
 
   Finder->addMatcher(CallExpr, this);

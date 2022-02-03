@@ -15,9 +15,9 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-/// Hook APIs slot, slot_clear, slot_count and slot_size take a
-/// parameter specifying the accessed slot number. Value of this
-/// parameter is limited, and the functions fail if the limit is
+/// Hook APIs slot, slot_clear, slot_count, slot_size and slot_float
+/// take a parameter specifying the accessed slot number. Value of
+/// this parameter is limited, and the functions fail if the limit is
 /// exceeded.
 class SlotLimitCheck : public ClangTidyCheck {
 public:
