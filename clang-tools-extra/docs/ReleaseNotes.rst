@@ -284,6 +284,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-transaction-slot-limit
+  <clang-tidy/checks/hooks-transaction-slot-limit>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-validate-buf-len
   <clang-tidy/checks/hooks-validate-buf-len>` check.
 
