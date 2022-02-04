@@ -18,15 +18,15 @@ namespace tidy {
 namespace hooks {
 
 void SlotLimitCheck::registerMatchers(MatchFinder *Finder) {
-  const auto CallExpr =
-    callExpr(callee(functionDecl(hasName("slot")).bind("declaration")),
-	     hasArgument(2, expr().bind("argument")));
-
-  const auto CallExpr2 =
+  const auto CallExpr0 =
     callExpr(callee(functionDecl(hasAnyName("slot_clear", "slot_count", "slot_float", "slot_size")).bind("declaration")),
 	     hasArgument(0, expr().bind("argument")));
 
-  Finder->addMatcher(CallExpr, this);
+  const auto CallExpr2 =
+    callExpr(callee(functionDecl(hasAnyName("slot", "trace_slot")).bind("declaration")),
+	     hasArgument(2, expr().bind("argument")));
+
+  Finder->addMatcher(CallExpr0, this);
   Finder->addMatcher(CallExpr2, this);
 }
 

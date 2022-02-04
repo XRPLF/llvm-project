@@ -15,10 +15,10 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-/// Hook APIs slot, slot_clear, slot_count, slot_size and slot_float
-/// take a parameter specifying the accessed slot number. Value of
-/// this parameter is limited, and the functions fail if the limit is
-/// exceeded.
+/// Hook APIs slot, slot_clear, slot_count, slot_size, slot_float and
+/// trace_slot take a parameter specifying the accessed slot
+/// number. Value of this parameter is limited, and the functions fail
+/// if the limit is exceeded.
 class SlotLimitCheck : public ClangTidyCheck {
 public:
   SlotLimitCheck(StringRef Name, ClangTidyContext *Context)
