@@ -236,7 +236,8 @@ Clang-Tidy Checks
    `hooks-slot-limit <hooks-slot-limit.html>`_,
    `hooks-slot-sub-limit <hooks-slot-sub-limit.html>`_,
    `hooks-slot-type-limit <hooks-slot-type-limit.html>`_,
-   `hooks-state-buf-len <hooks-state-buf-len.html>`_, "Yes"
+   `hooks-state-buf-len <hooks-state-buf-len.html>`_,
+   `hooks-transaction-hash-buf-len <hooks-transaction-hash-buf-len.html>`_, "Yes"
    `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,

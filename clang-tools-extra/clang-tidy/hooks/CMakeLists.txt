@@ -41,6 +41,7 @@ add_clang_library(clangTidyHooksModule
   SlotSubLimitCheck.cpp
   SlotTypeLimitCheck.cpp
   StateBufLenCheck.cpp
+  TransactionHashBufLenCheck.cpp
   ValidateBufLenCheck.cpp
   VerifyBufLenCheck.cpp
 
