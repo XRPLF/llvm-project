@@ -2212,7 +2212,7 @@ static bool containsIncludeDelimiter(llvm::StringRef Content) {
   return false;
 }
 
-static bool mayBeRelativePath(llvm::StringRef Content) {
+bool mayBeRelativePath(llvm::StringRef Content) {
   // searching for ".." is simpler, but doesn't match ".\."...
   int DotCount = 0;
   for (auto i = Content.begin(); i != Content.end(); ++i)

@@ -66,6 +66,7 @@ public:
     Dict.handle("Diagnostics", [&](Node &N) { parse(F.Diagnostics, N); });
     Dict.handle("Completion", [&](Node &N) { parse(F.Completion, N); });
     Dict.handle("Hover", [&](Node &N) { parse(F.Hover, N); });
+    Dict.handle("Security", [&](Node &N) { parse(F.Security, N); });
     Dict.parse(N);
     return !(N.failed() || HadError);
   }
@@ -217,6 +218,16 @@ private:
           F.ShowAKA = *ShowAKA;
         else
           warning("ShowAKA should be a boolean", N);
+      }
+    });
+    Dict.parse(N);
+  }
+
+  void parse(Fragment::SecurityBlock &F, Node &N) {
+    DictParser Dict("Security", this);
+    Dict.handle("AccessibleDirectories", [&](Node &N) {
+      if (auto Values = scalarValues(N)) {
+        F.AccessibleDirectories = std::move(*Values);
       }
     });
     Dict.parse(N);

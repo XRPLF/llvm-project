@@ -122,6 +122,11 @@ struct Config {
     /// Whether hover show a.k.a type.
     bool ShowAKA = false;
   } Hover;
+
+  /// Additions for remote clangd.
+  struct {
+    std::vector<std::string> AccessibleDirectories;
+  } Security;
 };
 
 } // namespace clangd

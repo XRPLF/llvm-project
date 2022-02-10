@@ -710,7 +710,7 @@ void StoreDiags::HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
     D.InsideMainFile = InsideMainFile;
     D.Range = diagnosticRange(Info, *LangOpts);
     D.File = std::string(SM.getFilename(Info.getLocation()));
-    D.AbsFile = getCanonicalPath(
+    D.AbsFile = getRealCanonicalPath(
         SM.getFileEntryForID(SM.getFileID(Info.getLocation())), SM);
     D.ID = Info.getID();
     return D;
@@ -877,9 +877,17 @@ void StoreDiags::flushLastDiag() {
   Output.push_back(std::move(*LastDiag));
 }
 
-bool isBuiltinDiagnosticSuppressed(unsigned ID,
+bool isBuiltinDiagnosticSuppressed(const clang::Diagnostic &Info,
                                    const llvm::StringSet<> &Suppress) {
+  unsigned ID = Info.getID();
   if (const char *CodePtr = getDiagnosticCode(ID)) {
+    llvm::StringRef CodeRef(CodePtr);
+    if (CodeRef == "err_pp_file_not_found") {
+      const std::string &FileName = Info.getArgStdStr(0);
+      if (llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName))
+	return true;
+    }
+
     if (Suppress.contains(normalizeSuppressedCode(CodePtr)))
       return true;
   }

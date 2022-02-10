@@ -205,7 +205,7 @@ public:
   const std::string &toURI(const FileEntry *FE) {
     auto R = CacheFEToURI.try_emplace(FE);
     if (R.second) {
-      auto CanonPath = getCanonicalPath(FE, SM);
+      auto CanonPath = getRealCanonicalPath(FE, SM);
       R.first->second = &toURIInternal(CanonPath ? *CanonPath : FE->getName());
     }
     return *R.first->second;

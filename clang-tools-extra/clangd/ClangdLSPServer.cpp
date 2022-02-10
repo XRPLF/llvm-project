@@ -1541,7 +1541,14 @@ std::vector<Fix> ClangdLSPServer::getFixes(llvm::StringRef File,
 // of simplicity here.
 bool ClangdLSPServer::shouldRunCompletion(
     const CompletionParams &Params) const {
-  auto Code = Server->getDraft(Params.textDocument.uri.file());
+  llvm::StringRef FileName = Params.textDocument.uri.file();
+
+  // disabling completion in files w/ multiple (even non-consecutive)
+  // dots in their name - is that a problem?
+  if (mayBeRelativePath(FileName))
+    return false;
+
+  auto Code = Server->getDraft(FileName);
   if (!Code)
     return true; // completion code will log the error for untracked doc.
   auto Offset = positionToOffset(*Code, Params.position,

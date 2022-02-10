@@ -197,6 +197,7 @@ struct FragmentCompiler {
     compile(std::move(F.Diagnostics));
     compile(std::move(F.Completion));
     compile(std::move(F.Hover));
+    compile(std::move(F.Security));
   }
 
   void compile(Fragment::IfBlock &&F) {
@@ -523,6 +524,31 @@ struct FragmentCompiler {
       Out.Apply.push_back([ShowAKA(**F.ShowAKA)](const Params &, Config &C) {
         C.Hover.ShowAKA = ShowAKA;
       });
+    }
+  }
+
+  void compile(Fragment::SecurityBlock &&F) {
+    if (!F.AccessibleDirectories.empty()) {
+      std::vector<std::string> AccessibleDirectories;
+      for (auto &Raw : F.AccessibleDirectories) {
+	std::string Dir(*Raw);
+	if (!Dir.empty()) {
+	  if (Dir[Dir.length() - 1] != '/')
+	    Dir += '/';
+
+	  AccessibleDirectories.push_back(Dir);
+	}
+      }
+
+      if (!AccessibleDirectories.empty()) {
+	Out.Apply.push_back([AccessibleDirectories(
+				std::move(AccessibleDirectories))](
+				const Params &, Config &C) {
+	  C.Security.AccessibleDirectories.insert(
+	      C.Security.AccessibleDirectories.begin(),
+	      AccessibleDirectories.begin(), AccessibleDirectories.end());
+	});
+      }
     }
   }
 

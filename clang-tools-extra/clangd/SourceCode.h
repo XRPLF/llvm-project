@@ -162,6 +162,15 @@ TextEdit toTextEdit(const FixItHint &FixIt, const SourceManager &M,
 /// This function should be used when paths needs to be used outside the
 /// component that generate it, so that paths are normalized as much as
 /// possible.
+llvm::Optional<std::string> getRealCanonicalPath(const FileEntry *F,
+                                                 const SourceManager &SourceMgr);
+
+/// Checks whether FilePath is in an authorized directory (if the
+/// current configuration has a list of authorized directories).
+bool isAuthorizedAbsolutePath(llvm::StringRef FilePath);
+
+/// Like getRealCanonicalPath, but returns None for files with paths
+/// for which isAuthorizedAbsolutePath returns false.
 llvm::Optional<std::string> getCanonicalPath(const FileEntry *F,
                                              const SourceManager &SourceMgr);
 

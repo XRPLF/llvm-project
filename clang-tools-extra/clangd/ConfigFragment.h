@@ -283,6 +283,16 @@ struct Fragment {
     llvm::Optional<Located<bool>> ShowAKA;
   };
   HoverBlock Hover;
+
+  // Settings for running clangd remotely, as a public web service.
+  struct SecurityBlock {
+    // just to make the struct type different from StyleBlock
+    llvm::Optional<Located<bool>> Unused;
+
+    // Source & include directories clangd is allowed to use.
+    std::vector<Located<std::string>> AccessibleDirectories;
+  };
+  SecurityBlock Security;
 };
 
 } // namespace config

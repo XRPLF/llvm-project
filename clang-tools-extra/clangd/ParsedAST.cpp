@@ -414,6 +414,7 @@ ParsedAST::build(llvm::StringRef Filename, const ParseInputs &Inputs,
   llvm::Optional<IncludeFixer> FixIncludes;
   // No need to run clang-tidy or IncludeFixerif we are not going to surface
   // diagnostics.
+  bool Unauthorized = false;
   if (PreserveDiags) {
     trace::Span Tracer("ClangTidyInit");
     tidy::ClangTidyCheckFactories CTFactories;
@@ -435,10 +436,13 @@ ParsedAST::build(llvm::StringRef Filename, const ParseInputs &Inputs,
     }
 
     const Config &Cfg = Config::current();
+    const SourceManager &SrcMan = Clang->getSourceManager();
+    const FileEntry *MainFileEntry = SrcMan.getFileEntryForID(SrcMan.getMainFileID());
+    Unauthorized = MainFileEntry && !getCanonicalPath(MainFileEntry, SrcMan);
     ASTDiags.setLevelAdjuster([&](DiagnosticsEngine::Level DiagLevel,
                                   const clang::Diagnostic &Info) {
-      if (Cfg.Diagnostics.SuppressAll ||
-          isBuiltinDiagnosticSuppressed(Info.getID(), Cfg.Diagnostics.Suppress))
+      if (Unauthorized || Cfg.Diagnostics.SuppressAll ||
+          isBuiltinDiagnosticSuppressed(Info, Cfg.Diagnostics.Suppress))
         return DiagnosticsEngine::Ignored;
       if (!CTChecks.empty()) {
         std::string CheckName = CTContext->getCheckName(Info.getID());
@@ -587,6 +591,8 @@ ParsedAST::build(llvm::StringRef Filename, const ParseInputs &Inputs,
       Diags->insert(Diags->end(), D.begin(), D.end());
     }
   }
+  if (Unauthorized)
+    Diags->clear();
   ParsedAST Result(Inputs.Version, std::move(Preamble), std::move(Clang),
                    std::move(Action), std::move(Tokens), std::move(Macros),
                    std::move(Marks), std::move(ParsedDecls), std::move(Diags),

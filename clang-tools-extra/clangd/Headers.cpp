@@ -43,6 +43,9 @@ public:
                           llvm::StringRef /*RelativePath*/,
                           const clang::Module * /*Imported*/,
                           SrcMgr::CharacteristicKind FileKind) override {
+    if (llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName))
+      return;
+
     auto MainFID = SM.getMainFileID();
     // If an include is part of the preamble patch, translate #line directives.
     if (InBuiltinFile)

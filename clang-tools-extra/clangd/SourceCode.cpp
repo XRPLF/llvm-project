@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 #include "SourceCode.h"
 
+#include "Config.h"
 #include "FuzzyMatch.h"
 #include "Preamble.h"
 #include "Protocol.h"
@@ -511,8 +512,8 @@ std::vector<TextEdit> replacementsToEdits(llvm::StringRef Code,
   return Edits;
 }
 
-llvm::Optional<std::string> getCanonicalPath(const FileEntry *F,
-                                             const SourceManager &SourceMgr) {
+llvm::Optional<std::string> getRealCanonicalPath(const FileEntry *F,
+						 const SourceManager &SourceMgr) {
   if (!F)
     return None;
 
@@ -548,6 +549,30 @@ llvm::Optional<std::string> getCanonicalPath(const FileEntry *F,
   }
 
   return FilePath.str().str();
+}
+
+bool isAuthorizedAbsolutePath(llvm::StringRef FilePath) {
+  const Config &Cfg = Config::current();
+  if (Cfg.Security.AccessibleDirectories.empty()) {
+    elog("AccessibleDirectories not configured");
+    return true;
+  } else {
+    for (auto &Dir : Cfg.Security.AccessibleDirectories) {
+      if (FilePath.startswith(Dir))
+	return true;
+    }
+
+    return false;
+  }
+}
+
+llvm::Optional<std::string> getCanonicalPath(const FileEntry *F,
+					     const SourceManager &SourceMgr) {
+  llvm::Optional<std::string> R = getRealCanonicalPath(F, SourceMgr);
+  if (!R || !isAuthorizedAbsolutePath(*R))
+    return None;
+
+  return R;
 }
 
 TextEdit toTextEdit(const FixItHint &FixIt, const SourceManager &M,
