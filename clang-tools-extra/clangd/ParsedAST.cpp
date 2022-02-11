@@ -591,8 +591,18 @@ ParsedAST::build(llvm::StringRef Filename, const ParseInputs &Inputs,
       Diags->insert(Diags->end(), D.begin(), D.end());
     }
   }
-  if (Unauthorized)
+  if (Unauthorized) {
     Diags->clear();
+  } else {
+    auto iter = Diags->begin();
+    while (iter != Diags->end()) {
+      if (iter->AbsFile && !isAuthorizedAbsolutePath(*(iter->AbsFile))) {
+	iter = Diags->erase(iter);
+      } else {
+	++iter;
+      }
+    }
+  }
   ParsedAST Result(Inputs.Version, std::move(Preamble), std::move(Clang),
                    std::move(Action), std::move(Tokens), std::move(Macros),
                    std::move(Marks), std::move(ParsedDecls), std::move(Diags),
