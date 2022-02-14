@@ -162,7 +162,6 @@ template<class T>
 #include <__concepts/invocable.h>
 #include <__config>
 #include <__debug>
-#include <__functional_base>
 #include <compare>
 #include <functional>
 #include <initializer_list>
@@ -172,8 +171,13 @@ template<class T>
 #include <utility>
 #include <version>
 
+// TODO: remove these headers
+#include <__memory/allocator_arg_t.h>
+#include <__memory/uses_allocator.h>
+#include <typeinfo>
+
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
+#  pragma GCC system_header
 #endif
 
 namespace std  // purposefully not using versioning namespace
@@ -1167,8 +1171,8 @@ public:
 };
 
 #if _LIBCPP_STD_VER >= 17
-template<class T>
-    optional(T) -> optional<T>;
+template<class _Tp>
+    optional(_Tp) -> optional<_Tp>;
 #endif
 
 // Comparisons between optionals

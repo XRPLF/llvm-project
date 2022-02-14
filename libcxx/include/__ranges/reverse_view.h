@@ -28,12 +28,12 @@
 #include <type_traits>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
+#  pragma GCC system_header
 #endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if !defined(_LIBCPP_HAS_NO_RANGES)
+#if !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 namespace ranges {
   template<view _View>
@@ -43,8 +43,8 @@ namespace ranges {
     // amortized O(1) begin() method.
     static constexpr bool _UseCache = !random_access_range<_View> && !common_range<_View>;
     using _Cache = _If<_UseCache, __non_propagating_cache<reverse_iterator<iterator_t<_View>>>, __empty_cache>;
-    [[no_unique_address]] _Cache __cached_begin_ = _Cache();
-    [[no_unique_address]] _View __base_ = _View();
+    _LIBCPP_NO_UNIQUE_ADDRESS _Cache __cached_begin_ = _Cache();
+    _LIBCPP_NO_UNIQUE_ADDRESS _View __base_ = _View();
 
   public:
     _LIBCPP_HIDE_FROM_ABI
@@ -175,15 +175,15 @@ namespace ranges {
         -> decltype(      reverse_view{_VSTD::forward<_Range>(__range)})
         { return          reverse_view{_VSTD::forward<_Range>(__range)}; }
     };
-  }
+  } // namespace __reverse
 
   inline namespace __cpo {
     inline constexpr auto reverse = __reverse::__fn{};
-  }
+  } // namespace __cpo
   } // namespace views
 } // namespace ranges
 
-#endif // !defined(_LIBCPP_HAS_NO_RANGES)
+#endif // !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 _LIBCPP_END_NAMESPACE_STD
 

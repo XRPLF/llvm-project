@@ -674,6 +674,7 @@ bool SystemZInstrInfo::FoldImmediate(MachineInstr &UseMI, MachineInstr &DefMI,
 bool SystemZInstrInfo::isPredicable(const MachineInstr &MI) const {
   unsigned Opcode = MI.getOpcode();
   if (Opcode == SystemZ::Return ||
+      Opcode == SystemZ::Return_XPLINK ||
       Opcode == SystemZ::Trap ||
       Opcode == SystemZ::CallJG ||
       Opcode == SystemZ::CallBR)
@@ -731,11 +732,13 @@ bool SystemZInstrInfo::PredicateInstruction(
       .addReg(SystemZ::CC, RegState::Implicit);
     return true;
   }
-  if (Opcode == SystemZ::Return) {
-    MI.setDesc(get(SystemZ::CondReturn));
+  if (Opcode == SystemZ::Return || Opcode == SystemZ::Return_XPLINK) {
+    MI.setDesc(get(Opcode == SystemZ::Return ? SystemZ::CondReturn
+                                             : SystemZ::CondReturn_XPLINK));
     MachineInstrBuilder(*MI.getParent()->getParent(), MI)
-      .addImm(CCValid).addImm(CCMask)
-      .addReg(SystemZ::CC, RegState::Implicit);
+        .addImm(CCValid)
+        .addImm(CCMask)
+        .addReg(SystemZ::CC, RegState::Implicit);
     return true;
   }
   if (Opcode == SystemZ::CallJG) {
@@ -1309,7 +1312,7 @@ MachineInstr *SystemZInstrInfo::foldMemoryOperandImpl(
     // allocated regs are in an FP reg-class per previous check above.
     for (const MachineOperand &MO : MIB->operands())
       if (MO.isReg() && Register::isVirtualRegister(MO.getReg())) {
-        unsigned Reg = MO.getReg();
+        Register Reg = MO.getReg();
         if (MRI.getRegClass(Reg) == &SystemZ::VR32BitRegClass)
           MRI.setRegClass(Reg, &SystemZ::FP32BitRegClass);
         else if (MRI.getRegClass(Reg) == &SystemZ::VR64BitRegClass)
@@ -1650,6 +1653,13 @@ unsigned SystemZInstrInfo::getOpcodeForOffset(unsigned Opcode,
       return Opcode;
   }
   return 0;
+}
+
+bool SystemZInstrInfo::hasDisplacementPairInsn(unsigned Opcode) const {
+  const MCInstrDesc &MCID = get(Opcode);
+  if (MCID.TSFlags & SystemZII::Has20BitOffset)
+    return SystemZ::getDisp12Opcode(Opcode) >= 0;
+  return SystemZ::getDisp20Opcode(Opcode) >= 0;
 }
 
 unsigned SystemZInstrInfo::getLoadAndTest(unsigned Opcode) const {

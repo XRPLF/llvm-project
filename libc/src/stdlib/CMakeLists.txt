@@ -230,7 +230,19 @@ if(LLVM_LIBC_INCLUDE_SCUDO)
     DEPENDS
       ${SCUDO_DEPS}
   )
-
+else()
+  add_entrypoint_external(
+    malloc
+  )
+  add_entrypoint_external(
+    calloc
+  )
+  add_entrypoint_external(
+    realloc
+  )
+  add_entrypoint_external(
+    free
+  )
 endif()
 
 if(NOT LLVM_LIBC_FULL_BUILD)
@@ -250,12 +262,7 @@ add_entrypoint_object(
 
 # add_entrypoint_object(
 #   abort
-#   SRCS
-#     abort.cpp
-#   HDRS
-#     abort.h
+#   ALIAS
 #   DEPENDS
-#     libc.include.stdlib
-#     libc.src.signal.raise
-#     ._Exit
+#     .${LIBC_TARGET_OS}.abort
 # )

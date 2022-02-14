@@ -30,8 +30,6 @@
 #include "llvm/IR/Operator.h"
 #include "llvm/IR/PatternMatch.h"
 #include "llvm/Support/ErrorHandling.h"
-#include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/MathExtras.h"
 using namespace llvm;
 using namespace llvm::PatternMatch;
 
@@ -119,21 +117,21 @@ static Constant *FoldBitCast(Constant *V, Type *DestTy) {
     if (PointerType *DPTy = dyn_cast<PointerType>(DestTy))
       if (PTy->getAddressSpace() == DPTy->getAddressSpace() &&
           !PTy->isOpaque() && !DPTy->isOpaque() &&
-          PTy->getElementType()->isSized()) {
+          PTy->getNonOpaquePointerElementType()->isSized()) {
         SmallVector<Value*, 8> IdxList;
         Value *Zero =
           Constant::getNullValue(Type::getInt32Ty(DPTy->getContext()));
         IdxList.push_back(Zero);
-        Type *ElTy = PTy->getElementType();
-        while (ElTy && ElTy != DPTy->getElementType()) {
+        Type *ElTy = PTy->getNonOpaquePointerElementType();
+        while (ElTy && ElTy != DPTy->getNonOpaquePointerElementType()) {
           ElTy = GetElementPtrInst::getTypeAtIndex(ElTy, (uint64_t)0);
           IdxList.push_back(Zero);
         }
 
-        if (ElTy == DPTy->getElementType())
+        if (ElTy == DPTy->getNonOpaquePointerElementType())
           // This GEP is inbounds because all indices are zero.
-          return ConstantExpr::getInBoundsGetElementPtr(PTy->getElementType(),
-                                                        V, IdxList);
+          return ConstantExpr::getInBoundsGetElementPtr(
+              PTy->getNonOpaquePointerElementType(), V, IdxList);
       }
 
   // Handle casts from one vector constant to another.  We know that the src
@@ -1537,16 +1535,11 @@ static ICmpInst::Predicate evaluateICmpRelation(Constant *V1, Constant *V2,
         if (const GlobalValue *GV = dyn_cast<GlobalValue>(CE1Op0)) {
           // If its not weak linkage, the GVal must have a non-zero address
           // so the result is greater-than
-          if (!GV->hasExternalWeakLinkage())
+          if (!GV->hasExternalWeakLinkage() && CE1GEP->isInBounds())
             return ICmpInst::ICMP_UGT;
         }
       } else if (const GlobalValue *GV2 = dyn_cast<GlobalValue>(V2)) {
-        if (isa<ConstantPointerNull>(CE1Op0)) {
-          // If its not weak linkage, the GVal must have a non-zero address
-          // so the result is less-than
-          if (!GV2->hasExternalWeakLinkage())
-            return ICmpInst::ICMP_ULT;
-        } else if (const GlobalValue *GV = dyn_cast<GlobalValue>(CE1Op0)) {
+        if (const GlobalValue *GV = dyn_cast<GlobalValue>(CE1Op0)) {
           if (GV != GV2) {
             if (CE1GEP->hasAllZeroIndices())
               return areGlobalsPotentiallyEqual(GV, GV2);
@@ -1979,31 +1972,13 @@ static Constant *foldGEPOfGEP(GEPOperator *GEP, Type *PointeeTy, bool InBounds,
        I != E; ++I)
     LastI = I;
 
-  // We cannot combine indices if doing so would take us outside of an
-  // array or vector.  Doing otherwise could trick us if we evaluated such a
-  // GEP as part of a load.
-  //
-  // e.g. Consider if the original GEP was:
-  // i8* getelementptr ({ [2 x i8], i32, i8, [3 x i8] }* @main.c,
-  //                    i32 0, i32 0, i64 0)
-  //
-  // If we then tried to offset it by '8' to get to the third element,
-  // an i8, we should *not* get:
-  // i8* getelementptr ({ [2 x i8], i32, i8, [3 x i8] }* @main.c,
-  //                    i32 0, i32 0, i64 8)
-  //
-  // This GEP tries to index array element '8  which runs out-of-bounds.
-  // Subsequent evaluation would get confused and produce erroneous results.
-  //
-  // The following prohibits such a GEP from being formed by checking to see
-  // if the index is in-range with respect to an array.
+  // We can't combine GEPs if the last index is a struct type.
   if (!LastI.isSequential())
     return nullptr;
+  // We could perform the transform with non-constant index, but prefer leaving
+  // it as GEP of GEP rather than GEP of add for now.
   ConstantInt *CI = dyn_cast<ConstantInt>(Idx0);
   if (!CI)
-    return nullptr;
-  if (LastI.isBoundedSequential() &&
-      !isIndexInRangeOfArrayType(LastI.getSequentialNumElements(), CI))
     return nullptr;
 
   // TODO: This code may be extended to handle vectors as well.
@@ -2119,11 +2094,12 @@ Constant *llvm::ConstantFoldGetElementPtr(Type *PointeeTy, Constant *C,
       PointerType *SrcPtrTy =
         dyn_cast<PointerType>(CE->getOperand(0)->getType());
       PointerType *DstPtrTy = dyn_cast<PointerType>(CE->getType());
-      if (SrcPtrTy && DstPtrTy) {
+      if (SrcPtrTy && DstPtrTy && !SrcPtrTy->isOpaque() &&
+          !DstPtrTy->isOpaque()) {
         ArrayType *SrcArrayTy =
-          dyn_cast<ArrayType>(SrcPtrTy->getElementType());
+          dyn_cast<ArrayType>(SrcPtrTy->getNonOpaquePointerElementType());
         ArrayType *DstArrayTy =
-          dyn_cast<ArrayType>(DstPtrTy->getElementType());
+          dyn_cast<ArrayType>(DstPtrTy->getNonOpaquePointerElementType());
         if (SrcArrayTy && DstArrayTy
             && SrcArrayTy->getElementType() == DstArrayTy->getElementType()
             && SrcPtrTy->getAddressSpace() == DstPtrTy->getAddressSpace())

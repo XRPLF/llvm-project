@@ -19,12 +19,12 @@
 #include <type_traits>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
+#  pragma GCC system_header
 #endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if !defined(_LIBCPP_HAS_NO_RANGES)
+#if !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 // __copyable_box allows turning a type that is copy-constructible (but maybe not copy-assignable) into
 // a type that is both copy-constructible and copy-assignable. It does that by introducing an empty state
@@ -41,7 +41,7 @@ namespace ranges {
   // Primary template - uses std::optional and introduces an empty state in case assignment fails.
   template<__copy_constructible_object _Tp>
   class __copyable_box {
-    [[no_unique_address]] optional<_Tp> __val_;
+    _LIBCPP_NO_UNIQUE_ADDRESS optional<_Tp> __val_;
 
   public:
     template<class ..._Args>
@@ -116,7 +116,7 @@ namespace ranges {
   template<__copy_constructible_object _Tp>
     requires __doesnt_need_empty_state_for_copy<_Tp> && __doesnt_need_empty_state_for_move<_Tp>
   class __copyable_box<_Tp> {
-    [[no_unique_address]] _Tp __val_;
+    _LIBCPP_NO_UNIQUE_ADDRESS _Tp __val_;
 
   public:
     template<class ..._Args>
@@ -171,7 +171,7 @@ namespace ranges {
   };
 } // namespace ranges
 
-#endif // !defined(_LIBCPP_HAS_NO_RANGES)
+#endif // !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 _LIBCPP_END_NAMESPACE_STD
 

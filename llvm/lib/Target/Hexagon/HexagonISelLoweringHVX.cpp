@@ -24,7 +24,6 @@ static const MVT LegalW64[] =  { MVT::v128i8, MVT::v64i16,  MVT::v32i32 };
 static const MVT LegalV128[] = { MVT::v128i8, MVT::v64i16,  MVT::v32i32 };
 static const MVT LegalW128[] = { MVT::v256i8, MVT::v128i16, MVT::v64i32 };
 
-
 void
 HexagonTargetLowering::initializeHVXLowering() {
   if (Subtarget.useHVX64BOps()) {
@@ -79,72 +78,85 @@ HexagonTargetLowering::initializeHVXLowering() {
   // Handle bitcasts of vector predicates to scalars (e.g. v32i1 to i32).
   // Note: v16i1 -> i16 is handled in type legalization instead of op
   // legalization.
-  setOperationAction(ISD::BITCAST,            MVT::i16,   Custom);
-  setOperationAction(ISD::BITCAST,            MVT::i32,   Custom);
-  setOperationAction(ISD::BITCAST,            MVT::i64,   Custom);
+  setOperationAction(ISD::BITCAST,              MVT::i16, Custom);
+  setOperationAction(ISD::BITCAST,              MVT::i32, Custom);
+  setOperationAction(ISD::BITCAST,              MVT::i64, Custom);
   setOperationAction(ISD::BITCAST,            MVT::v16i1, Custom);
-  setOperationAction(ISD::BITCAST,            MVT::v128i1, Custom);
-  setOperationAction(ISD::BITCAST,            MVT::i128, Custom);
-  setOperationAction(ISD::VECTOR_SHUFFLE,     ByteV,      Legal);
-  setOperationAction(ISD::VECTOR_SHUFFLE,     ByteW,      Legal);
+  setOperationAction(ISD::BITCAST,           MVT::v128i1, Custom);
+  setOperationAction(ISD::BITCAST,             MVT::i128, Custom);
+  setOperationAction(ISD::VECTOR_SHUFFLE,          ByteV, Legal);
+  setOperationAction(ISD::VECTOR_SHUFFLE,          ByteW, Legal);
   setOperationAction(ISD::INTRINSIC_WO_CHAIN, MVT::Other, Custom);
 
   if (Subtarget.useHVX128BOps() && Subtarget.useHVXV68Ops() &&
       Subtarget.useHVXFloatingPoint()) {
-    setOperationAction(ISD::FMINNUM, MVT::v64f16, Legal);
-    setOperationAction(ISD::FMAXNUM, MVT::v64f16, Legal);
-    setOperationAction(ISD::FADD,    MVT::v64f16, Legal);
-    setOperationAction(ISD::FSUB,    MVT::v64f16, Legal);
-    setOperationAction(ISD::FMUL,    MVT::v64f16, Legal);
-    setOperationAction(ISD::FADD,    MVT::v32f32, Legal);
-    setOperationAction(ISD::FSUB,    MVT::v32f32, Legal);
-    setOperationAction(ISD::FMUL,    MVT::v32f32, Legal);
-    setOperationAction(ISD::FMINNUM, MVT::v32f32, Legal);
-    setOperationAction(ISD::FMAXNUM, MVT::v32f32, Legal);
-    setOperationAction(ISD::INSERT_SUBVECTOR,  MVT::v64f16, Custom);
-    setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v64f16, Custom);
-    setOperationAction(ISD::INSERT_SUBVECTOR,  MVT::v32f32, Custom);
-    setOperationAction(ISD::EXTRACT_SUBVECTOR, MVT::v32f32, Custom);
 
-    // Handle ISD::BUILD_VECTOR for v32f32 in a custom way to generate vsplat
-    setOperationAction(ISD::BUILD_VECTOR, MVT::v32f32, Custom);
+    static const MVT FloatV[] = { MVT::v64f16, MVT::v32f32 };
+    static const MVT FloatW[] = { MVT::v128f16, MVT::v64f32 };
+
+    for (MVT T : FloatV) {
+      setOperationAction(ISD::FADD,              T, Legal);
+      setOperationAction(ISD::FSUB,              T, Legal);
+      setOperationAction(ISD::FMUL,              T, Legal);
+      setOperationAction(ISD::FMINNUM,           T, Legal);
+      setOperationAction(ISD::FMAXNUM,           T, Legal);
+
+      setOperationAction(ISD::INSERT_SUBVECTOR,  T, Custom);
+      setOperationAction(ISD::EXTRACT_SUBVECTOR, T, Custom);
+
+      setOperationAction(ISD::SPLAT_VECTOR,      T, Legal);
+      setOperationAction(ISD::SPLAT_VECTOR,      T, Legal);
+
+      setOperationAction(ISD::MLOAD,             T, Custom);
+      setOperationAction(ISD::MSTORE,            T, Custom);
+      // Custom-lower BUILD_VECTOR. The standard (target-independent)
+      // handling of it would convert it to a load, which is not always
+      // the optimal choice.
+      setOperationAction(ISD::BUILD_VECTOR,      T, Custom);
+    }
+
 
     // BUILD_VECTOR with f16 operands cannot be promoted without
     // promoting the result, so lower the node to vsplat or constant pool
-    setOperationAction(ISD::BUILD_VECTOR,      MVT::f16,    Custom);
-    setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::f16,    Custom);
-    setOperationAction(ISD::SPLAT_VECTOR,      MVT::f16,    Custom);
-    setOperationAction(ISD::SPLAT_VECTOR,      MVT::v64f16, Legal);
-    setOperationAction(ISD::SPLAT_VECTOR,      MVT::v32f32, Legal);
+    setOperationAction(ISD::BUILD_VECTOR,      MVT::f16, Custom);
+    setOperationAction(ISD::INSERT_VECTOR_ELT, MVT::f16, Custom);
+    setOperationAction(ISD::SPLAT_VECTOR,      MVT::f16, Custom);
+
     // Vector shuffle is always promoted to ByteV and a bitcast to f16 is
     // generated.
-    setPromoteTo(ISD::VECTOR_SHUFFLE, MVT::v64f16, ByteV);
-    setPromoteTo(ISD::VECTOR_SHUFFLE, MVT::v64f32, ByteW);
-    setPromoteTo(ISD::VECTOR_SHUFFLE, MVT::v32f32, ByteV);
+    setPromoteTo(ISD::VECTOR_SHUFFLE, MVT::v128f16, ByteW);
+    setPromoteTo(ISD::VECTOR_SHUFFLE,  MVT::v64f16, ByteV);
+    setPromoteTo(ISD::VECTOR_SHUFFLE,  MVT::v64f32, ByteW);
+    setPromoteTo(ISD::VECTOR_SHUFFLE,  MVT::v32f32, ByteV);
 
-    // Custom-lower BUILD_VECTOR for vector pairs. The standard (target-
-    // independent) handling of it would convert it to a load, which is
-    // not always the optimal choice.
-    setOperationAction(ISD::BUILD_VECTOR, MVT::v64f32, Custom);
-    // Make concat-vectors custom to handle concats of more than 2 vectors.
-    setOperationAction(ISD::CONCAT_VECTORS, MVT::v128f16, Custom);
-    setOperationAction(ISD::CONCAT_VECTORS, MVT::v64f32, Custom);
+    for (MVT P : FloatW) {
+      setOperationAction(ISD::LOAD,           P, Custom);
+      setOperationAction(ISD::STORE,          P, Custom);
+      setOperationAction(ISD::FADD,           P, Custom);
+      setOperationAction(ISD::FSUB,           P, Custom);
+      setOperationAction(ISD::FMUL,           P, Custom);
+      setOperationAction(ISD::FMINNUM,        P, Custom);
+      setOperationAction(ISD::FMAXNUM,        P, Custom);
+      setOperationAction(ISD::VSELECT,        P, Custom);
 
-    setOperationAction(ISD::LOAD,    MVT::v64f32, Custom);
-    setOperationAction(ISD::STORE,   MVT::v64f32, Custom);
-    setOperationAction(ISD::FADD,    MVT::v64f32, Custom);
-    setOperationAction(ISD::FSUB,    MVT::v64f32, Custom);
-    setOperationAction(ISD::FMUL,    MVT::v64f32, Custom);
-    setOperationAction(ISD::FMINNUM, MVT::v64f32, Custom);
-    setOperationAction(ISD::FMAXNUM, MVT::v64f32, Custom);
-    setOperationAction(ISD::VSELECT, MVT::v64f32, Custom);
+      // Custom-lower BUILD_VECTOR. The standard (target-independent)
+      // handling of it would convert it to a load, which is not always
+      // the optimal choice.
+      setOperationAction(ISD::BUILD_VECTOR,   P, Custom);
+      // Make concat-vectors custom to handle concats of more than 2 vectors.
+      setOperationAction(ISD::CONCAT_VECTORS, P, Custom);
 
-    setOperationAction(ISD::MLOAD, MVT::v32f32, Custom);
-    setOperationAction(ISD::MSTORE, MVT::v32f32, Custom);
-    setOperationAction(ISD::MLOAD, MVT::v64f16, Custom);
-    setOperationAction(ISD::MSTORE, MVT::v64f16, Custom);
-    setOperationAction(ISD::MLOAD, MVT::v64f32, Custom);
-    setOperationAction(ISD::MSTORE, MVT::v64f32, Custom);
+      setOperationAction(ISD::MLOAD,          P, Custom);
+      setOperationAction(ISD::MSTORE,         P, Custom);
+    }
+
+    if (Subtarget.useHVXQFloatOps()) {
+      setOperationAction(ISD::FP_EXTEND, MVT::v64f32, Custom);
+      setOperationAction(ISD::FP_ROUND,  MVT::v64f16, Legal);
+    } else if (Subtarget.useHVXIEEEFPOps()) {
+      setOperationAction(ISD::FP_EXTEND, MVT::v64f32, Legal);
+      setOperationAction(ISD::FP_ROUND,  MVT::v64f16, Legal);
+    }
   }
 
   for (MVT T : LegalV) {
@@ -199,6 +211,18 @@ HexagonTargetLowering::initializeHVXLowering() {
 
       // Promote all shuffles to operate on vectors of bytes.
       setPromoteTo(ISD::VECTOR_SHUFFLE, T, ByteV);
+    }
+
+    if (Subtarget.useHVXQFloatOps()) {
+      setOperationAction(ISD::SINT_TO_FP, T, Expand);
+      setOperationAction(ISD::UINT_TO_FP, T, Expand);
+      setOperationAction(ISD::FP_TO_SINT, T, Expand);
+      setOperationAction(ISD::FP_TO_UINT, T, Expand);
+    } else if (Subtarget.useHVXIEEEFPOps()) {
+      setOperationAction(ISD::SINT_TO_FP, T, Custom);
+      setOperationAction(ISD::UINT_TO_FP, T, Custom);
+      setOperationAction(ISD::FP_TO_SINT, T, Custom);
+      setOperationAction(ISD::FP_TO_UINT, T, Custom);
     }
 
     setCondCodeAction(ISD::SETNE,  T, Expand);
@@ -262,6 +286,11 @@ HexagonTargetLowering::initializeHVXLowering() {
       setOperationAction(ISD::UMIN,   T, Custom);
       setOperationAction(ISD::UMAX,   T, Custom);
     }
+
+    setOperationAction(ISD::SINT_TO_FP, T, Custom);
+    setOperationAction(ISD::UINT_TO_FP, T, Custom);
+    setOperationAction(ISD::FP_TO_SINT, T, Custom);
+    setOperationAction(ISD::FP_TO_UINT, T, Custom);
   }
 
   setCondCodeAction(ISD::SETNE,  MVT::v64f16, Expand);
@@ -755,7 +784,6 @@ HexagonTargetLowering::buildHvxVectorReg(ArrayRef<SDValue> Values,
   SDValue N = HalfV0;
   SDValue M = HalfV1;
   for (unsigned i = 0; i != NumWords/2; ++i) {
-
     // Rotate by element count since last insertion.
     if (Words[i] != Words[n] || VecHist[n] <= 1) {
       Sn = DAG.getConstant(Rn, dl, MVT::i32);
@@ -1386,6 +1414,17 @@ HexagonTargetLowering::LowerHvxBuildVector(SDValue Op, SelectionDAG &DAG)
   for (unsigned i = 0; i != Size; ++i)
     Ops.push_back(Op.getOperand(i));
 
+  // First, split the BUILD_VECTOR for vector pairs. We could generate
+  // some pairs directly (via splat), but splats should be generated
+  // by the combiner prior to getting here.
+  if (VecTy.getSizeInBits() == 16*Subtarget.getVectorLength()) {
+    ArrayRef<SDValue> A(Ops);
+    MVT SingleTy = typeSplit(VecTy).first;
+    SDValue V0 = buildHvxVectorReg(A.take_front(Size/2), dl, SingleTy, DAG);
+    SDValue V1 = buildHvxVectorReg(A.drop_front(Size/2), dl, SingleTy, DAG);
+    return DAG.getNode(ISD::CONCAT_VECTORS, dl, VecTy, V0, V1);
+  }
+
   if (VecTy.getVectorElementType() == MVT::i1)
     return buildHvxVectorPred(Ops, dl, VecTy, DAG);
 
@@ -1400,14 +1439,6 @@ HexagonTargetLowering::LowerHvxBuildVector(SDValue Op, SelectionDAG &DAG)
     SDValue T0 = DAG.getNode(ISD::BUILD_VECTOR, dl,
         tyVector(VecTy, MVT::i16), NewOps);
     return DAG.getBitcast(tyVector(VecTy, MVT::f16), T0);
-  }
-
-  if (VecTy.getSizeInBits() == 16*Subtarget.getVectorLength()) {
-    ArrayRef<SDValue> A(Ops);
-    MVT SingleTy = typeSplit(VecTy).first;
-    SDValue V0 = buildHvxVectorReg(A.take_front(Size/2), dl, SingleTy, DAG);
-    SDValue V1 = buildHvxVectorReg(A.drop_front(Size/2), dl, SingleTy, DAG);
-    return DAG.getNode(ISD::CONCAT_VECTORS, dl, VecTy, V0, V1);
   }
 
   return buildHvxVectorReg(Ops, dl, VecTy, DAG);
@@ -1992,6 +2023,80 @@ HexagonTargetLowering::LowerHvxMaskedOp(SDValue Op, SelectionDAG &DAG) const {
   return DAG.getNode(ISD::TokenFactor, dl, MVT::Other, {StoreLo, StoreHi});
 }
 
+SDValue HexagonTargetLowering::LowerHvxFpExtend(SDValue Op,
+                                                SelectionDAG &DAG) const {
+  // This conversion only applies to QFloat.
+  assert(Subtarget.useHVXQFloatOps());
+
+  assert(Op->getOpcode() == ISD::FP_EXTEND);
+
+  MVT VecTy = ty(Op);
+  MVT ArgTy = ty(Op.getOperand(0));
+  const SDLoc &dl(Op);
+  assert(VecTy == MVT::v64f32 && ArgTy == MVT::v64f16);
+
+  SDValue F16Vec = Op.getOperand(0);
+
+  APFloat FloatVal = APFloat(1.0f);
+  bool Ignored;
+  FloatVal.convert(APFloat::IEEEhalf(), APFloat::rmNearestTiesToEven, &Ignored);
+  SDValue Fp16Ones = DAG.getConstantFP(FloatVal, dl, ArgTy);
+  SDValue VmpyVec =
+      getInstr(Hexagon::V6_vmpy_qf32_hf, dl, VecTy, {F16Vec, Fp16Ones}, DAG);
+
+  MVT HalfTy = typeSplit(VecTy).first;
+  VectorPair Pair = opSplit(VmpyVec, dl, DAG);
+  SDValue LoVec =
+      getInstr(Hexagon::V6_vconv_sf_qf32, dl, HalfTy, {Pair.first}, DAG);
+  SDValue HiVec =
+      getInstr(Hexagon::V6_vconv_sf_qf32, dl, HalfTy, {Pair.second}, DAG);
+
+  SDValue ShuffVec =
+      getInstr(Hexagon::V6_vshuffvdd, dl, VecTy,
+               {HiVec, LoVec, DAG.getConstant(-4, dl, MVT::i32)}, DAG);
+
+  return ShuffVec;
+}
+
+SDValue
+HexagonTargetLowering::LowerHvxConvertFpInt(SDValue Op, SelectionDAG &DAG)
+    const {
+  // This conversion only applies to IEEE.
+  assert(Subtarget.useHVXIEEEFPOps());
+
+  unsigned Opc = Op.getOpcode();
+  // Catch invalid conversion ops (just in case).
+  assert(Opc == ISD::FP_TO_SINT || Opc == ISD::FP_TO_UINT ||
+         Opc == ISD::SINT_TO_FP || Opc == ISD::UINT_TO_FP);
+  MVT ResTy = ty(Op);
+
+  if (Opc == ISD::FP_TO_SINT || Opc == ISD::FP_TO_UINT) {
+    MVT FpTy = ty(Op.getOperand(0)).getVectorElementType();
+    // There are only conversions of f16.
+    if (FpTy != MVT::f16)
+      return SDValue();
+
+    MVT IntTy = ResTy.getVectorElementType();
+    // Other int types aren't legal in HVX, so we shouldn't see them here.
+    assert(IntTy == MVT::i8 || IntTy == MVT::i16 || IntTy == MVT::i32);
+    // Conversions to i8 and i16 are legal.
+    if (IntTy == MVT::i8 || IntTy == MVT::i16)
+      return Op;
+  } else {
+    // Converting int -> fp.
+    if (ResTy.getVectorElementType() != MVT::f16)
+      return SDValue();
+    MVT IntTy = ty(Op.getOperand(0)).getVectorElementType();
+    // Other int types aren't legal in HVX, so we shouldn't see them here.
+    assert(IntTy == MVT::i8 || IntTy == MVT::i16 || IntTy == MVT::i32);
+    // i8, i16 -> f16 is legal.
+    if (IntTy == MVT::i8 || IntTy == MVT::i16)
+      return Op;
+  }
+
+  return SDValue();
+}
+
 SDValue
 HexagonTargetLowering::SplitHvxPairOp(SDValue Op, SelectionDAG &DAG) const {
   assert(!Op.isMachineOpcode());
@@ -2296,6 +2401,13 @@ HexagonTargetLowering::LowerHvxOperation(SDValue Op, SelectionDAG &DAG) const {
       case ISD::MLOAD:
       case ISD::MSTORE:
         return SplitHvxMemOp(Op, DAG);
+      case ISD::SINT_TO_FP:
+      case ISD::UINT_TO_FP:
+      case ISD::FP_TO_SINT:
+      case ISD::FP_TO_UINT:
+        if (ty(Op).getSizeInBits() == ty(Op.getOperand(0)).getSizeInBits())
+          return SplitHvxPairOp(Op, DAG);
+        break;
       case ISD::CTPOP:
       case ISD::CTLZ:
       case ISD::CTTZ:
@@ -2356,6 +2468,11 @@ HexagonTargetLowering::LowerHvxOperation(SDValue Op, SelectionDAG &DAG) const {
     case ISD::MSTORE:                  return LowerHvxMaskedOp(Op, DAG);
     // Unaligned loads will be handled by the default lowering.
     case ISD::LOAD:                    return SDValue();
+    case ISD::FP_EXTEND:               return LowerHvxFpExtend(Op, DAG);
+    case ISD::FP_TO_SINT:
+    case ISD::FP_TO_UINT:
+    case ISD::SINT_TO_FP:
+    case ISD::UINT_TO_FP:              return LowerHvxConvertFpInt(Op, DAG);
   }
 #ifndef NDEBUG
   Op.dumpr(&DAG);

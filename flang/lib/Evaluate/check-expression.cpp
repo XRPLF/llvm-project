@@ -385,7 +385,7 @@ private:
 
 // Converts, folds, and then checks type, rank, and shape of an
 // initialization expression for a named constant, a non-pointer
-// variable static initializatio, a component default initializer,
+// variable static initialization, a component default initializer,
 // a type parameter default value, or instantiated type parameter value.
 std::optional<Expr<SomeType>> NonPointerInitializationExpr(const Symbol &symbol,
     Expr<SomeType> &&x, FoldingContext &context,
@@ -394,7 +394,20 @@ std::optional<Expr<SomeType>> NonPointerInitializationExpr(const Symbol &symbol,
   if (auto symTS{
           characteristics::TypeAndShape::Characterize(symbol, context)}) {
     auto xType{x.GetType()};
-    if (auto converted{ConvertToType(symTS->type(), std::move(x))}) {
+    auto converted{ConvertToType(symTS->type(), Expr<SomeType>{x})};
+    if (!converted &&
+        symbol.owner().context().IsEnabled(
+            common::LanguageFeature::LogicalIntegerAssignment)) {
+      converted = DataConstantConversionExtension(context, symTS->type(), x);
+      if (converted &&
+          symbol.owner().context().ShouldWarn(
+              common::LanguageFeature::LogicalIntegerAssignment)) {
+        context.messages().Say(
+            "nonstandard usage: initialization of %s with %s"_en_US,
+            symTS->type().AsFortran(), x.GetType().value().AsFortran());
+      }
+    }
+    if (converted) {
       auto folded{Fold(context, std::move(*converted))};
       if (IsActuallyConstant(folded)) {
         int symRank{GetRank(symTS->shape())};
@@ -513,15 +526,11 @@ public:
       } else {
         return "dummy procedure argument";
       }
+    } else if (&symbol.owner() != &scope_ || &ultimate.owner() != &scope_) {
+      return std::nullopt; // host association is in play
     } else if (const auto *object{
                    ultimate.detailsIf<semantics::ObjectEntityDetails>()}) {
       if (object->commonBlock()) {
-        return std::nullopt;
-      }
-    }
-    for (const semantics::Scope *s{&scope_}; !s->IsGlobal();) {
-      s = &s->parent();
-      if (s == &ultimate.owner()) {
         return std::nullopt;
       }
     }

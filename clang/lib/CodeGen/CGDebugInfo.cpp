@@ -354,13 +354,9 @@ CGDebugInfo::computeChecksum(FileID FID, SmallString<32> &Checksum) const {
   if (!MemBuffer)
     return None;
 
-  llvm::MD5 Hash;
-  llvm::MD5::MD5Result Result;
-
-  Hash.update(MemBuffer->getBuffer());
-  Hash.final(Result);
-
-  Hash.stringifyResult(Result, Checksum);
+  llvm::toHex(
+      llvm::MD5::hash(llvm::arrayRefFromStringRef(MemBuffer->getBuffer())),
+      /*LowerCase*/ true, Checksum);
   return llvm::DIFile::CSK_MD5;
 }
 
@@ -3690,7 +3686,7 @@ void CGDebugInfo::CollectContainingType(const CXXRecordDecl *RD,
   const ASTRecordLayout &RL = CGM.getContext().getASTRecordLayout(RD);
   if (const CXXRecordDecl *PBase = RL.getPrimaryBase()) {
     // Seek non-virtual primary base root.
-    while (1) {
+    while (true) {
       const ASTRecordLayout &BRL = CGM.getContext().getASTRecordLayout(PBase);
       const CXXRecordDecl *PBT = BRL.getPrimaryBase();
       if (PBT && !BRL.isPrimaryBaseVirtual())
@@ -4979,6 +4975,52 @@ llvm::DIGlobalVariableExpression *CGDebugInfo::CollectAnonRecordDecls(
   return GVE;
 }
 
+static bool ReferencesAnonymousEntity(ArrayRef<TemplateArgument> Args);
+static bool ReferencesAnonymousEntity(RecordType *RT) {
+  // Unnamed classes/lambdas can't be reconstituted due to a lack of column
+  // info we produce in the DWARF, so we can't get Clang's full name back.
+  // But so long as it's not one of those, it doesn't matter if some sub-type
+  // of the record (a template parameter) can't be reconstituted - because the
+  // un-reconstitutable type itself will carry its own name.
+  const auto *RD = dyn_cast<CXXRecordDecl>(RT->getDecl());
+  if (!RD)
+    return false;
+  if (!RD->getIdentifier())
+    return true;
+  auto *TSpecial = dyn_cast<ClassTemplateSpecializationDecl>(RD);
+  if (!TSpecial)
+    return false;
+  return ReferencesAnonymousEntity(TSpecial->getTemplateArgs().asArray());
+}
+static bool ReferencesAnonymousEntity(ArrayRef<TemplateArgument> Args) {
+  return llvm::any_of(Args, [&](const TemplateArgument &TA) {
+    switch (TA.getKind()) {
+    case TemplateArgument::Pack:
+      return ReferencesAnonymousEntity(TA.getPackAsArray());
+    case TemplateArgument::Type: {
+      struct ReferencesAnonymous
+          : public RecursiveASTVisitor<ReferencesAnonymous> {
+        bool RefAnon = false;
+        bool VisitRecordType(RecordType *RT) {
+          if (ReferencesAnonymousEntity(RT)) {
+            RefAnon = true;
+            return false;
+          }
+          return true;
+        }
+      };
+      ReferencesAnonymous RT;
+      RT.TraverseType(TA.getAsType());
+      if (RT.RefAnon)
+        return true;
+      break;
+    }
+    default:
+      break;
+    }
+    return false;
+  });
+}
 namespace {
 struct ReconstitutableType : public RecursiveASTVisitor<ReconstitutableType> {
   bool Reconstitutable = true;
@@ -4998,6 +5040,10 @@ struct ReconstitutableType : public RecursiveASTVisitor<ReconstitutableType> {
         Reconstitutable = false;
         return false;
       }
+      if (!ED->isExternallyVisible()) {
+        Reconstitutable = false;
+        return false;
+      }
     }
     return true;
   }
@@ -5006,16 +5052,8 @@ struct ReconstitutableType : public RecursiveASTVisitor<ReconstitutableType> {
     Reconstitutable &= !isNoexceptExceptionSpec(FT->getExceptionSpecType());
     return Reconstitutable;
   }
-  bool TraverseRecordType(RecordType *RT) {
-    // Unnamed classes/lambdas can't be reconstituted due to a lack of column
-    // info we produce in the DWARF, so we can't get Clang's full name back.
-    // But so long as it's not one of those, it doesn't matter if some sub-type
-    // of the record (a template parameter) can't be reconstituted - because the
-    // un-reconstitutable type itself will carry its own name.
-    const auto *RD = dyn_cast<CXXRecordDecl>(RT->getDecl());
-    if (!RD)
-      return true;
-    if (RD->isLambda() || !RD->getIdentifier()) {
+  bool VisitRecordType(RecordType *RT) {
+    if (ReferencesAnonymousEntity(RT)) {
       Reconstitutable = false;
       return false;
     }

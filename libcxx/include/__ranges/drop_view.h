@@ -26,12 +26,12 @@
 #include <type_traits>
 
 #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
-#pragma GCC system_header
+#  pragma GCC system_header
 #endif
 
 _LIBCPP_BEGIN_NAMESPACE_STD
 
-#if !defined(_LIBCPP_HAS_NO_RANGES)
+#if !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 namespace ranges {
   template<view _View>
@@ -45,7 +45,7 @@ namespace ranges {
     // one can't call begin() on it more than once.
     static constexpr bool _UseCache = forward_range<_View> && !(random_access_range<_View> && sized_range<_View>);
     using _Cache = _If<_UseCache, __non_propagating_cache<iterator_t<_View>>, __empty_cache>;
-    [[no_unique_address]] _Cache __cached_begin_ = _Cache();
+    _LIBCPP_NO_UNIQUE_ADDRESS _Cache __cached_begin_ = _Cache();
     range_difference_t<_View> __count_ = 0;
     _View __base_ = _View();
 
@@ -120,7 +120,7 @@ public:
   inline constexpr bool enable_borrowed_range<drop_view<_Tp>> = enable_borrowed_range<_Tp>;
 } // namespace ranges
 
-#endif // !defined(_LIBCPP_HAS_NO_RANGES)
+#endif // !defined(_LIBCPP_HAS_NO_CONCEPTS)
 
 _LIBCPP_END_NAMESPACE_STD
 

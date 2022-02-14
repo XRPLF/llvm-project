@@ -198,6 +198,7 @@ struct FragmentCompiler {
     compile(std::move(F.Completion));
     compile(std::move(F.Hover));
     compile(std::move(F.Security));
+    compile(std::move(F.InlayHints));
   }
 
   void compile(Fragment::IfBlock &&F) {
@@ -550,6 +551,25 @@ struct FragmentCompiler {
 	});
       }
     }
+
+  void compile(Fragment::InlayHintsBlock &&F) {
+    if (F.Enabled)
+      Out.Apply.push_back([Value(**F.Enabled)](const Params &, Config &C) {
+        C.InlayHints.Enabled = Value;
+      });
+    if (F.ParameterNames)
+      Out.Apply.push_back(
+          [Value(**F.ParameterNames)](const Params &, Config &C) {
+            C.InlayHints.Parameters = Value;
+          });
+    if (F.DeducedTypes)
+      Out.Apply.push_back([Value(**F.DeducedTypes)](const Params &, Config &C) {
+        C.InlayHints.DeducedTypes = Value;
+      });
+    if (F.Designators)
+      Out.Apply.push_back([Value(**F.Designators)](const Params &, Config &C) {
+        C.InlayHints.Designators = Value;
+      });
   }
 
   constexpr static llvm::SourceMgr::DiagKind Error = llvm::SourceMgr::DK_Error;

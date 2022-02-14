@@ -293,6 +293,20 @@ struct Fragment {
     std::vector<Located<std::string>> AccessibleDirectories;
   };
   SecurityBlock Security;
+
+  /// Configures labels shown inline with the code.
+  struct InlayHintsBlock {
+    /// Enables/disables the inlay-hints feature.
+    llvm::Optional<Located<bool>> Enabled;
+
+    /// Show parameter names before function arguments.
+    llvm::Optional<Located<bool>> ParameterNames;
+    /// Show deduced types for `auto`.
+    llvm::Optional<Located<bool>> DeducedTypes;
+    /// Show designators in aggregate initialization.
+    llvm::Optional<Located<bool>> Designators;
+  };
+  InlayHintsBlock InlayHints;
 };
 
 } // namespace config

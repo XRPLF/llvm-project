@@ -180,7 +180,9 @@ private:
 
 /// Determine whether a (non-clang-tidy) diagnostic is suppressed by config.
 bool isBuiltinDiagnosticSuppressed(const clang::Diagnostic &Info,
-                                   const llvm::StringSet<> &Suppressed);
+                                   const llvm::StringSet<> &Suppressed,
+                                   const LangOptions &LangOpts);
+
 /// Take a user-specified diagnostic code, and convert it to a normalized form
 /// stored in the config and consumed by isBuiltinDiagnosticsSuppressed.
 ///

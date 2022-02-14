@@ -9,10 +9,11 @@
 #ifndef LLVM_CLANG_LIB_CODEGEN_CGBUILDER_H
 #define LLVM_CLANG_LIB_CODEGEN_CGBUILDER_H
 
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/IRBuilder.h"
 #include "Address.h"
 #include "CodeGenTypeCache.h"
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/Type.h"
 
 namespace clang {
 namespace CodeGen {
@@ -148,13 +149,6 @@ public:
                   llvm::SyncScope::ID SSID = llvm::SyncScope::System) {
     return CGBuilderBaseTy::CreateAtomicRMW(Op, Ptr, Val, llvm::MaybeAlign(),
                                             Ordering, SSID);
-  }
-
-  using CGBuilderBaseTy::CreateBitCast;
-  Address CreateBitCast(Address Addr, llvm::Type *Ty,
-                        const llvm::Twine &Name = "") {
-    return Address(CreateBitCast(Addr.getPointer(), Ty, Name),
-                   Addr.getAlignment());
   }
 
   using CGBuilderBaseTy::CreateAddrSpaceCast;
