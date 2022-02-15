@@ -612,6 +612,11 @@ ParsedAST::build(llvm::StringRef Filename, const ParseInputs &Inputs,
       if (iter->AbsFile && !isAuthorizedAbsolutePath(*(iter->AbsFile))) {
 	iter = Diags->erase(iter);
       } else {
+	// for -Wimplicit-function-declaration diagnostic, the
+	// standard fix is to include a standard library header, which
+	// won't work (hooks don't have the standard library)
+	if (iter->ID == diag::ext_implicit_lib_function_decl)
+	  iter->Fixes.clear();
 	++iter;
       }
     }
