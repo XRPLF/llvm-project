@@ -551,6 +551,7 @@ struct FragmentCompiler {
 	});
       }
     }
+  }
 
   void compile(Fragment::InlayHintsBlock &&F) {
     if (F.Enabled)
