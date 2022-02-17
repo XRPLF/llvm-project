@@ -17,14 +17,14 @@ namespace tidy {
 namespace hooks {
 
 void EntryPointsNegCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(functionDecl(isDefinition(), unless(isStaticStorageClass())).bind("functionDefinition"), this);
+  Finder->addMatcher(functionDecl(isDefinition()).bind("functionDefinition"), this);
 }
 
 void EntryPointsNegCheck::check(const MatchFinder::MatchResult &Result) {
   const auto *Matched = Result.Nodes.getNodeAs<FunctionDecl>("functionDefinition");
   std::string Name = Matched->getDeclName().getAsString();
   if ((Name != "cbak") && (Name != "hook")) {
-    diag(Matched->getLocation(), "unknown exported function '%0'") << Name;
+    diag(Matched->getLocation(), "hook cannot define unknown function '%0'", DiagnosticIDs::Error) << Name;
   }
 }
 

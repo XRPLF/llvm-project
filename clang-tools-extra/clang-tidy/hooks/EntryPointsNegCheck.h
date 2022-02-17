@@ -15,7 +15,11 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-/// A Hook always implements and exports exactly two functions: cbak and hook.
+/// A Hook always implements and exports exactly two functions: cbak
+/// and hook. Defining other functions isn't allowed, and that
+/// includes static functions (which may not be "exported" in a C
+/// sense, but are visible in the compiled Wasm and fail SetHook
+/// check).
 class EntryPointsNegCheck : public ClangTidyCheck {
 public:
   EntryPointsNegCheck(StringRef Name, ClangTidyContext *Context)
