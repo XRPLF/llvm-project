@@ -3406,11 +3406,11 @@ TEST(AllowImplicitCompletion, All) {
   };
   for (const char *Test : Yes) {
     llvm::Annotations A(Test);
-    EXPECT_TRUE(allowImplicitCompletion(A.code(), A.point())) << Test;
+    EXPECT_TRUE(allowImplicitCompletion(A.code(), A.point(), false)) << Test;
   }
   for (const char *Test : No) {
     llvm::Annotations A(Test);
-    EXPECT_FALSE(allowImplicitCompletion(A.code(), A.point())) << Test;
+    EXPECT_FALSE(allowImplicitCompletion(A.code(), A.point(), true)) << Test;
   }
 }
 
