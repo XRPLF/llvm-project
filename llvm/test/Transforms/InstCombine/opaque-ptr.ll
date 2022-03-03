@@ -482,3 +482,37 @@ define ptr @select_of_gep_different_type(i1 %c, ptr %p) {
   %s = select i1 %c, ptr %gep1, ptr %gep2
   ret ptr %s
 }
+
+define void @dse(ptr %p) {
+; CHECK-LABEL: @dse(
+; CHECK-NEXT:    store i32 0, ptr [[P:%.*]], align 4
+; CHECK-NEXT:    store i8 1, ptr [[P]], align 1
+; CHECK-NEXT:    ret void
+;
+  store i32 0, ptr %p
+  store i8 1, ptr %p
+  ret void
+}
+
+declare void @call_i64(i64)
+declare void @call_byval(i64, ptr byval(i64))
+
+define void @call_cast_ptr_to_int(ptr %p) {
+; CHECK-LABEL: @call_cast_ptr_to_int(
+; CHECK-NEXT:    [[TMP1:%.*]] = ptrtoint ptr [[P:%.*]] to i64
+; CHECK-NEXT:    call void @call_i64(i64 [[TMP1]])
+; CHECK-NEXT:    ret void
+;
+  call void @call_i64(ptr %p)
+  ret void
+}
+
+define void @call_cast_byval(ptr %p, ptr %p2) {
+; CHECK-LABEL: @call_cast_byval(
+; CHECK-NEXT:    [[TMP1:%.*]] = ptrtoint ptr [[P:%.*]] to i64
+; CHECK-NEXT:    call void @call_byval(i64 [[TMP1]], ptr byval(double) [[P2:%.*]])
+; CHECK-NEXT:    ret void
+;
+  call void @call_byval(ptr %p, ptr byval(double) %p2)
+  ret void
+}

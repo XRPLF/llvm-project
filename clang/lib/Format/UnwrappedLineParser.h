@@ -119,6 +119,7 @@ private:
   void parseParens(TokenType AmpAmpTokenType = TT_Unknown);
   void parseSquare(bool LambdaIntroducer = false);
   void keepAncestorBraces();
+  void parseUnbracedBody(bool CheckEOF = false);
   FormatToken *parseIfThenElse(IfStmtKind *IfKind, bool KeepBraces = false);
   void parseTryCatch();
   void parseForOrWhileLoop();
@@ -133,8 +134,9 @@ private:
   bool parseEnum();
   bool parseStructLike();
   void parseConcept();
-  void parseRequiresClause();
-  void parseRequiresExpression();
+  bool parseRequires();
+  void parseRequiresClause(FormatToken *RequiresToken);
+  void parseRequiresExpression(FormatToken *RequiresToken);
   void parseConstraintExpression();
   void parseJavaEnumBody();
   // Parses a record (aka class) as a top level element. If ParseAsExpr is true,

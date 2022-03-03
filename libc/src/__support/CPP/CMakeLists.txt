@@ -10,6 +10,7 @@ add_header_library(
     Limits.h
     StringView.h
     TypeTraits.h
+    Utility.h
 )
 
 add_header_library(
@@ -18,4 +19,10 @@ add_header_library(
     vector.h
   DEPENDS
     libc.include.stdlib
+)
+
+add_header_library(
+  atomic
+  HDRS
+    atomic.h
 )

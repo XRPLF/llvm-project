@@ -17,7 +17,6 @@
 #include "llvm/ADT/Optional.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/Statistic.h"
-#include "llvm/ADT/StringRef.h"
 #include "llvm/Analysis/TargetFolder.h"
 #include "llvm/Analysis/TargetLibraryInfo.h"
 #include "llvm/Analysis/Utils/Local.h"
@@ -659,10 +658,10 @@ SizeOffsetType ObjectSizeOffsetVisitor::visitAllocaInst(AllocaInst &I) {
   if (!I.getAllocatedType()->isSized())
     return unknown();
 
-  if (isa<ScalableVectorType>(I.getAllocatedType()))
+  TypeSize ElemSize = DL.getTypeAllocSize(I.getAllocatedType());
+  if (ElemSize.isScalable() && Options.EvalMode != ObjectSizeOpts::Mode::Min)
     return unknown();
-
-  APInt Size(IntTyBits, DL.getTypeAllocSize(I.getAllocatedType()));
+  APInt Size(IntTyBits, ElemSize.getKnownMinSize());
   if (!I.isArrayAllocation())
     return std::make_pair(align(Size, I.getAlign()), Zero);
 

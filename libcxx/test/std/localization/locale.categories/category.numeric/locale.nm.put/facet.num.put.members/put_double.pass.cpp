@@ -12,11 +12,7 @@
 
 // iter_type put(iter_type s, ios_base& iob, char_type fill, double v) const;
 
-// FIXME: The printf functions in Microsoft's CRT have a couple quirks in
-// corner cases, failing this test.
-// XFAIL: msvc
-
-// XFAIL: LIBCXX-AIX-FIXME
+// XFAIL: win32-broken-printf-g-precision
 
 #include <locale>
 #include <ios>
@@ -61,11 +57,11 @@ void test1()
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -77,7 +73,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -85,7 +81,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -93,7 +89,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -111,7 +107,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -119,7 +115,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -127,7 +123,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -136,7 +132,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -148,7 +144,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -156,7 +152,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -164,7 +160,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -182,7 +178,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -190,7 +186,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -198,7 +194,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -208,9 +204,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -222,7 +218,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -230,7 +226,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -238,7 +234,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -256,7 +252,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -264,7 +260,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -272,7 +268,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -281,7 +277,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -293,7 +289,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -301,7 +297,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -309,7 +305,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -327,7 +323,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -335,7 +331,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -343,7 +339,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -354,11 +350,11 @@ void test1()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -370,7 +366,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -378,7 +374,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -386,7 +382,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -404,7 +400,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -412,7 +408,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -420,7 +416,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -429,7 +425,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -441,7 +437,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -449,7 +445,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -457,7 +453,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -475,7 +471,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -483,7 +479,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -491,7 +487,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -501,9 +497,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -515,7 +511,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -523,7 +519,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -531,7 +527,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -549,7 +545,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -557,7 +553,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -565,7 +561,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -574,7 +570,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -586,7 +582,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -594,7 +590,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -602,7 +598,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -620,7 +616,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -628,7 +624,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -636,7 +632,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -650,11 +646,11 @@ void test1()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -666,7 +662,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -674,7 +670,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -682,7 +678,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -700,7 +696,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -708,7 +704,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -716,7 +712,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -725,7 +721,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -737,7 +733,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -745,7 +741,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -753,7 +749,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -771,7 +767,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -779,7 +775,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -787,7 +783,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -797,9 +793,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -811,7 +807,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -819,7 +815,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -827,7 +823,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -845,7 +841,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -853,7 +849,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -861,7 +857,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -870,7 +866,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -882,7 +878,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -890,7 +886,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -898,7 +894,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -916,7 +912,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -924,7 +920,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -932,7 +928,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -943,11 +939,11 @@ void test1()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -959,7 +955,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -967,7 +963,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -975,7 +971,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -993,7 +989,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1001,7 +997,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1009,7 +1005,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1018,7 +1014,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1030,7 +1026,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1038,7 +1034,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1046,7 +1042,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1064,7 +1060,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1072,7 +1068,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1080,7 +1076,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1090,9 +1086,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1104,7 +1100,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1112,7 +1108,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1120,7 +1116,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1138,7 +1134,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1146,7 +1142,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1154,7 +1150,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1163,7 +1159,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1175,7 +1171,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1183,7 +1179,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1191,7 +1187,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1209,7 +1205,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1217,7 +1213,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1225,7 +1221,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1239,11 +1235,11 @@ void test1()
             }
             ios.precision(6);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1255,7 +1251,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1263,7 +1259,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1271,7 +1267,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1289,7 +1285,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1297,7 +1293,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1305,7 +1301,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1314,7 +1310,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1326,7 +1322,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1334,7 +1330,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1342,7 +1338,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1360,7 +1356,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1368,7 +1364,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1376,7 +1372,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1386,9 +1382,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1400,7 +1396,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1408,7 +1404,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1416,7 +1412,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1434,7 +1430,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1442,7 +1438,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1450,7 +1446,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1459,7 +1455,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1471,7 +1467,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1479,7 +1475,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1487,7 +1483,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1505,7 +1501,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1513,7 +1509,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1521,7 +1517,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1532,11 +1528,11 @@ void test1()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1548,7 +1544,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1556,7 +1552,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1564,7 +1560,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1582,7 +1578,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1590,7 +1586,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1598,7 +1594,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1607,7 +1603,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1619,7 +1615,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1627,7 +1623,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1635,7 +1631,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1653,7 +1649,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1661,7 +1657,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1669,7 +1665,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1679,9 +1675,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1693,7 +1689,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1701,7 +1697,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1709,7 +1705,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1727,7 +1723,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1735,7 +1731,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1743,7 +1739,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1752,7 +1748,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1764,7 +1760,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1772,7 +1768,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1780,7 +1776,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1798,7 +1794,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1806,7 +1802,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1814,7 +1810,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1828,11 +1824,11 @@ void test1()
             }
             ios.precision(16);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1844,7 +1840,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1852,7 +1848,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1860,7 +1856,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1878,7 +1874,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1886,7 +1882,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1894,7 +1890,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1903,7 +1899,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1915,7 +1911,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1923,7 +1919,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1931,7 +1927,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1949,7 +1945,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1957,7 +1953,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1965,7 +1961,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1975,9 +1971,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -1989,7 +1985,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -1997,7 +1993,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2005,7 +2001,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2023,7 +2019,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2031,7 +2027,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2039,7 +2035,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2048,7 +2044,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2060,7 +2056,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2068,7 +2064,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2076,7 +2072,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2094,7 +2090,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2102,7 +2098,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2110,7 +2106,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2121,11 +2117,11 @@ void test1()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2137,7 +2133,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2145,7 +2141,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2153,7 +2149,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2171,7 +2167,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2179,7 +2175,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2187,7 +2183,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2196,7 +2192,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2208,7 +2204,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2216,7 +2212,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2224,7 +2220,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2242,7 +2238,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2250,7 +2246,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2258,7 +2254,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2268,9 +2264,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2282,7 +2278,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2290,7 +2286,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2298,7 +2294,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2316,7 +2312,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2324,7 +2320,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2332,7 +2328,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2341,7 +2337,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2353,7 +2349,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2361,7 +2357,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2369,7 +2365,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2387,7 +2383,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2395,7 +2391,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2403,7 +2399,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2417,11 +2413,11 @@ void test1()
             }
             ios.precision(60);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2433,7 +2429,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2441,7 +2437,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2449,7 +2445,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2467,7 +2463,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2475,7 +2471,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2483,7 +2479,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2492,7 +2488,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2504,7 +2500,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2512,7 +2508,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2520,7 +2516,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2538,7 +2534,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2546,7 +2542,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2554,7 +2550,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2564,9 +2560,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2578,7 +2574,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2586,7 +2582,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2594,7 +2590,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2612,7 +2608,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2620,7 +2616,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2628,7 +2624,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2637,7 +2633,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2649,7 +2645,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2657,7 +2653,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2665,7 +2661,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2683,7 +2679,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2691,7 +2687,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2699,7 +2695,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2710,11 +2706,11 @@ void test1()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2726,7 +2722,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2734,7 +2730,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2742,7 +2738,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2760,7 +2756,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2768,7 +2764,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2776,7 +2772,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2785,7 +2781,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2797,7 +2793,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2805,7 +2801,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2813,7 +2809,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2831,7 +2827,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2839,7 +2835,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2847,7 +2843,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2857,9 +2853,9 @@ void test1()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2871,7 +2867,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2879,7 +2875,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2887,7 +2883,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2905,7 +2901,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2913,7 +2909,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2921,7 +2917,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2930,7 +2926,7 @@ void test1()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -2942,7 +2938,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2950,7 +2946,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2958,7 +2954,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2976,7 +2972,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2984,7 +2980,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -2992,7 +2988,7 @@ void test1()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3021,11 +3017,11 @@ void test2()
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3037,7 +3033,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3045,7 +3041,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3053,7 +3049,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3071,7 +3067,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3079,7 +3075,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3087,7 +3083,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3096,7 +3092,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3108,7 +3104,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3116,7 +3112,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3124,7 +3120,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3142,7 +3138,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3150,7 +3146,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3158,7 +3154,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3168,9 +3164,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3182,7 +3178,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3190,7 +3186,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3198,7 +3194,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3216,7 +3212,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3224,7 +3220,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3232,7 +3228,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3241,7 +3237,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3253,7 +3249,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3261,7 +3257,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3269,7 +3265,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3287,7 +3283,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3295,7 +3291,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3303,7 +3299,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3314,11 +3310,11 @@ void test2()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3330,7 +3326,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3338,7 +3334,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3346,7 +3342,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3364,7 +3360,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3372,7 +3368,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3380,7 +3376,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3389,7 +3385,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3401,7 +3397,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3409,7 +3405,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3417,7 +3413,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3435,7 +3431,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3443,7 +3439,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3451,7 +3447,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3461,9 +3457,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3475,7 +3471,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3483,7 +3479,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3491,7 +3487,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3509,7 +3505,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3517,7 +3513,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3525,7 +3521,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3534,7 +3530,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3546,7 +3542,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3554,7 +3550,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3562,7 +3558,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3580,7 +3576,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3588,7 +3584,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3596,7 +3592,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3610,11 +3606,11 @@ void test2()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3626,7 +3622,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3634,7 +3630,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3642,7 +3638,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3660,7 +3656,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3668,7 +3664,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3676,7 +3672,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3685,7 +3681,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3697,7 +3693,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3705,7 +3701,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3713,7 +3709,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3731,7 +3727,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3739,7 +3735,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3747,7 +3743,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3757,9 +3753,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3771,7 +3767,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3779,7 +3775,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3787,7 +3783,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3805,7 +3801,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3813,7 +3809,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3821,7 +3817,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3830,7 +3826,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3842,7 +3838,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3850,7 +3846,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3858,7 +3854,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3876,7 +3872,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3884,7 +3880,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3892,7 +3888,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3903,11 +3899,11 @@ void test2()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3919,7 +3915,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3927,7 +3923,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3935,7 +3931,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3953,7 +3949,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3961,7 +3957,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3969,7 +3965,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3978,7 +3974,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -3990,7 +3986,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -3998,7 +3994,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4006,7 +4002,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4024,7 +4020,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4032,7 +4028,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4040,7 +4036,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4050,9 +4046,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4064,7 +4060,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4072,7 +4068,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4080,7 +4076,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4098,7 +4094,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4106,7 +4102,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4114,7 +4110,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4123,7 +4119,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4135,7 +4131,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4143,7 +4139,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4151,7 +4147,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4169,7 +4165,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4177,7 +4173,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4185,7 +4181,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4199,11 +4195,11 @@ void test2()
             }
             ios.precision(6);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4215,7 +4211,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4223,7 +4219,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4231,7 +4227,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4249,7 +4245,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4257,7 +4253,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4265,7 +4261,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4274,7 +4270,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4286,7 +4282,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4294,7 +4290,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4302,7 +4298,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4320,7 +4316,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4328,7 +4324,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4336,7 +4332,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4346,9 +4342,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4360,7 +4356,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4368,7 +4364,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4376,7 +4372,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4394,7 +4390,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4402,7 +4398,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4410,7 +4406,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4419,7 +4415,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4431,7 +4427,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4439,7 +4435,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4447,7 +4443,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4465,7 +4461,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4473,7 +4469,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4481,7 +4477,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4492,11 +4488,11 @@ void test2()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4508,7 +4504,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4516,7 +4512,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4524,7 +4520,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4542,7 +4538,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4550,7 +4546,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4558,7 +4554,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4567,7 +4563,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4579,7 +4575,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4587,7 +4583,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4595,7 +4591,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4613,7 +4609,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4621,7 +4617,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4629,7 +4625,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4639,9 +4635,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4653,7 +4649,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4661,7 +4657,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4669,7 +4665,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4687,7 +4683,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4695,7 +4691,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4703,7 +4699,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4712,7 +4708,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4724,7 +4720,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4732,7 +4728,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4740,7 +4736,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4758,7 +4754,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4766,7 +4762,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4774,7 +4770,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4788,11 +4784,11 @@ void test2()
             }
             ios.precision(16);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4804,7 +4800,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4812,7 +4808,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4820,7 +4816,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4838,7 +4834,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4846,7 +4842,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4854,7 +4850,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4863,7 +4859,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4875,7 +4871,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4883,7 +4879,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4891,7 +4887,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4909,7 +4905,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4917,7 +4913,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4925,7 +4921,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4935,9 +4931,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -4949,7 +4945,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4957,7 +4953,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4965,7 +4961,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4983,7 +4979,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4991,7 +4987,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -4999,7 +4995,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5008,7 +5004,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5020,7 +5016,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5028,7 +5024,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5036,7 +5032,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5054,7 +5050,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5062,7 +5058,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5070,7 +5066,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5081,11 +5077,11 @@ void test2()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5097,7 +5093,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5105,7 +5101,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5113,7 +5109,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5131,7 +5127,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5139,7 +5135,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5147,7 +5143,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5156,7 +5152,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5168,7 +5164,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5176,7 +5172,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5184,7 +5180,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5202,7 +5198,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5210,7 +5206,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5218,7 +5214,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5228,9 +5224,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5242,7 +5238,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5250,7 +5246,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5258,7 +5254,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5276,7 +5272,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5284,7 +5280,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5292,7 +5288,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5301,7 +5297,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5313,7 +5309,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5321,7 +5317,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5329,7 +5325,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5347,7 +5343,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5355,7 +5351,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5363,7 +5359,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5377,11 +5373,11 @@ void test2()
             }
             ios.precision(60);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5393,7 +5389,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5401,7 +5397,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5409,7 +5405,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5427,7 +5423,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5435,7 +5431,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5443,7 +5439,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5452,7 +5448,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5464,7 +5460,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5472,7 +5468,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5480,7 +5476,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5498,7 +5494,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5506,7 +5502,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5514,7 +5510,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5524,9 +5520,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5538,7 +5534,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5546,7 +5542,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5554,7 +5550,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5572,7 +5568,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5580,7 +5576,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5588,7 +5584,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5597,7 +5593,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5609,7 +5605,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5617,7 +5613,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5625,7 +5621,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5643,7 +5639,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5651,7 +5647,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5659,7 +5655,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5670,11 +5666,11 @@ void test2()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5686,7 +5682,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5694,7 +5690,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5702,7 +5698,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5720,7 +5716,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5728,7 +5724,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5736,7 +5732,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5745,7 +5741,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5757,7 +5753,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5765,7 +5761,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5773,7 +5769,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5791,7 +5787,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5799,7 +5795,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5807,7 +5803,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5817,9 +5813,9 @@ void test2()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5831,7 +5827,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5839,7 +5835,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5847,7 +5843,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5865,7 +5861,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5873,7 +5869,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5881,7 +5877,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5890,7 +5886,7 @@ void test2()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5902,7 +5898,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5910,7 +5906,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5918,7 +5914,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5936,7 +5932,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5944,7 +5940,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5952,7 +5948,7 @@ void test2()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -5977,16 +5973,16 @@ void test3()
     {
         double v = +0.;
         std::ios ios(0);
-        fixed(ios);
+        std::fixed(ios);
         // %f
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -5998,7 +5994,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6006,7 +6002,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6014,7 +6010,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6032,7 +6028,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6040,7 +6036,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6048,7 +6044,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6057,7 +6053,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6069,7 +6065,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6077,7 +6073,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6085,7 +6081,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6103,7 +6099,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6111,7 +6107,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6119,7 +6115,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6129,9 +6125,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6143,7 +6139,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6151,7 +6147,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6159,7 +6155,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6177,7 +6173,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6185,7 +6181,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6193,7 +6189,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6202,7 +6198,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6214,7 +6210,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6222,7 +6218,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6230,7 +6226,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6248,7 +6244,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6256,7 +6252,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6264,7 +6260,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6275,11 +6271,11 @@ void test3()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6291,7 +6287,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6299,7 +6295,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6307,7 +6303,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6325,7 +6321,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6333,7 +6329,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6341,7 +6337,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6350,7 +6346,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6362,7 +6358,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6370,7 +6366,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6378,7 +6374,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6396,7 +6392,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6404,7 +6400,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6412,7 +6408,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6422,9 +6418,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6436,7 +6432,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6444,7 +6440,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6452,7 +6448,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6470,7 +6466,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6478,7 +6474,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6486,7 +6482,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6495,7 +6491,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6507,7 +6503,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6515,7 +6511,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6523,7 +6519,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6541,7 +6537,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6549,7 +6545,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6557,7 +6553,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6571,11 +6567,11 @@ void test3()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6587,7 +6583,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6595,7 +6591,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6603,7 +6599,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6621,7 +6617,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6629,7 +6625,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6637,7 +6633,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6646,7 +6642,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6658,7 +6654,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6666,7 +6662,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6674,7 +6670,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6692,7 +6688,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6700,7 +6696,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6708,7 +6704,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6718,9 +6714,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6732,7 +6728,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6740,7 +6736,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6748,7 +6744,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6766,7 +6762,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6774,7 +6770,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6782,7 +6778,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6791,7 +6787,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6803,7 +6799,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6811,7 +6807,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6819,7 +6815,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6837,7 +6833,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6845,7 +6841,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6853,7 +6849,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6864,11 +6860,11 @@ void test3()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6880,7 +6876,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6888,7 +6884,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6896,7 +6892,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6914,7 +6910,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6922,7 +6918,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6930,7 +6926,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6939,7 +6935,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -6951,7 +6947,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6959,7 +6955,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6967,7 +6963,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6985,7 +6981,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -6993,7 +6989,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7001,7 +6997,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7011,9 +7007,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7025,7 +7021,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7033,7 +7029,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7041,7 +7037,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7059,7 +7055,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7067,7 +7063,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7075,7 +7071,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7084,7 +7080,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7096,7 +7092,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7104,7 +7100,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7112,7 +7108,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7130,7 +7126,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7138,7 +7134,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7146,7 +7142,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7160,11 +7156,11 @@ void test3()
             }
             ios.precision(6);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7176,7 +7172,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7184,7 +7180,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7192,7 +7188,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7210,7 +7206,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7218,7 +7214,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7226,7 +7222,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7235,7 +7231,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7247,7 +7243,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7255,7 +7251,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7263,7 +7259,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7281,7 +7277,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7289,7 +7285,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7297,7 +7293,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7307,9 +7303,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7321,7 +7317,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7329,7 +7325,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7337,7 +7333,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7355,7 +7351,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7363,7 +7359,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7371,7 +7367,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7380,7 +7376,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7392,7 +7388,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7400,7 +7396,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7408,7 +7404,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7426,7 +7422,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7434,7 +7430,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7442,7 +7438,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7453,11 +7449,11 @@ void test3()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7469,7 +7465,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7477,7 +7473,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7485,7 +7481,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7503,7 +7499,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7511,7 +7507,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7519,7 +7515,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7528,7 +7524,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7540,7 +7536,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7548,7 +7544,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7556,7 +7552,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7574,7 +7570,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7582,7 +7578,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7590,7 +7586,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7600,9 +7596,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7614,7 +7610,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7622,7 +7618,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7630,7 +7626,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7648,7 +7644,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7656,7 +7652,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7664,7 +7660,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7673,7 +7669,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7685,7 +7681,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7693,7 +7689,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7701,7 +7697,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7719,7 +7715,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7727,7 +7723,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7735,7 +7731,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7749,11 +7745,11 @@ void test3()
             }
             ios.precision(16);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7765,7 +7761,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7773,7 +7769,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7781,7 +7777,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7799,7 +7795,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7807,7 +7803,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7815,7 +7811,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7824,7 +7820,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7836,7 +7832,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7844,7 +7840,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7852,7 +7848,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7870,7 +7866,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7878,7 +7874,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7886,7 +7882,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7896,9 +7892,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7910,7 +7906,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7918,7 +7914,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7926,7 +7922,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7944,7 +7940,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7952,7 +7948,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7960,7 +7956,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7969,7 +7965,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -7981,7 +7977,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7989,7 +7985,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -7997,7 +7993,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8015,7 +8011,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8023,7 +8019,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8031,7 +8027,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8042,11 +8038,11 @@ void test3()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8058,7 +8054,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8066,7 +8062,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8074,7 +8070,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8092,7 +8088,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8100,7 +8096,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8108,7 +8104,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8117,7 +8113,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8129,7 +8125,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8137,7 +8133,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8145,7 +8141,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8163,7 +8159,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8171,7 +8167,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8179,7 +8175,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8189,9 +8185,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8203,7 +8199,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8211,7 +8207,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8219,7 +8215,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8237,7 +8233,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8245,7 +8241,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8253,7 +8249,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8262,7 +8258,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8274,7 +8270,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8282,7 +8278,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8290,7 +8286,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8308,7 +8304,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8316,7 +8312,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8324,7 +8320,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8338,11 +8334,11 @@ void test3()
             }
             ios.precision(60);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8354,7 +8350,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8362,7 +8358,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8370,7 +8366,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8388,7 +8384,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8396,7 +8392,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8404,7 +8400,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8413,7 +8409,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8425,7 +8421,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8433,7 +8429,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8441,7 +8437,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8459,7 +8455,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8467,7 +8463,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8475,7 +8471,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8485,9 +8481,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8499,7 +8495,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8507,7 +8503,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8515,7 +8511,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8533,7 +8529,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8541,7 +8537,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8549,7 +8545,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8558,7 +8554,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8570,7 +8566,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8578,7 +8574,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8586,7 +8582,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8604,7 +8600,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8612,7 +8608,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8620,7 +8616,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8631,11 +8627,11 @@ void test3()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8647,7 +8643,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8655,7 +8651,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8663,7 +8659,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8681,7 +8677,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8689,7 +8685,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8697,7 +8693,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8706,7 +8702,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8718,7 +8714,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8726,7 +8722,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8734,7 +8730,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8752,7 +8748,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8760,7 +8756,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8768,7 +8764,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8778,9 +8774,9 @@ void test3()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8792,7 +8788,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8800,7 +8796,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8808,7 +8804,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8826,7 +8822,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8834,7 +8830,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8842,7 +8838,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8851,7 +8847,7 @@ void test3()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8863,7 +8859,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8871,7 +8867,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8879,7 +8875,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8897,7 +8893,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8905,7 +8901,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8913,7 +8909,7 @@ void test3()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8938,16 +8934,16 @@ void test4()
     {
         double v = 1234567890.125;
         std::ios ios(0);
-        fixed(ios);
+        std::fixed(ios);
         // %f
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -8959,7 +8955,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8967,7 +8963,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8975,7 +8971,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -8993,7 +8989,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9001,7 +8997,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9009,7 +9005,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9018,7 +9014,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9030,7 +9026,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9038,7 +9034,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9046,7 +9042,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9064,7 +9060,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9072,7 +9068,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9080,7 +9076,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9090,9 +9086,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9104,7 +9100,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9112,7 +9108,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9120,7 +9116,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9138,7 +9134,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9146,7 +9142,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9154,7 +9150,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9163,7 +9159,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9175,7 +9171,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9183,7 +9179,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9191,7 +9187,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9209,7 +9205,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9217,7 +9213,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9225,7 +9221,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9236,11 +9232,11 @@ void test4()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9252,7 +9248,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9260,7 +9256,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9268,7 +9264,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9286,7 +9282,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9294,7 +9290,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9302,7 +9298,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9311,7 +9307,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9323,7 +9319,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9331,7 +9327,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9339,7 +9335,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9357,7 +9353,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9365,7 +9361,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9373,7 +9369,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9383,9 +9379,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9397,7 +9393,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9405,7 +9401,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9413,7 +9409,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9431,7 +9427,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9439,7 +9435,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9447,7 +9443,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9456,7 +9452,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9468,7 +9464,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9476,7 +9472,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9484,7 +9480,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9502,7 +9498,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9510,7 +9506,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9518,7 +9514,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9532,11 +9528,11 @@ void test4()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9548,7 +9544,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9556,7 +9552,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9564,7 +9560,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9582,7 +9578,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9590,7 +9586,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9598,7 +9594,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9607,7 +9603,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9619,7 +9615,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9627,7 +9623,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9635,7 +9631,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9653,7 +9649,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9661,7 +9657,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9669,7 +9665,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9679,9 +9675,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9693,7 +9689,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9701,7 +9697,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9709,7 +9705,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9727,7 +9723,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9735,7 +9731,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9743,7 +9739,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9752,7 +9748,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9764,7 +9760,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9772,7 +9768,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9780,7 +9776,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9798,7 +9794,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9806,7 +9802,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9814,7 +9810,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9825,11 +9821,11 @@ void test4()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9841,7 +9837,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9849,7 +9845,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9857,7 +9853,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9875,7 +9871,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9883,7 +9879,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9891,7 +9887,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9900,7 +9896,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9912,7 +9908,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9920,7 +9916,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9928,7 +9924,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9946,7 +9942,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9954,7 +9950,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9962,7 +9958,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9972,9 +9968,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -9986,7 +9982,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -9994,7 +9990,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10002,7 +9998,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10020,7 +10016,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10028,7 +10024,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10036,7 +10032,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10045,7 +10041,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10057,7 +10053,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10065,7 +10061,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10073,7 +10069,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10091,7 +10087,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10099,7 +10095,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10107,7 +10103,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10121,11 +10117,11 @@ void test4()
             }
             ios.precision(6);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10137,7 +10133,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10145,7 +10141,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10153,7 +10149,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10171,7 +10167,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10179,7 +10175,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10187,7 +10183,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10196,7 +10192,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10208,7 +10204,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10216,7 +10212,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10224,7 +10220,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10242,7 +10238,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10250,7 +10246,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10258,7 +10254,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10268,9 +10264,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10282,7 +10278,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10290,7 +10286,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10298,7 +10294,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10316,7 +10312,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10324,7 +10320,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10332,7 +10328,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10341,7 +10337,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10353,7 +10349,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10361,7 +10357,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10369,7 +10365,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10387,7 +10383,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10395,7 +10391,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10403,7 +10399,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10414,11 +10410,11 @@ void test4()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10430,7 +10426,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10438,7 +10434,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10446,7 +10442,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10464,7 +10460,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10472,7 +10468,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10480,7 +10476,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10489,7 +10485,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10501,7 +10497,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10509,7 +10505,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10517,7 +10513,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10535,7 +10531,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10543,7 +10539,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10551,7 +10547,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10561,9 +10557,9 @@ void test4()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10575,7 +10571,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10583,7 +10579,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10591,7 +10587,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10609,7 +10605,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10617,7 +10613,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10625,7 +10621,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10634,7 +10630,7 @@ void test4()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10646,7 +10642,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10654,7 +10650,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10662,7 +10658,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10680,7 +10676,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10688,7 +10684,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10696,7 +10692,7 @@ void test4()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10725,16 +10721,16 @@ void test5()
     {
         double v = -0.;
         std::ios ios(0);
-        scientific(ios);
+        std::scientific(ios);
         // %e
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10746,7 +10742,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10754,7 +10750,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10762,7 +10758,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10780,7 +10776,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10788,7 +10784,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10796,7 +10792,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10805,7 +10801,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10817,7 +10813,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10825,7 +10821,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10833,7 +10829,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10851,7 +10847,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10859,7 +10855,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10867,7 +10863,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10877,9 +10873,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10891,7 +10887,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10899,7 +10895,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10907,7 +10903,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10925,7 +10921,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10933,7 +10929,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10941,7 +10937,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10950,7 +10946,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -10962,7 +10958,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10970,7 +10966,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10978,7 +10974,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -10996,7 +10992,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11004,7 +11000,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11012,7 +11008,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11023,11 +11019,11 @@ void test5()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11039,7 +11035,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11047,7 +11043,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11055,7 +11051,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11073,7 +11069,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11081,7 +11077,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11089,7 +11085,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11098,7 +11094,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11110,7 +11106,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11118,7 +11114,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11126,7 +11122,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11144,7 +11140,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11152,7 +11148,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11160,7 +11156,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11170,9 +11166,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11184,7 +11180,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11192,7 +11188,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11200,7 +11196,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11218,7 +11214,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11226,7 +11222,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11234,7 +11230,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11243,7 +11239,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11255,7 +11251,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11263,7 +11259,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11271,7 +11267,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11289,7 +11285,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11297,7 +11293,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11305,7 +11301,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11319,11 +11315,11 @@ void test5()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11335,7 +11331,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11343,7 +11339,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11351,7 +11347,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11369,7 +11365,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11377,7 +11373,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11385,7 +11381,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11394,7 +11390,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11406,7 +11402,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11414,7 +11410,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11422,7 +11418,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11440,7 +11436,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11448,7 +11444,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11456,7 +11452,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11466,9 +11462,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11480,7 +11476,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11488,7 +11484,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11496,7 +11492,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11514,7 +11510,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11522,7 +11518,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11530,7 +11526,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11539,7 +11535,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11551,7 +11547,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11559,7 +11555,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11567,7 +11563,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11585,7 +11581,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11593,7 +11589,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11601,7 +11597,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11612,11 +11608,11 @@ void test5()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11628,7 +11624,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11636,7 +11632,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11644,7 +11640,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11662,7 +11658,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11670,7 +11666,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11678,7 +11674,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11687,7 +11683,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11699,7 +11695,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11707,7 +11703,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11715,7 +11711,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11733,7 +11729,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11741,7 +11737,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11749,7 +11745,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11759,9 +11755,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11773,7 +11769,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11781,7 +11777,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11789,7 +11785,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11807,7 +11803,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11815,7 +11811,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11823,7 +11819,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11832,7 +11828,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11844,7 +11840,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11852,7 +11848,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11860,7 +11856,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11878,7 +11874,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11886,7 +11882,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11894,7 +11890,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11908,11 +11904,11 @@ void test5()
             }
             ios.precision(6);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11924,7 +11920,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11932,7 +11928,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11940,7 +11936,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11958,7 +11954,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11966,7 +11962,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11974,7 +11970,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -11983,7 +11979,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -11995,7 +11991,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12003,7 +11999,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12011,7 +12007,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12029,7 +12025,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12037,7 +12033,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12045,7 +12041,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12055,9 +12051,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12069,7 +12065,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12077,7 +12073,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12085,7 +12081,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12103,7 +12099,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12111,7 +12107,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12119,7 +12115,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12128,7 +12124,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12140,7 +12136,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12148,7 +12144,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12156,7 +12152,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12174,7 +12170,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12182,7 +12178,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12190,7 +12186,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12201,11 +12197,11 @@ void test5()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12217,7 +12213,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12225,7 +12221,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12233,7 +12229,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12251,7 +12247,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12259,7 +12255,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12267,7 +12263,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12276,7 +12272,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12288,7 +12284,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12296,7 +12292,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12304,7 +12300,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12322,7 +12318,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12330,7 +12326,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12338,7 +12334,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12348,9 +12344,9 @@ void test5()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12362,7 +12358,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12370,7 +12366,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12378,7 +12374,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12396,7 +12392,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12404,7 +12400,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12412,7 +12408,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12421,7 +12417,7 @@ void test5()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12433,7 +12429,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12441,7 +12437,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12449,7 +12445,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12467,7 +12463,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12475,7 +12471,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12483,7 +12479,7 @@ void test5()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12514,16 +12510,16 @@ void test6()
     {
         double v = 1234567890.125;
         std::ios ios(0);
-        scientific(ios);
+        std::scientific(ios);
         // %e
         {
             ios.precision(0);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12535,7 +12531,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12543,7 +12539,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12551,7 +12547,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12569,7 +12565,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12577,7 +12573,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12585,7 +12581,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12594,7 +12590,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12606,7 +12602,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12614,7 +12610,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12622,7 +12618,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12640,7 +12636,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12648,7 +12644,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12656,7 +12652,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12666,9 +12662,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12680,7 +12676,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12688,7 +12684,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12696,7 +12692,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12714,7 +12710,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12722,7 +12718,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12730,7 +12726,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12739,7 +12735,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12751,7 +12747,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12759,7 +12755,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12767,7 +12763,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12785,7 +12781,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12793,7 +12789,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12801,7 +12797,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12812,11 +12808,11 @@ void test6()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12828,7 +12824,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12836,7 +12832,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12844,7 +12840,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12862,7 +12858,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12870,7 +12866,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12878,7 +12874,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12887,7 +12883,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12899,7 +12895,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12907,7 +12903,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12915,7 +12911,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12933,7 +12929,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12941,7 +12937,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12949,7 +12945,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12959,9 +12955,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -12973,7 +12969,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12981,7 +12977,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -12989,7 +12985,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13007,7 +13003,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13015,7 +13011,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13023,7 +13019,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13032,7 +13028,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13044,7 +13040,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13052,7 +13048,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13060,7 +13056,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13078,7 +13074,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13086,7 +13082,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13094,7 +13090,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13108,11 +13104,11 @@ void test6()
             }
             ios.precision(1);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13124,7 +13120,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13132,7 +13128,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13140,7 +13136,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13158,7 +13154,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13166,7 +13162,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13174,7 +13170,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13183,7 +13179,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13195,7 +13191,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13203,7 +13199,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13211,7 +13207,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13229,7 +13225,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13237,7 +13233,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13245,7 +13241,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13255,9 +13251,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13269,7 +13265,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13277,7 +13273,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13285,7 +13281,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13303,7 +13299,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13311,7 +13307,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13319,7 +13315,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13328,7 +13324,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13340,7 +13336,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13348,7 +13344,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13356,7 +13352,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13374,7 +13370,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13382,7 +13378,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13390,7 +13386,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13401,11 +13397,11 @@ void test6()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13417,7 +13413,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13425,7 +13421,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13433,7 +13429,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13451,7 +13447,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13459,7 +13455,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13467,7 +13463,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13476,7 +13472,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13488,7 +13484,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13496,7 +13492,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13504,7 +13500,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13522,7 +13518,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13530,7 +13526,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13538,7 +13534,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13548,9 +13544,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13562,7 +13558,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13570,7 +13566,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13578,7 +13574,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13596,7 +13592,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13604,7 +13600,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13612,7 +13608,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13621,7 +13617,7 @@ void test6()
                                 }
                             }
                         }
-                        showpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13633,7 +13629,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13641,7 +13637,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13649,7 +13645,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13667,7 +13663,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13675,7 +13671,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13683,7 +13679,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13703,11 +13699,11 @@ void test6()
             }
             ios.precision(60);
             {
-                nouppercase(ios);
+                std::nouppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13719,7 +13715,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13727,7 +13723,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13735,78 +13731,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13824,7 +13749,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13832,7 +13757,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13840,7 +13765,78 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                        }
+                        std::showpoint(ios);
+                        {
+                            ios.imbue(lc);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                            ios.imbue(lg);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13850,9 +13846,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -13864,7 +13860,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13872,7 +13868,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13880,78 +13876,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13969,7 +13894,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13977,7 +13902,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13985,7 +13910,78 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                        }
+                        std::showpoint(ios);
+                        {
+                            ios.imbue(lc);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                            ios.imbue(lg);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000e+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -13996,11 +13992,11 @@ void test6()
                         }
                     }
                 }
-                uppercase(ios);
+                std::uppercase(ios);
                 {
-                    noshowpos(ios);
+                    std::noshowpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -14012,7 +14008,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14020,7 +14016,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14028,78 +14024,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14117,7 +14042,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14125,7 +14050,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14133,7 +14058,78 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                        }
+                        std::showpoint(ios);
+                        {
+                            ios.imbue(lc);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1.234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                            }
+                            ios.imbue(lg);
+                            {
+                                ios.width(0);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::left(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::right(ios);
+                                {
+                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
+                                    std::string ex(str, iter.base());
+                                    assert(ex == "1;234567890125000000000000000000000000000000000000000000000000E+09");
+                                    assert(ios.width() == 0);
+                                }
+                                ios.width(25);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14143,9 +14139,9 @@ void test6()
                             }
                         }
                     }
-                    showpos(ios);
+                    std::showpos(ios);
                     {
-                        noshowpoint(ios);
+                        std::noshowpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -14157,7 +14153,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14165,7 +14161,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14173,78 +14169,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14262,7 +14187,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14270,7 +14195,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14278,7 +14203,7 @@ void test6()
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
@@ -14287,32 +14212,7 @@ void test6()
                                 }
                             }
                         }
-                    }
-                }
-            }
-        }
-    }
-}
-
-void test7()
-{
-    char str[200];
-    std::locale lc = std::locale::classic();
-    std::locale lg(lc, new my_numpunct);
-    const my_facet f(1);
-    {
-        double v = -0.;
-        std::ios ios(0);
-        hexfloat(ios);
-        // %a
-        {
-            ios.precision(0);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
+                        std::showpoint(ios);
                         {
                             ios.imbue(lc);
                             {
@@ -14320,31 +14220,31 @@ void test7()
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
+                                    assert(ex == "+1.234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                             }
@@ -14354,3513 +14254,31 @@ void test7()
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                left(ios);
+                                std::left(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                right(ios);
+                                std::right(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                                 ios.width(25);
-                                internal(ios);
+                                std::internal(ios);
                                 {
                                     cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
                                     std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ios.precision(1);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ios.precision(6);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0p+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0x0p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0.p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0.p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0x0;p+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0x0;p+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0P+0******************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "******************-0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-******************0X0P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0.P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0.P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-0X0;P+0*****************");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*****************-0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "-*****************0X0;P+0");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ios.precision(16);
-            {
-            }
-            ios.precision(60);
-            {
-            }
-        }
-    }
-}
-
-void test8()
-{
-    char str[200];
-    std::locale lc = std::locale::classic();
-    std::locale lg(lc, new my_numpunct);
-    const my_facet f(1);
-    {
-        double v = 1234567890.125;
-        std::ios ios(0);
-        hexfloat(ios);
-        // %a
-        {
-            ios.precision(0);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ios.precision(1);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            ios.precision(6);
-            {
-            }
-            ios.precision(16);
-            {
-            }
-            ios.precision(60);
-            {
-                nouppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1.26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x1;26580b488p+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0x********1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1.26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1.26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0x1;26580b488p+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0x1;26580b488p+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                uppercase(ios);
-                {
-                    noshowpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1.26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X1;26580B488P+30********");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "********0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "0X********1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                    }
-                    showpos(ios);
-                    {
-                        noshowpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                        }
-                        showpoint(ios);
-                        {
-                            ios.imbue(lc);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1.26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1.26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                            }
-                            ios.imbue(lg);
-                            {
-                                ios.width(0);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                left(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+0X1;26580B488P+30*******");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                right(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "*******+0X1;26580B488P+30");
-                                    assert(ios.width() == 0);
-                                }
-                                ios.width(25);
-                                internal(ios);
-                                {
-                                    cpp17_output_iterator<char*> iter = f.put(cpp17_output_iterator<char*>(str), ios, '*', v);
-                                    std::string ex(str, iter.base());
-                                    assert(ex == "+*******0X1;26580B488P+30");
+                                    assert(ex == "+1;234567890125000000000000000000000000000000000000000000000000E+09");
                                     assert(ios.width() == 0);
                                 }
                             }
@@ -17880,8 +14298,6 @@ int main(int, char**)
     test4();
     test5();
     test6();
-    test7();
-    test8();
 
   return 0;
 }

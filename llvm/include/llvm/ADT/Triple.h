@@ -200,6 +200,7 @@ public:
     ELFIAMCU,
     TvOS,       // Apple tvOS
     WatchOS,    // Apple watchOS
+    DriverKit,  // Apple DriverKit
     Mesa3D,
     Contiki,
     AMDPAL,     // AMD PAL Runtime
@@ -362,6 +363,9 @@ public:
   /// with WatchOS or generic triples.
   VersionTuple getWatchOSVersion() const;
 
+  /// Parse the version number as with getOSVersion.
+  VersionTuple getDriverKitVersion() const;
+
   /// @}
   /// @name Direct Component Access
   /// @{
@@ -464,11 +468,14 @@ public:
     return getSubArch() == Triple::ARMSubArch_v7k;
   }
 
+  /// Is this an Apple DriverKit triple.
+  bool isDriverKit() const { return getOS() == Triple::DriverKit; }
+
   bool isOSzOS() const { return getOS() == Triple::ZOS; }
 
   /// Is this a "Darwin" OS (macOS, iOS, tvOS or watchOS).
   bool isOSDarwin() const {
-    return isMacOSX() || isiOS() || isWatchOS();
+    return isMacOSX() || isiOS() || isWatchOS() || isDriverKit();
   }
 
   bool isSimulatorEnvironment() const {
@@ -816,6 +823,17 @@ public:
   bool isRISCV() const {
     return getArch() == Triple::riscv32 || getArch() == Triple::riscv64;
   }
+
+  /// Tests whether the target is 32-bit SPARC (little and big endian).
+  bool isSPARC32() const {
+    return getArch() == Triple::sparc || getArch() == Triple::sparcel;
+  }
+
+  /// Tests whether the target is 64-bit SPARC (big endian).
+  bool isSPARC64() const { return getArch() == Triple::sparcv9; }
+
+  /// Tests whether the target is SPARC.
+  bool isSPARC() const { return isSPARC32() || isSPARC64(); }
 
   /// Tests whether the target is SystemZ.
   bool isSystemZ() const {

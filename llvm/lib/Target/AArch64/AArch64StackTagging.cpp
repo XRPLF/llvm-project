@@ -48,6 +48,7 @@
 #include "llvm/IR/IntrinsicInst.h"
 #include "llvm/IR/IntrinsicsAArch64.h"
 #include "llvm/IR/Metadata.h"
+#include "llvm/IR/ValueHandle.h"
 #include "llvm/InitializePasses.h"
 #include "llvm/Pass.h"
 #include "llvm/Support/Casting.h"
@@ -305,7 +306,6 @@ public:
   }
 
   bool isInterestingAlloca(const AllocaInst &AI);
-  void alignAndPadAlloca(memtag::AllocaInfo &Info);
 
   void tagAlloca(AllocaInst *AI, Instruction *InsertBefore, Value *Ptr,
                  uint64_t Size);
@@ -482,40 +482,6 @@ Instruction *AArch64StackTagging::insertBaseTaggedPointer(
   return Base;
 }
 
-void AArch64StackTagging::alignAndPadAlloca(memtag::AllocaInfo &Info) {
-  const Align NewAlignment =
-      max(MaybeAlign(Info.AI->getAlign()), kTagGranuleSize);
-  Info.AI->setAlignment(NewAlignment);
-
-  uint64_t Size = Info.AI->getAllocationSizeInBits(*DL).getValue() / 8;
-  uint64_t AlignedSize = alignTo(Size, kTagGranuleSize);
-  if (Size == AlignedSize)
-    return;
-
-  // Add padding to the alloca.
-  Type *AllocatedType =
-      Info.AI->isArrayAllocation()
-          ? ArrayType::get(
-                Info.AI->getAllocatedType(),
-                cast<ConstantInt>(Info.AI->getArraySize())->getZExtValue())
-          : Info.AI->getAllocatedType();
-  Type *PaddingType =
-      ArrayType::get(Type::getInt8Ty(F->getContext()), AlignedSize - Size);
-  Type *TypeWithPadding = StructType::get(AllocatedType, PaddingType);
-  auto *NewAI = new AllocaInst(
-      TypeWithPadding, Info.AI->getType()->getAddressSpace(), nullptr, "", Info.AI);
-  NewAI->takeName(Info.AI);
-  NewAI->setAlignment(Info.AI->getAlign());
-  NewAI->setUsedWithInAlloca(Info.AI->isUsedWithInAlloca());
-  NewAI->setSwiftError(Info.AI->isSwiftError());
-  NewAI->copyMetadata(*Info.AI);
-
-  auto *NewPtr = new BitCastInst(NewAI, Info.AI->getType(), "", Info.AI);
-  Info.AI->replaceAllUsesWith(NewPtr);
-  Info.AI->eraseFromParent();
-  Info.AI = NewAI;
-}
-
 // FIXME: check for MTE extension
 bool AArch64StackTagging::runOnFunction(Function &Fn) {
   if (!Fn.hasFnAttribute(Attribute::SanitizeMemTag))
@@ -537,19 +503,12 @@ bool AArch64StackTagging::runOnFunction(Function &Fn) {
   if (SInfo.AllocasToInstrument.empty())
     return false;
 
-  for (auto &I : SInfo.AllocasToInstrument) {
-    memtag::AllocaInfo &Info = I.second;
-    assert(Info.AI && isInterestingAlloca(*Info.AI));
-    alignAndPadAlloca(Info);
-  }
-
   std::unique_ptr<DominatorTree> DeleteDT;
   DominatorTree *DT = nullptr;
   if (auto *P = getAnalysisIfAvailable<DominatorTreeWrapperPass>())
     DT = &P->getDomTree();
 
-  if (DT == nullptr && (SInfo.AllocasToInstrument.size() > 1 ||
-                        !F->hasFnAttribute(Attribute::OptimizeNone))) {
+  if (DT == nullptr) {
     DeleteDT = std::make_unique<DominatorTree>(*F);
     DT = DeleteDT.get();
   }
@@ -559,7 +518,7 @@ bool AArch64StackTagging::runOnFunction(Function &Fn) {
   if (auto *P = getAnalysisIfAvailable<PostDominatorTreeWrapperPass>())
     PDT = &P->getPostDomTree();
 
-  if (PDT == nullptr && !F->hasFnAttribute(Attribute::OptimizeNone)) {
+  if (PDT == nullptr) {
     DeletePDT = std::make_unique<PostDominatorTree>(*F);
     PDT = DeletePDT.get();
   }
@@ -571,7 +530,10 @@ bool AArch64StackTagging::runOnFunction(Function &Fn) {
 
   int NextTag = 0;
   for (auto &I : SInfo.AllocasToInstrument) {
-    const memtag::AllocaInfo &Info = I.second;
+    memtag::AllocaInfo &Info = I.second;
+    assert(Info.AI && isInterestingAlloca(*Info.AI));
+    TrackingVH<Instruction> OldAI = Info.AI;
+    memtag::alignAndPadAlloca(Info, kTagGranuleSize);
     AllocaInst *AI = Info.AI;
     int Tag = NextTag;
     NextTag = (NextTag + 1) % 16;
@@ -627,7 +589,7 @@ bool AArch64StackTagging::runOnFunction(Function &Fn) {
 
     // Fixup debug intrinsics to point to the new alloca.
     for (auto DVI : Info.DbgVariableIntrinsics)
-      DVI->replaceVariableLocationOp(Info.OldAI, Info.AI);
+      DVI->replaceVariableLocationOp(OldAI, Info.AI);
   }
 
   // If we have instrumented at least one alloca, all unrecognized lifetime

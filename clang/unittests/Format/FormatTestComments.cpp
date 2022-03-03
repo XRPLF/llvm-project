@@ -91,6 +91,11 @@ TEST_F(FormatTestComments, UnderstandsSingleLineComments) {
                "// line 2\n"
                "void f() {}\n");
 
+  EXPECT_EQ("// comment\n"
+            "// clang-format on\n",
+            format("//comment\n"
+                   "// clang-format on\n"));
+
   verifyFormat("void f() {\n"
                "  // Doesn't do anything\n"
                "}");
@@ -3650,6 +3655,13 @@ TEST_F(FormatTestComments, SpaceAtLineCommentBegin) {
             format("//   x\n"
                    "// y",
                    Style));
+  EXPECT_EQ(
+      "// loooooooooooooooooooooooooooooong\n"
+      "// commentcomments\n"
+      "// normal comments",
+      format("//            loooooooooooooooooooooooooooooong commentcomments\n"
+             "// normal comments",
+             Style));
 
   Style.SpacesInLineCommentPrefix = {3, 3};
   EXPECT_EQ("//   Lorem ipsum\n"

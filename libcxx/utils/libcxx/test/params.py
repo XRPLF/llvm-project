@@ -76,6 +76,8 @@ DEFAULT_PARAMETERS = [
             actions=lambda modules: [
               AddFeature('modules-build'),
               AddCompileFlag('-fmodules'),
+              AddCompileFlag('-fcxx-modules'), # AppleClang disregards -fmodules entirely when compiling C++. This enables modules for C++.
+              AddCompileFlag('-D_LIBCXX_MODULES_BUILD') # Needed to exclude headers that are not supported in a modules build
             ] if modules else []),
 
   Parameter(name='enable_exceptions', choices=[True, False], type=bool, default=True,

@@ -79,7 +79,7 @@
 #include "llvm/CodeGen/GlobalISel/LegalizerHelper.h"
 #include "llvm/CodeGen/GlobalISel/MIPatternMatch.h"
 #include "llvm/CodeGen/GlobalISel/MachineIRBuilder.h"
-#include "llvm/CodeGen/GlobalISel/RegisterBank.h"
+#include "llvm/CodeGen/RegisterBank.h"
 #include "llvm/IR/IntrinsicsAMDGPU.h"
 
 #define GET_TARGET_REGBANK_IMPL
@@ -1789,7 +1789,7 @@ bool AMDGPURegisterBankInfo::buildVCopy(MachineIRBuilder &B, Register DstReg,
 }
 
 /// Utility function for pushing dynamic vector indexes with a constant offset
-/// into waterwall loops.
+/// into waterfall loops.
 static void reinsertVectorIndexAdd(MachineIRBuilder &B,
                                    MachineInstr &IdxUseInstr,
                                    unsigned OpIdx,

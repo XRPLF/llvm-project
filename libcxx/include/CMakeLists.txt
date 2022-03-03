@@ -26,6 +26,7 @@ set(files
   __algorithm/generate.h
   __algorithm/generate_n.h
   __algorithm/half_positive.h
+  __algorithm/in_found_result.h
   __algorithm/in_fun_result.h
   __algorithm/in_in_out_result.h
   __algorithm/in_in_result.h
@@ -48,6 +49,7 @@ set(files
   __algorithm/merge.h
   __algorithm/min.h
   __algorithm/min_element.h
+  __algorithm/min_max_result.h
   __algorithm/minmax.h
   __algorithm/minmax_element.h
   __algorithm/mismatch.h
@@ -99,6 +101,7 @@ set(files
   __algorithm/unique_copy.h
   __algorithm/unwrap_iter.h
   __algorithm/upper_bound.h
+  __assert
   __availability
   __bit/bit_cast.h
   __bit/byteswap.h
@@ -242,6 +245,7 @@ set(files
   __iterator/iter_swap.h
   __iterator/iterator.h
   __iterator/iterator_traits.h
+  __iterator/mergeable.h
   __iterator/move_iterator.h
   __iterator/next.h
   __iterator/ostream_iterator.h
@@ -253,6 +257,7 @@ set(files
   __iterator/reverse_access.h
   __iterator/reverse_iterator.h
   __iterator/size.h
+  __iterator/sortable.h
   __iterator/unreachable_sentinel.h
   __iterator/wrap_iter.h
   __libcpp_version
@@ -308,6 +313,7 @@ set(files
   __random/geometric_distribution.h
   __random/independent_bits_engine.h
   __random/is_seed_sequence.h
+  __random/is_valid.h
   __random/knuth_b.h
   __random/linear_congruential_engine.h
   __random/log2.h
@@ -401,6 +407,7 @@ set(files
   __utility/swap.h
   __utility/to_underlying.h
   __utility/transaction.h
+  __utility/unreachable.h
   __variant/monostate.h
   algorithm
   any

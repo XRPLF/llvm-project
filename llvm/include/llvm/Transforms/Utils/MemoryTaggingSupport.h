@@ -15,13 +15,12 @@
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/Analysis/CFG.h"
 #include "llvm/Analysis/PostDominators.h"
-#include "llvm/IR/Dominators.h"
-#include "llvm/IR/Instruction.h"
 #include "llvm/IR/IntrinsicInst.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/ValueHandle.h"
 
 namespace llvm {
+class DominatorTree;
+class AllocaInst;
+class Instruction;
 namespace memtag {
 // For an alloca valid between lifetime markers Start and Ends, call the
 // Callback for all possible exits out of the lifetime in the containing
@@ -75,7 +74,6 @@ Instruction *getUntagLocationIfFunctionExit(Instruction &Inst);
 
 struct AllocaInfo {
   AllocaInst *AI;
-  TrackingVH<Instruction> OldAI; // Track through RAUW to replace debug uses.
   SmallVector<IntrinsicInst *, 2> LifetimeStart;
   SmallVector<IntrinsicInst *, 2> LifetimeEnd;
   SmallVector<DbgVariableIntrinsic *, 2> DbgVariableIntrinsics;
@@ -100,6 +98,9 @@ private:
   StackInfo Info;
   std::function<bool(const AllocaInst &)> IsInterestingAlloca;
 };
+
+uint64_t getAllocaSizeInBytes(const AllocaInst &AI);
+void alignAndPadAlloca(memtag::AllocaInfo &Info, llvm::Align Align);
 
 } // namespace memtag
 } // namespace llvm

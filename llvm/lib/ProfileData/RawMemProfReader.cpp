@@ -14,10 +14,10 @@
 #include <type_traits>
 
 #include "llvm/ADT/DenseMap.h"
-#include "llvm/ADT/STLExtras.h"
 #include "llvm/DebugInfo/DWARF/DWARFContext.h"
 #include "llvm/DebugInfo/Symbolize/SymbolizableModule.h"
 #include "llvm/DebugInfo/Symbolize/SymbolizableObjectFile.h"
+#include "llvm/IR/Function.h"
 #include "llvm/Object/Binary.h"
 #include "llvm/Object/ELFObjectFile.h"
 #include "llvm/Object/ObjectFile.h"
@@ -26,7 +26,6 @@
 #include "llvm/ProfileData/MemProfData.inc"
 #include "llvm/ProfileData/RawMemProfReader.h"
 #include "llvm/Support/Endian.h"
-#include "llvm/Support/MD5.h"
 
 #define DEBUG_TYPE "memprof"
 
@@ -362,13 +361,18 @@ Error RawMemProfReader::fillRecord(const uint64_t Id, const MemInfoBlock &MIB,
     for (size_t I = 0; I < DI.getNumberOfFrames(); I++) {
       const auto &Frame = DI.getFrame(I);
       Record.CallStack.emplace_back(
-          std::to_string(llvm::MD5Hash(trimSuffix(Frame.FunctionName))),
+          // We use the function guid which we expect to be a uint64_t. At this
+          // time, it is the lower 64 bits of the md5 of the function name. Any
+          // suffix with .llvm. is trimmed since these are added by thinLTO
+          // global promotion. At the time the profile is consumed, these
+          // suffixes will not be present.
+          Function::getGUID(trimSuffix(Frame.FunctionName)),
           Frame.Line - Frame.StartLine, Frame.Column,
           // Only the first entry is not an inlined location.
           I != 0);
     }
   }
-  Record.Info = MIB;
+  Record.Info = PortableMemInfoBlock(MIB);
   return Error::success();
 }
 
