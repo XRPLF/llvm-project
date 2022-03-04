@@ -39,7 +39,8 @@ public:
                           llvm::StringRef /*RelativePath*/,
                           const clang::Module * /*Imported*/,
                           SrcMgr::CharacteristicKind FileKind) override {
-    if (llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName))
+    if (mayBeRelativePath(FileName) ||
+	(llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName)))
       return;
 
     auto MainFID = SM.getMainFileID();
