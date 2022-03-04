@@ -2194,17 +2194,6 @@ static bool containsIncludeDelimiter(llvm::StringRef Content) {
   return false;
 }
 
-bool mayBeRelativePath(llvm::StringRef Content) {
-  // searching for ".." is simpler, but doesn't match ".\."...
-  int DotCount = 0;
-  for (auto i = Content.begin(); i != Content.end(); ++i)
-    if (*i == '.')
-      if (++DotCount >= 2)
-	return true;
-
-  return false;
-}
-
 bool allowImplicitCompletion(llvm::StringRef Content, unsigned Offset, bool TriggeredByCharacter) {
   // Look at last line before completion point only.
   Content = Content.take_front(Offset);

@@ -509,6 +509,21 @@ std::vector<TextEdit> replacementsToEdits(llvm::StringRef Code,
   return Edits;
 }
 
+bool mayBeRelativePath(llvm::StringRef Content) {
+  // searching for ".." is simpler, but doesn't match ".\."...
+  int DotCount = 0;
+  for (auto i = Content.begin(); i != Content.end(); ++i) {
+    if (*i == '.') {
+      if (++DotCount >= 2)
+	return true;
+    } else if (DotCount && (((*i >= 'a') && (*i <= 'z')) || ((*i >= 'A') && (*i <= 'Z')) || ((*i >= '0') && (*i <= '9')))) {
+      DotCount = 0;
+    }
+  }
+
+  return false;
+}
+
 llvm::Optional<std::string> getRealCanonicalPath(const FileEntry *F,
 						 const SourceManager &SourceMgr) {
   if (!F)

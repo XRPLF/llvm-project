@@ -891,7 +891,8 @@ bool isBuiltinDiagnosticSuppressed(const clang::Diagnostic &Info,
     llvm::StringRef CodeRef(CodePtr);
     if ((CodeRef == "err_pp_file_not_found") || (CodeRef == "err_cannot_open_file")) {
       const std::string &FileName = Info.getArgStdStr(0);
-      if (llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName))
+      if (mayBeRelativePath(FileName) ||
+	  (llvm::sys::path::is_absolute(FileName) && !isAuthorizedAbsolutePath(FileName)))
 	return true;
     }
 

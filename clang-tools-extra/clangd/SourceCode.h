@@ -152,6 +152,9 @@ std::vector<TextEdit> replacementsToEdits(StringRef Code,
 TextEdit toTextEdit(const FixItHint &FixIt, const SourceManager &M,
                     const LangOptions &L);
 
+// Searches for '.' characters.
+bool mayBeRelativePath(llvm::StringRef Content);
+
 /// Get the canonical path of \p F.  This means:
 ///
 ///   - Absolute path
