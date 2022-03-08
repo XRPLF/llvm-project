@@ -31,7 +31,6 @@ void f2(void *b) {
 
   printf("%s", c);
   // non-nested-warning@-1 {{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}}
-  // non-nested-note@-2 {{include the header <stdio.h> or explicitly provide a declaration for 'printf'}}
 }
 
 int f(void);

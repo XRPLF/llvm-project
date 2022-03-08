@@ -39,7 +39,6 @@ void use(void) {
   #elif ONLY_JMP_BUF
   // cxx-error@-5 {{undeclared identifier 'setjmp'}}
   // c-warning@-6 {{implicitly declaring library function 'setjmp' with type 'int (jmp_buf)' (aka 'int (int *)')}}
-  // c-note@-7 {{include the header <setjmp.h> or explicitly provide a declaration for 'setjmp'}}
   #else
   // cxx-no-diagnostics
   #endif

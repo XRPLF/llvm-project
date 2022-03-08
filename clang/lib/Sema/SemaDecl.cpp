@@ -2260,9 +2260,13 @@ NamedDecl *Sema::LazilyCreateBuiltin(IdentifierInfo *II, unsigned ID,
        Context.BuiltinInfo.isHeaderDependentFunction(ID))) {
     Diag(Loc, diag::ext_implicit_lib_function_decl)
         << Context.BuiltinInfo.getName(ID) << R;
+    // do not propose to include a standard library header - hooks
+    // don't have the standard library
+#if 0
     if (const char *Header = Context.BuiltinInfo.getHeaderName(ID))
       Diag(Loc, diag::note_include_header_or_declare)
           << Header << Context.BuiltinInfo.getName(ID);
+#endif
   }
 
   if (R.isNull())

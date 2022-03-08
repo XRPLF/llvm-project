@@ -2,10 +2,8 @@
 // RUN: %clang_cc1 -triple i386-unknown-unknown -fsyntax-only -verify %s -fms-extensions
 
 void f(void) {
-  (void)_byteswap_ushort(42); // expected-warning{{implicitly declaring library function '_byteswap_ushort'}} \
-  // expected-note{{include the header <stdlib.h> or explicitly provide a declaration for '_byteswap_ushort'}}
-  (void)_byteswap_uint64(42LL); // expected-warning{{implicitly declaring library function '_byteswap_uint64'}} \
-  // expected-note{{include the header <stdlib.h> or explicitly provide a declaration for '_byteswap_uint64'}}
+  (void)_byteswap_ushort(42); // expected-warning{{implicitly declaring library function '_byteswap_ushort'}}
+  (void)_byteswap_uint64(42LL); // expected-warning{{implicitly declaring library function '_byteswap_uint64'}}
 }
 
 void _byteswap_ulong(void); // expected-warning{{incompatible redeclaration of library function '_byteswap_ulong'}} \
@@ -21,10 +19,8 @@ void g(void) {
 
 #if defined(__x86_64__)
 void h(void) {
-  (void)__mulh(21, 2);  // expected-warning{{implicitly declaring library function '__mulh'}} \
-  // expected-note{{include the header <intrin.h> or explicitly provide a declaration for '__mulh'}}
-  (void)__umulh(21, 2); // expected-warning{{implicitly declaring library function '__umulh'}} \
-  // expected-note{{include the header <intrin.h> or explicitly provide a declaration for '__umulh'}}
+  (void)__mulh(21, 2);  // expected-warning{{implicitly declaring library function '__mulh'}}
+  (void)__umulh(21, 2); // expected-warning{{implicitly declaring library function '__umulh'}}
 }
 
 long long __mulh(long long, long long);

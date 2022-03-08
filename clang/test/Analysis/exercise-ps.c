@@ -19,8 +19,7 @@ void_typedef f2_helper(void);
 static void f2(void *buf) {
   F12_typedef* x;
   x = f2_helper();
-  memcpy((&x[1]), (buf), 1); // expected-warning{{implicitly declaring library function 'memcpy' with type 'void *(void *, const void *}} \
-  // expected-note{{include the header <string.h> or explicitly provide a declaration for 'memcpy'}}
+  memcpy((&x[1]), (buf), 1); // expected-warning{{implicitly declaring library function 'memcpy' with type 'void *(void *, const void *}}
 }
 
 // AllocaRegion is untyped. Void pointer isn't of much help either. Before

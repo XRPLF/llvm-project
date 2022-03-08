@@ -2,8 +2,7 @@
 
 int main(void) {
   @try {
-    printf("executing try"); // expected-warning{{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}} \
-        // expected-note{{include the header <stdio.h> or explicitly provide a declaration for 'printf'}}
+    printf("executing try"); // expected-warning{{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}}
     return(0); // expected-warning{{rewriter doesn't support user-specified control flow semantics for @try/@finally (code may not execute properly)}}
   } @finally {
     printf("executing finally");
