@@ -229,6 +229,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-func-addr-taken
+  <clang-tidy/checks/hooks-func-addr-taken>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-guard-called
   <clang-tidy/checks/hooks-guard-called>` check.
 

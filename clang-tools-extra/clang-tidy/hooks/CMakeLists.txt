@@ -26,6 +26,7 @@ add_clang_library(clangTidyHooksModule
   FloatManipPureCheck.cpp
   FloatOnePureCheck.cpp
   FloatPureCheck.cpp
+  FuncAddrTakenCheck.cpp
   GuardCalledCheck.cpp
   GuardInForCheck.cpp
   GuardInWhileCheck.cpp

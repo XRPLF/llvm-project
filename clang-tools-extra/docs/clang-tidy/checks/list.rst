@@ -12,7 +12,7 @@ Clang-Tidy Checks
 .. csv-table::
    :header: "Name", "Offers fixes"
 
-   `abseil-cleanup-ctad <abseil-cleanup-ctad.html>`_,
+   `abseil-cleanup-ctad <abseil-cleanup-ctad.html>`_, "Yes"
    `abseil-duration-addition <abseil-duration-addition.html>`_, "Yes"
    `abseil-duration-comparison <abseil-duration-comparison.html>`_, "Yes"
    `abseil-duration-conversion-cast <abseil-duration-conversion-cast.html>`_, "Yes"
@@ -84,7 +84,7 @@ Clang-Tidy Checks
    `bugprone-posix-return <bugprone-posix-return.html>`_, "Yes"
    `bugprone-redundant-branch-condition <bugprone-redundant-branch-condition.html>`_, "Yes"
    `bugprone-reserved-identifier <bugprone-reserved-identifier.html>`_, "Yes"
-   `bugprone-shared-ptr-array-mismatch <bugprone-shared-ptr-array-mismatch.html>`_, "Yes"
+   `bugprone-shared-ptr-array-mismatch <bugprone-shared-ptr-array-mismatch.html>`_,
    `bugprone-signal-handler <bugprone-signal-handler.html>`_,
    `bugprone-signed-char-misuse <bugprone-signed-char-misuse.html>`_,
    `bugprone-sizeof-container <bugprone-sizeof-container.html>`_,
@@ -93,7 +93,7 @@ Clang-Tidy Checks
    `bugprone-string-constructor <bugprone-string-constructor.html>`_, "Yes"
    `bugprone-string-integer-assignment <bugprone-string-integer-assignment.html>`_, "Yes"
    `bugprone-string-literal-with-embedded-nul <bugprone-string-literal-with-embedded-nul.html>`_,
-   `bugprone-stringview-nullptr <bugprone-stringview-nullptr.html>`_,
+   `bugprone-stringview-nullptr <bugprone-stringview-nullptr.html>`_, "Yes"
    `bugprone-suspicious-enum-usage <bugprone-suspicious-enum-usage.html>`_,
    `bugprone-suspicious-include <bugprone-suspicious-include.html>`_,
    `bugprone-suspicious-memory-comparison <bugprone-suspicious-memory-comparison.html>`_,
@@ -224,6 +224,7 @@ Clang-Tidy Checks
    `hooks-float-manip-pure <hooks-float-manip-pure.html>`_, "Yes"
    `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
+   `hooks-func-addr-taken <hooks-func-addr-taken.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,
@@ -239,7 +240,7 @@ Clang-Tidy Checks
    `hooks-slot-type-limit <hooks-slot-type-limit.html>`_,
    `hooks-state-buf-len <hooks-state-buf-len.html>`_,
    `hooks-transaction-hash-buf-len <hooks-transaction-hash-buf-len.html>`_,
-   `hooks-transaction-slot-limit <hooks-transaction-slot-limit.html>`_, "Yes"
+   `hooks-transaction-slot-limit <hooks-transaction-slot-limit.html>`_,
    `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,
@@ -301,7 +302,7 @@ Clang-Tidy Checks
    `modernize-use-using <modernize-use-using.html>`_, "Yes"
    `mpi-buffer-deref <mpi-buffer-deref.html>`_, "Yes"
    `mpi-type-mismatch <mpi-type-mismatch.html>`_, "Yes"
-   `objc-assert-equals <objc-assert-equals.html>`_,
+   `objc-assert-equals <objc-assert-equals.html>`_, "Yes"
    `objc-avoid-nserror-init <objc-avoid-nserror-init.html>`_,
    `objc-dealloc-in-category <objc-dealloc-in-category.html>`_,
    `objc-forbidden-subclassing <objc-forbidden-subclassing.html>`_,
