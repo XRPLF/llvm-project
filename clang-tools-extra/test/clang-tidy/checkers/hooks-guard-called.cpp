@@ -1,10 +1,10 @@
-// RUN: %check_clang_tidy %s hooks-guard-called %t
+// RUN: %check_clang_tidy -expect-clang-tidy-error %s hooks-guard-called %t
 
 // Declaration is not a problem.
 long hook(long reserved);
 
 long hook(long reserved) {
-// CHECK-MESSAGES: :[[@LINE-1]]:6: warning: 'hook' function does not call '_g' [hooks-guard-called]
+// CHECK-MESSAGES: :[[@LINE-1]]:6: error: 'hook' function does not call '_g' [hooks-guard-called]
   return 0l;
 }
 

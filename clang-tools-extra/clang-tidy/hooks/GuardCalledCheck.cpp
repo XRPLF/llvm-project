@@ -22,7 +22,7 @@ void GuardCalledCheck::registerMatchers(MatchFinder *Finder) {
 
 void GuardCalledCheck::check(const MatchFinder::MatchResult &Result) {
   const auto *Matched = Result.Nodes.getNodeAs<FunctionDecl>("hook");
-  diag(Matched->getLocation(), "'hook' function does not call '_g'");
+  diag(Matched->getLocation(), "'hook' function does not call '_g'", DiagnosticIDs::Error);
 }
 
 } // namespace hooks
