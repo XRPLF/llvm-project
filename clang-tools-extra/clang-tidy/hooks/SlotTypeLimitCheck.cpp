@@ -46,7 +46,7 @@ void SlotTypeLimitCheck::check(const MatchFinder::MatchResult &Result) {
   if (FlagsValue) {
     llvm::APSInt LimitedValue = *FlagsValue;
     if ((LimitedValue < 0) || (LimitedValue > 1)) {
-      diag(Slot->getBeginLoc(), "function slot_type accepts only 0 or 1 flags");
+      diag(Flags->getBeginLoc(), "function slot_type accepts only 0 or 1 flags");
     }
   }
 }
