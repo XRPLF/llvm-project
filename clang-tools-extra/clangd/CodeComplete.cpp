@@ -1778,6 +1778,10 @@ private:
           C.IndexResult->SymInfo.Kind == index::SymbolKind::Macro)) &&
         !C.Name.startswith_insensitive(Filter->pattern()))
       return None;
+    // include_next might be valid, but not in main file, and even
+    // inside a header it's non-standard
+    if (C.Name == "include_next")
+      return None;
     return Filter->match(C.Name);
   }
 
