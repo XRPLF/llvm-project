@@ -20,8 +20,8 @@ namespace hooks {
 const char *EntryPointsCheck::Names[] = { "cbak", "hook" };
 
 const char *EntryPointsCheck::DefaultFunctions[] = {
-   "int64_t cbak(int64_t reserved) { return 0; }\n",
-   "int64_t hook(int64_t reserved) { }\n"
+   "int64_t cbak(uint32_t what) { return 0; }\n",
+   "int64_t hook(uint32_t reserved) { }\n"
 };
 
 void EntryPointsCheck::registerMatchers(MatchFinder *Finder) {
