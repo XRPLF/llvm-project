@@ -629,7 +629,17 @@ void ClangdLSPServer::onInitialize(const InitializeParams &Params,
   applyConfiguration(Params.initializationOptions.ConfigSettings);
 }
 
-void ClangdLSPServer::onInitialized(const InitializedParams &Params) {}
+void ClangdLSPServer::onInitialized(const InitializedParams &Params) {
+  // Use this occasion to parse <stdint.h>, so that clangd knows to
+  // recommend including it when a hook source (not including
+  // "hookapi.h", e.g. because it's empty) uses types from it (such as
+  // int64_t, e.g. because it applied a fix offered by
+  // hooks-entry-points). Note the parsed source doesn't exist on disk
+  // and needn't be in the workspace.
+  Server->addDocument("/tmp/$extra.c", "#include <stdint.h>\n",
+                      encodeVersion(1),
+                      WantDiagnostics::No);
+}
 
 void ClangdLSPServer::onShutdown(const NoParams &,
                                  Callback<std::nullptr_t> Reply) {
