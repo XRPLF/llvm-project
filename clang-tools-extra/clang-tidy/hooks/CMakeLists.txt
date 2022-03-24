@@ -33,6 +33,7 @@ add_clang_library(clangTidyHooksModule
   HashBufLenCheck.cpp
   HooksTidyModule.cpp
   KeyletBufLenCheck.cpp
+  ParamBufLenCheck.cpp
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp
   ReserveLimitCheck.cpp

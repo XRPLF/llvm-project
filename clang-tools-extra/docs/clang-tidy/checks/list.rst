@@ -224,12 +224,13 @@ Clang-Tidy Checks
    `hooks-float-manip-pure <hooks-float-manip-pure.html>`_, "Yes"
    `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
-   `hooks-func-addr-taken <hooks-func-addr-taken.html>`_, "Yes"
+   `hooks-func-addr-taken <hooks-func-addr-taken.html>`_,
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,
    `hooks-hash-buf-len <hooks-hash-buf-len.html>`_,
    `hooks-keylet-buf-len <hooks-keylet-buf-len.html>`_,
+   `hooks-param-buf-len <hooks-param-buf-len.html>`_, "Yes"
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"

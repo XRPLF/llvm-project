@@ -37,6 +37,7 @@
 #include "GuardInWhileCheck.h"
 #include "HashBufLenCheck.h"
 #include "KeyletBufLenCheck.h"
+#include "ParamBufLenCheck.h"
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
@@ -114,6 +115,8 @@ public:
         "hooks-hash-buf-len");
     CheckFactories.registerCheck<KeyletBufLenCheck>(
         "hooks-keylet-buf-len");
+    CheckFactories.registerCheck<ParamBufLenCheck>(
+        "hooks-param-buf-len");
     CheckFactories.registerCheck<RaddrConvBufLenCheck>(
         "hooks-raddr-conv-buf-len");
     CheckFactories.registerCheck<RaddrConvPureCheck>(
