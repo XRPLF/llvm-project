@@ -230,7 +230,8 @@ Clang-Tidy Checks
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,
    `hooks-hash-buf-len <hooks-hash-buf-len.html>`_,
    `hooks-keylet-buf-len <hooks-keylet-buf-len.html>`_,
-   `hooks-param-buf-len <hooks-param-buf-len.html>`_, "Yes"
+   `hooks-param-buf-len <hooks-param-buf-len.html>`_,
+   `hooks-param-set-buf-len <hooks-param-set-buf-len.html>`_, "Yes"
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"

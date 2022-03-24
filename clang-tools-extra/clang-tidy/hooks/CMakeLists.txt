@@ -34,6 +34,7 @@ add_clang_library(clangTidyHooksModule
   HooksTidyModule.cpp
   KeyletBufLenCheck.cpp
   ParamBufLenCheck.cpp
+  ParamSetBufLenCheck.cpp
   RaddrConvBufLenCheck.cpp
   RaddrConvPureCheck.cpp
   ReserveLimitCheck.cpp

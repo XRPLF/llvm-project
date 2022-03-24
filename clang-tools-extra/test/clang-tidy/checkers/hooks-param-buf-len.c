@@ -4,8 +4,6 @@
 
 extern int64_t hook_param(uint32_t write_ptr, uint32_t write_len, uint32_t read_ptr, uint32_t read_len);
 
-#define SBUF(str) (uint32_t)(str), sizeof(str)
-
 int64_t hook(uint32_t reserved)
 {
     uint8_t pname[] = {0xCAU, 0xFEU};
