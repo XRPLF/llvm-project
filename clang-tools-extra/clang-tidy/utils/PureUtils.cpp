@@ -82,7 +82,7 @@ std::string makeTraceFix(llvm::StringRef BufferName, int HexFlag) {
   Fix += BufferName;
   Fix += "\", sizeof(\"";
   Fix += BufferName;
-  Fix += "\"), (uint32_t)";
+  Fix += "\") - 1, (uint32_t)";
   Fix += BufferName;
   Fix += ", sizeof(";
   Fix += BufferName;
@@ -97,7 +97,7 @@ std::string makeTraceFloatFix(llvm::StringRef BufferName) {
   Fix += BufferName;
   Fix += "\", sizeof(\"";
   Fix += BufferName;
-  Fix += "\"), (int64_t)";
+  Fix += "\") - 1, (int64_t)";
   Fix += BufferName;
   Fix += ");\n";
   return Fix;

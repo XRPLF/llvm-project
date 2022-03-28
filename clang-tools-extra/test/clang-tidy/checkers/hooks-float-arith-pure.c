@@ -52,11 +52,11 @@ int64_t hook(int64_t reserved)
 
     int64_t zero = float_negate(0);
 // CHECK-MESSAGES: :[[@LINE-1]]:20: warning: output of float_negate can be precomputed [hooks-float-arith-pure]
-// CHECK-FIXES: trace_num((uint32_t)"zero", sizeof("zero"), (int64_t)zero);
+// CHECK-FIXES: trace_num((uint32_t)"zero", sizeof("zero") - 1, (int64_t)zero);
 
     int64_t one = float_invert(0x54838d7ea4c68000ll);
 // CHECK-MESSAGES: :[[@LINE-1]]:19: warning: output of float_invert can be precomputed [hooks-float-arith-pure]
-// CHECK-FIXES: trace_num((uint32_t)"one", sizeof("one"), (int64_t)one);
+// CHECK-FIXES: trace_num((uint32_t)"one", sizeof("one") - 1, (int64_t)one);
 
     int64_t exponent = float_exponent(0x54838d7ea4c68000ll);
 // CHECK-MESSAGES: :[[@LINE-1]]:24: warning: output of float_exponent can be precomputed [hooks-float-arith-pure]

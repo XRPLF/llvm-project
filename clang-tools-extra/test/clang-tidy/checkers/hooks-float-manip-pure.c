@@ -14,7 +14,7 @@ int64_t hook(int64_t reserved)
 {
     int64_t new_xfl = float_exponent_set(0x54871afd498d0000ll, -71);
 // CHECK-MESSAGES: :[[@LINE-1]]:23: warning: output of float_exponent_set can be precomputed [hooks-float-manip-pure]
-// CHECK-FIXES: trace_num((uint32_t)"new_xfl", sizeof("new_xfl"), (int64_t)new_xfl);
+// CHECK-FIXES: trace_num((uint32_t)"new_xfl", sizeof("new_xfl") - 1, (int64_t)new_xfl);
 
     new_xfl = float_mantissa_set(0x54871afd498d0000ll, 100000000000000ULL);
 // CHECK-MESSAGES: :[[@LINE-1]]:56: warning: last argument of float_mantissa_set must be between 1000000000000000 and 9999999999999999 [hooks-float-manip-pure]
