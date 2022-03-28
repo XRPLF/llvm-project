@@ -231,10 +231,11 @@ Clang-Tidy Checks
    `hooks-hash-buf-len <hooks-hash-buf-len.html>`_,
    `hooks-keylet-buf-len <hooks-keylet-buf-len.html>`_,
    `hooks-param-buf-len <hooks-param-buf-len.html>`_,
-   `hooks-param-set-buf-len <hooks-param-set-buf-len.html>`_, "Yes"
+   `hooks-param-set-buf-len <hooks-param-set-buf-len.html>`_,
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
+   `hooks-skip-hash-buf-len <hooks-skip-hash-buf-len.html>`_, "Yes"
    `hooks-slot-hash-buf-len <hooks-slot-hash-buf-len.html>`_,
    `hooks-slot-keylet-buf-len <hooks-slot-keylet-buf-len.html>`_,
    `hooks-slot-limit <hooks-slot-limit.html>`_,

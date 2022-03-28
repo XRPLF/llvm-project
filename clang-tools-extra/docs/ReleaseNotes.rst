@@ -284,6 +284,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-skip-hash-buf-len
+  <clang-tidy/checks/hooks-skip-hash-buf-len>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-slot-hash-buf-len
   <clang-tidy/checks/hooks-slot-hash-buf-len>` check.
 

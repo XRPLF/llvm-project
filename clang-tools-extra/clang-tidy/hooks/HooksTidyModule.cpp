@@ -42,6 +42,7 @@
 #include "RaddrConvBufLenCheck.h"
 #include "RaddrConvPureCheck.h"
 #include "ReserveLimitCheck.h"
+#include "SkipHashBufLenCheck.h"
 #include "SlotHashBufLenCheck.h"
 #include "SlotKeyletBufLenCheck.h"
 #include "SlotLimitCheck.h"
@@ -126,6 +127,8 @@ public:
         "hooks-raddr-conv-pure");
     CheckFactories.registerCheck<ReserveLimitCheck>(
         "hooks-reserve-limit");
+    CheckFactories.registerCheck<SkipHashBufLenCheck>(
+        "hooks-skip-hash-buf-len");
     CheckFactories.registerCheck<SlotHashBufLenCheck>(
         "hooks-slot-hash-buf-len");
     CheckFactories.registerCheck<SlotKeyletBufLenCheck>(
