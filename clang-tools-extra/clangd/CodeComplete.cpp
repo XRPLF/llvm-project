@@ -1782,6 +1782,9 @@ private:
     // inside a header it's non-standard
     if (C.Name == "include_next")
       return None;
+    // using namespace is never valid in C
+    if (C.Name == "using namespace")
+      return None;
     return Filter->match(C.Name);
   }
 
