@@ -473,6 +473,11 @@ def AArch64call          : SDNode<"AArch64ISD::CALL",
                                 [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue,
                                  SDNPVariadic]>;
 
+def AArch64call_bti      : SDNode<"AArch64ISD::CALL_BTI",
+                                SDTypeProfile<0, -1, [SDTCisPtrTy<0>]>,
+                                [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue,
+                                 SDNPVariadic]>;
+
 def AArch64call_rvmarker: SDNode<"AArch64ISD::CALL_RVMARKER",
                              SDTypeProfile<0, -1, [SDTCisPtrTy<0>]>,
                              [SDNPHasChain, SDNPOptInGlue, SDNPOutGlue,
@@ -2081,6 +2086,10 @@ def : Pat<(bswap (rotr GPR64:$Rn, (i64 32))), (REV32Xr GPR64:$Rn)>;
 def : Pat<(srl (bswap top16Zero:$Rn), (i64 16)), (REV16Wr GPR32:$Rn)>;
 def : Pat<(srl (bswap top32Zero:$Rn), (i64 32)), (REV32Xr GPR64:$Rn)>;
 
+def : Pat<(or (and (srl GPR64:$Rn, (i64 8)), (i64 0x00ff00ff00ff00ff)),
+              (and (shl GPR64:$Rn, (i64 8)), (i64 0xff00ff00ff00ff00))),
+          (REV16Xr GPR64:$Rn)>;
+
 //===----------------------------------------------------------------------===//
 // Bitfield immediate extraction instruction.
 //===----------------------------------------------------------------------===//
@@ -2328,6 +2337,8 @@ let isCall = 1, Defs = [LR], Uses = [SP] in {
                 PseudoInstExpansion<(BLR GPR64:$Rn)>;
   def BLR_RVMARKER : Pseudo<(outs), (ins variable_ops), []>,
                      Sched<[WriteBrReg]>;
+  def BLR_BTI : Pseudo<(outs), (ins variable_ops), []>,
+                Sched<[WriteBrReg]>;
 } // isCall
 
 def : Pat<(AArch64call GPR64:$Rn),
@@ -2339,6 +2350,10 @@ def : Pat<(AArch64call GPR64noip:$Rn),
 
 def : Pat<(AArch64call_rvmarker (i64 tglobaladdr:$rvfunc), GPR64:$Rn),
           (BLR_RVMARKER tglobaladdr:$rvfunc, GPR64:$Rn)>,
+      Requires<[NoSLSBLRMitigation]>;
+
+def : Pat<(AArch64call_bti GPR64:$Rn),
+          (BLR_BTI GPR64:$Rn)>,
       Requires<[NoSLSBLRMitigation]>;
 
 let isBranch = 1, isTerminator = 1, isBarrier = 1, isIndirectBranch = 1 in {
@@ -5345,19 +5360,22 @@ defm FMAXP   : SIMDFPPairwiseScalar<0, 0b01111, "fmaxp">;
 defm FMINNMP : SIMDFPPairwiseScalar<1, 0b01100, "fminnmp">;
 defm FMINP   : SIMDFPPairwiseScalar<1, 0b01111, "fminp">;
 
+// Only the lower half of the result of the inner FADDP is used in the patterns
+// below, so the second operand does not matter. Re-use the first input
+// operand, so no additional dependencies need to be introduced.
 let Predicates = [HasFullFP16] in {
 def : Pat<(f16 (vecreduce_fadd (v8f16 V128:$Rn))),
             (FADDPv2i16p
               (EXTRACT_SUBREG
-                 (FADDPv8f16 (FADDPv8f16 V128:$Rn, (v8f16 (IMPLICIT_DEF))), (v8f16 (IMPLICIT_DEF))),
+                 (FADDPv8f16 (FADDPv8f16 V128:$Rn, V128:$Rn), V128:$Rn),
                dsub))>;
 def : Pat<(f16 (vecreduce_fadd (v4f16 V64:$Rn))),
-          (FADDPv2i16p (FADDPv4f16 V64:$Rn, (v4f16 (IMPLICIT_DEF))))>;
+          (FADDPv2i16p (FADDPv4f16 V64:$Rn, V64:$Rn))>;
 }
 def : Pat<(f32 (vecreduce_fadd (v4f32 V128:$Rn))),
           (FADDPv2i32p
             (EXTRACT_SUBREG
-              (FADDPv4f32 V128:$Rn, (v4f32 (IMPLICIT_DEF))),
+              (FADDPv4f32 V128:$Rn, V128:$Rn),
              dsub))>;
 def : Pat<(f32 (vecreduce_fadd (v2f32 V64:$Rn))),
           (FADDPv2i32p V64:$Rn)>;
@@ -6141,6 +6159,14 @@ def : Pat<(v8i8  immAllOnesV), (EXTRACT_SUBREG (MOVIv2d_ns (i32 255)), dsub)>;
 // EDIT per word & halfword: 2s, 4h, 4s, & 8h
 let isReMaterializable = 1, isAsCheapAsAMove = 1 in
 defm MOVI      : SIMDModifiedImmVectorShift<0, 0b10, 0b00, "movi">;
+
+let Predicates = [HasNEON] in {
+  // Using the MOVI to materialize fp constants.
+  def : Pat<(f32 fpimm32SIMDModImmType4:$in),
+            (EXTRACT_SUBREG (MOVIv2i32 (fpimm32SIMDModImmType4XForm f32:$in),
+                                       (i32 24)),
+                            ssub)>;
+}
 
 def : InstAlias<"movi $Vd.4h, $imm", (MOVIv4i16 V64:$Vd,  imm0_255:$imm, 0), 0>;
 def : InstAlias<"movi $Vd.8h, $imm", (MOVIv8i16 V128:$Vd, imm0_255:$imm, 0), 0>;
@@ -7349,6 +7375,7 @@ def : Pat<(v4bf16 (AArch64NvCast (v2i32 FPR64:$src))), (v4bf16 FPR64:$src)>;
 def : Pat<(v2i32 (AArch64NvCast (v2i32 FPR64:$src))), (v2i32 FPR64:$src)>;
 def : Pat<(v2f32 (AArch64NvCast (v2i32 FPR64:$src))), (v2f32 FPR64:$src)>;
 def : Pat<(v1i64 (AArch64NvCast (v2i32 FPR64:$src))), (v1i64 FPR64:$src)>;
+def : Pat<(v1f64 (AArch64NvCast (v2i32 FPR64:$src))), (v1f64 FPR64:$src)>;
 
 def : Pat<(v8i8 (AArch64NvCast (v4i16 FPR64:$src))), (v8i8 FPR64:$src)>;
 def : Pat<(v4i16 (AArch64NvCast (v4i16 FPR64:$src))), (v4i16 FPR64:$src)>;
@@ -7356,6 +7383,7 @@ def : Pat<(v4f16 (AArch64NvCast (v4i16 FPR64:$src))), (v4f16 FPR64:$src)>;
 def : Pat<(v4bf16 (AArch64NvCast (v4i16 FPR64:$src))), (v4bf16 FPR64:$src)>;
 def : Pat<(v2i32 (AArch64NvCast (v4i16 FPR64:$src))), (v2i32 FPR64:$src)>;
 def : Pat<(v1i64 (AArch64NvCast (v4i16 FPR64:$src))), (v1i64 FPR64:$src)>;
+def : Pat<(v1f64 (AArch64NvCast (v4i16 FPR64:$src))), (v1f64 FPR64:$src)>;
 
 def : Pat<(v8i8 (AArch64NvCast (v8i8 FPR64:$src))), (v8i8 FPR64:$src)>;
 def : Pat<(v4i16 (AArch64NvCast (v8i8 FPR64:$src))), (v4i16 FPR64:$src)>;
@@ -7364,6 +7392,7 @@ def : Pat<(v4bf16 (AArch64NvCast (v8i8 FPR64:$src))), (v4bf16 FPR64:$src)>;
 def : Pat<(v2i32 (AArch64NvCast (v8i8 FPR64:$src))), (v2i32 FPR64:$src)>;
 def : Pat<(v2f32 (AArch64NvCast (v8i8 FPR64:$src))), (v2f32 FPR64:$src)>;
 def : Pat<(v1i64 (AArch64NvCast (v8i8 FPR64:$src))), (v1i64 FPR64:$src)>;
+def : Pat<(v1f64 (AArch64NvCast (v4i16 FPR64:$src))), (v1f64 FPR64:$src)>;
 
 def : Pat<(v8i8 (AArch64NvCast (f64 FPR64:$src))), (v8i8 FPR64:$src)>;
 def : Pat<(v4i16 (AArch64NvCast (f64 FPR64:$src))), (v4i16 FPR64:$src)>;
@@ -7373,6 +7402,15 @@ def : Pat<(v2i32 (AArch64NvCast (f64 FPR64:$src))), (v2i32 FPR64:$src)>;
 def : Pat<(v2f32 (AArch64NvCast (f64 FPR64:$src))), (v2f32 FPR64:$src)>;
 def : Pat<(v1i64 (AArch64NvCast (f64 FPR64:$src))), (v1i64 FPR64:$src)>;
 def : Pat<(v1f64 (AArch64NvCast (f64 FPR64:$src))), (v1f64 FPR64:$src)>;
+
+def : Pat<(v8i8 (AArch64NvCast (v1f64 FPR64:$src))), (v8i8 FPR64:$src)>;
+def : Pat<(v4i16 (AArch64NvCast (v1f64 FPR64:$src))), (v4i16 FPR64:$src)>;
+def : Pat<(v4f16 (AArch64NvCast (v1f64 FPR64:$src))), (v4f16 FPR64:$src)>;
+def : Pat<(v4bf16 (AArch64NvCast (v1f64 FPR64:$src))), (v4bf16 FPR64:$src)>;
+def : Pat<(v2i32 (AArch64NvCast (v1f64 FPR64:$src))), (v2i32 FPR64:$src)>;
+def : Pat<(v2f32 (AArch64NvCast (v1f64 FPR64:$src))), (v2f32 FPR64:$src)>;
+def : Pat<(v1i64 (AArch64NvCast (v1f64 FPR64:$src))), (v1i64 FPR64:$src)>;
+def : Pat<(f64 (AArch64NvCast (v1f64 FPR64:$src))), (f64 FPR64:$src)>;
 
 def : Pat<(v8i8 (AArch64NvCast (v2f32 FPR64:$src))), (v8i8 FPR64:$src)>;
 def : Pat<(v4i16 (AArch64NvCast (v2f32 FPR64:$src))), (v4i16 FPR64:$src)>;

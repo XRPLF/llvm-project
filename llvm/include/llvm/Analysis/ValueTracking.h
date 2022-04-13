@@ -340,7 +340,9 @@ constexpr unsigned MaxAnalysisRecursionDepth = 6;
 
   /// If we can compute the length of the string pointed to by the specified
   /// pointer, return 'len+1'.  If we can't, return 0.
-  uint64_t GetStringLength(const Value *V, unsigned CharSize = 8);
+  uint64_t GetStringLength(const Value *V,
+                           const TargetLibraryInfo *TLI = nullptr,
+                           unsigned CharSize = 8);
 
   /// This function returns call pointer argument that is considered the same by
   /// aliasing rules. You CAN'T use it to replace one value with another. If
@@ -464,14 +466,14 @@ constexpr unsigned MaxAnalysisRecursionDepth = 6;
                                     const TargetLibraryInfo *TLI = nullptr);
 
   /// Returns true if the result or effects of the given instructions \p I
-  /// depend on or influence global memory.
-  /// Memory dependence arises for example if the instruction reads from
-  /// memory or may produce effects or undefined behaviour. Memory dependent
-  /// instructions generally cannot be reorderd with respect to other memory
-  /// dependent instructions or moved into non-dominated basic blocks.
-  /// Instructions which just compute a value based on the values of their
-  /// operands are not memory dependent.
-  bool mayBeMemoryDependent(const Instruction &I);
+  /// depend values not reachable through the def use graph.
+  /// * Memory dependence arises for example if the instruction reads from
+  ///   memory or may produce effects or undefined behaviour. Memory dependent
+  ///   instructions generally cannot be reorderd with respect to other memory
+  ///   dependent instructions.
+  /// * Control dependence arises for example if the instruction may fault
+  ///   if lifted above a throwing call or infinite loop.
+  bool mayHaveNonDefUseDependency(const Instruction &I);
 
   /// Return true if it is an intrinsic that cannot be speculated but also
   /// cannot trap.

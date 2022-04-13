@@ -51,7 +51,9 @@ public:
     return false;
   }
 
-  bool shortenInstruction(MCInst &) const override { return false; }
+  bool shortenInstruction(MCInst &, const MCSubtargetInfo &) const override {
+    return false;
+  }
 
   bool isADRP(const MCInst &Inst) const override {
     return Inst.getOpcode() == AArch64::ADRP;
@@ -203,8 +205,6 @@ public:
   bool isIndirectCall(const MCInst &Inst) const override {
     return Inst.getOpcode() == AArch64::BLR;
   }
-
-  MCPhysReg getNoRegister() const override { return AArch64::NoRegister; }
 
   bool hasPCRelOperand(const MCInst &Inst) const override {
     // ADRP is blacklisted and is an exception. Even though it has a
@@ -1102,8 +1102,6 @@ public:
   }
 
   bool isMoveMem2Reg(const MCInst &Inst) const override { return false; }
-
-  bool isADD64rr(const MCInst &Inst) const override { return false; }
 
   bool isLeave(const MCInst &Inst) const override { return false; }
 

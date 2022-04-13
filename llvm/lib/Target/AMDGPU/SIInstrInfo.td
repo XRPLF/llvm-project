@@ -29,6 +29,7 @@ def SIEncodingFamily {
   int GFX10 = 6;
   int SDWA10 = 7;
   int GFX90A = 8;
+  int GFX940 = 9;
 }
 
 //===----------------------------------------------------------------------===//
@@ -584,6 +585,34 @@ def store_align16_local_m0 : PatFrag <(ops node:$value, node:$ptr),
   let IsTruncStore = 0;
 }
 
+let PredicateCode = [{return cast<MemSDNode>(N)->getAlignment() < 4;}],
+    GISelPredicateCode = [{return (*MI.memoperands_begin())->getAlign() < 4;}],
+    AddressSpaces = [ AddrSpaces.Local ] in {
+def load_align_less_than_4_local : PatFrag<(ops node:$ptr),
+                                           (load_local node:$ptr)> {
+  let IsLoad = 1;
+  let IsNonExtLoad = 1;
+}
+
+def load_align_less_than_4_local_m0 : PatFrag<(ops node:$ptr),
+                                              (load_local_m0 node:$ptr)> {
+  let IsLoad = 1;
+  let IsNonExtLoad = 1;
+}
+
+def store_align_less_than_4_local : PatFrag <(ops node:$value, node:$ptr),
+                                             (store_local node:$value, node:$ptr)> {
+  let IsStore = 1;
+  let IsTruncStore = 0;
+}
+
+def store_align_less_than_4_local_m0 : PatFrag <(ops node:$value, node:$ptr),
+                                                (store_local_m0 node:$value, node:$ptr)> {
+  let IsStore = 1;
+  let IsTruncStore = 0;
+}
+}
+
 let AddressSpaces = StoreAddress_local.AddrSpaces in {
 
 def atomic_store_local_8_m0 : PatFrag <
@@ -1015,6 +1044,12 @@ def SWaitMatchClass : AsmOperandClass {
   let ParserMethod = "parseSWaitCntOps";
 }
 
+def DepCtrMatchClass : AsmOperandClass {
+  let Name = "DepCtr";
+  let RenderMethod = "addImmOperands";
+  let ParserMethod = "parseDepCtrOps";
+}
+
 def VReg32OrOffClass : AsmOperandClass {
   let Name = "VReg32OrOff";
   let ParserMethod = "parseVReg32OrOff";
@@ -1039,6 +1074,11 @@ def EndpgmImm : Operand<i16> {
 def WAIT_FLAG : Operand <i32> {
   let ParserMatchClass = SWaitMatchClass;
   let PrintMethod = "printWaitFlag";
+}
+
+def DepCtrImm : Operand <i32> {
+  let ParserMatchClass = DepCtrMatchClass;
+  let PrintMethod = "printDepCtr";
 }
 } // End OperandType = "OPERAND_IMMEDIATE"
 
@@ -1426,6 +1466,8 @@ def VOP3Mods_nnan : ComplexPattern<fAny, 2, "SelectVOP3Mods_NNaN">;
 def VOP3OMods : ComplexPattern<untyped, 3, "SelectVOP3OMods">;
 
 def VOP3PMods  : ComplexPattern<untyped, 2, "SelectVOP3PMods">;
+
+def VOP3PModsDOT  : ComplexPattern<untyped, 2, "SelectVOP3PModsDOT">;
 
 def VOP3OpSel  : ComplexPattern<untyped, 2, "SelectVOP3OpSel">;
 
@@ -2404,6 +2446,18 @@ def VOP_V4F32_V4I16_V4I16_V4F32   : VOPProfile <[v4f32,  v4i16, v4i16, v4f32]>;
 def VOP_V16F32_V4I16_V4I16_V16F32 : VOPProfile <[v16f32, v4i16, v4i16, v16f32]>;
 def VOP_V32F32_V4I16_V4I16_V32F32 : VOPProfile <[v32f32, v4i16, v4i16, v32f32]>;
 
+def VOP_V4I32_I64_I64_V4I32       : VOPProfile <[v4i32,  i64,   i64,   v4i32]>;
+def VOP_V16I32_I64_I64_V16I32     : VOPProfile <[v16i32, i64,   i64,   v16i32]>;
+def VOP_V4F32_V2F32_V2F32_V4F32   : VOPProfile <[v4f32,  v2f32, v2f32, v4f32]>;
+def VOP_V16F32_V2F32_V2F32_V16F32 : VOPProfile <[v16f32, v2f32, v2f32, v16f32]>;
+
+def VOP_V4F32_V4F16_V8F16_I32     : VOPProfile <[v4f32,  v4f16, v8f16, i32]>;
+def VOP_V16F32_V4F16_V8F16_I32    : VOPProfile <[v16f32, v4f16, v8f16, i32]>;
+def VOP_V4F32_V4I16_V8I16_I32     : VOPProfile <[v4f32,  v4i16, v8i16, i32]>;
+def VOP_V16F32_V4I16_V8I16_I32    : VOPProfile <[v16f32, v4i16, v8i16, i32]>;
+def VOP_V4I32_V2I32_V4I32_I32     : VOPProfile <[v4i32,  v2i32, v4i32, i32]>;
+def VOP_V16I32_V2I32_V4I32_I32    : VOPProfile <[v16i32, v2i32, v4i32, i32]>;
+
 class Commutable_REV <string revOp, bit isOrig> {
   string RevOp = revOp;
   bit IsOrig = isOrig;
@@ -2543,7 +2597,8 @@ def getMCOpcodeGen : InstrMapping {
                    [!cast<string>(SIEncodingFamily.GFX9)],
                    [!cast<string>(SIEncodingFamily.GFX10)],
                    [!cast<string>(SIEncodingFamily.SDWA10)],
-                   [!cast<string>(SIEncodingFamily.GFX90A)]];
+                   [!cast<string>(SIEncodingFamily.GFX90A)],
+                   [!cast<string>(SIEncodingFamily.GFX940)]];
 }
 
 // Get equivalent SOPK instruction.
@@ -2641,6 +2696,14 @@ def getFlatScratchInstSSfromSV : InstrMapping {
   let ValueCols = [["SS"]];
 }
 
+def getFlatScratchInstSVfromSVS : InstrMapping {
+  let FilterClass = "FlatScratchInst";
+  let RowFields = ["SVOp"];
+  let ColFields = ["Mode"];
+  let KeyCol = ["SVS"];
+  let ValueCols = [["SV"]];
+}
+
 def getFlatScratchInstSVfromSS : InstrMapping {
   let FilterClass = "FlatScratchInst";
   let RowFields = ["SVOp"];
@@ -2655,6 +2718,15 @@ def getMFMAEarlyClobberOp : InstrMapping {
   let ColFields = ["IsMac"];
   let KeyCol = ["1"];
   let ValueCols = [["0"]];
+}
+
+// Maps an v_cmp instruction to its v_cmpx equivalent.
+def getVCMPXOpFromVCMP : InstrMapping {
+  let FilterClass = "VCMPVCMPXTable";
+  let RowFields = ["VCMPOp"];
+  let ColFields = ["IsVCMPX"];
+  let KeyCol = ["0"];
+  let ValueCols = [["1"]];
 }
 
 include "SIInstructions.td"

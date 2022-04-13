@@ -907,17 +907,36 @@ bool RecurrenceDescriptor::isFirstOrderRecurrence(
         SinkCandidate->mayReadFromMemory() || SinkCandidate->isTerminator())
       return false;
 
-    // Try to sink an instruction after the 'deepest' previous instruction,
-    // which has multiple operands for first order recurrences.
+    // Avoid sinking an instruction multiple times (if multiple operands are
+    // first order recurrences) by sinking once - after the latest 'previous'
+    // instruction.
     auto It = SinkAfter.find(SinkCandidate);
     if (It != SinkAfter.end()) {
-      auto LastPrev = It->second;
-      if (LastPrev->getParent() != Previous->getParent())
+      auto *OtherPrev = It->second;
+      // Find the earliest entry in the 'sink-after' chain. The last entry in
+      // the chain is the original 'Previous' for a recurrence handled earlier.
+      auto EarlierIt = SinkAfter.find(OtherPrev);
+      while (EarlierIt != SinkAfter.end()) {
+        Instruction *EarlierInst = EarlierIt->second;
+        EarlierIt = SinkAfter.find(EarlierInst);
+        // Bail out if order has not been preserved.
+        if (EarlierIt != SinkAfter.end() &&
+            !DT->dominates(EarlierInst, OtherPrev))
+          return false;
+        OtherPrev = EarlierInst;
+      }
+      // Bail out if order has not been preserved.
+      if (OtherPrev != It->second && !DT->dominates(It->second, OtherPrev))
         return false;
 
-      // If LastPrev comes after the current Previous, SinkCandidate already
-      // gets sunk past Previous and nothing left to do.
-      return Previous->comesBefore(LastPrev);
+      // SinkCandidate is already being sunk after an instruction after
+      // Previous. Nothing left to do.
+      if (DT->dominates(Previous, OtherPrev) || Previous == OtherPrev)
+        return true;
+      // Otherwise, Previous comes after OtherPrev and SinkCandidate needs to be
+      // re-sunk to Previous, instead of sinking to OtherPrev. Remove
+      // SinkCandidate from SinkAfter to ensure it's insert position is updated.
+      SinkAfter.erase(SinkCandidate);
     }
 
     // If we reach a PHI node that is not dominated by Previous, we reached a

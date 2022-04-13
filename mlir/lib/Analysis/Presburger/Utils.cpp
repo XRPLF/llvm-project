@@ -303,3 +303,47 @@ void presburger::removeDuplicateDivs(
     }
   }
 }
+
+int64_t presburger::gcdRange(ArrayRef<int64_t> range) {
+  int64_t gcd = 0;
+  for (int64_t elem : range) {
+    gcd = llvm::GreatestCommonDivisor64(gcd, std::abs(elem));
+    if (gcd == 1)
+      return gcd;
+  }
+  return gcd;
+}
+
+int64_t presburger::normalizeRange(MutableArrayRef<int64_t> range) {
+  int64_t gcd = gcdRange(range);
+  if (gcd == 0 || gcd == 1)
+    return gcd;
+  for (int64_t &elem : range)
+    elem /= gcd;
+  return gcd;
+}
+
+void presburger::normalizeDiv(MutableArrayRef<int64_t> num, int64_t &denom) {
+  assert(denom > 0 && "denom must be positive!");
+  int64_t gcd = llvm::greatestCommonDivisor(gcdRange(num), denom);
+  for (int64_t &coeff : num)
+    coeff /= gcd;
+  denom /= gcd;
+}
+
+SmallVector<int64_t, 8> presburger::getNegatedCoeffs(ArrayRef<int64_t> coeffs) {
+  SmallVector<int64_t, 8> negatedCoeffs;
+  negatedCoeffs.reserve(coeffs.size());
+  for (int64_t coeff : coeffs)
+    negatedCoeffs.emplace_back(-coeff);
+  return negatedCoeffs;
+}
+
+SmallVector<int64_t, 8> presburger::getComplementIneq(ArrayRef<int64_t> ineq) {
+  SmallVector<int64_t, 8> coeffs;
+  coeffs.reserve(ineq.size());
+  for (int64_t coeff : ineq)
+    coeffs.emplace_back(-coeff);
+  --coeffs.back();
+  return coeffs;
+}

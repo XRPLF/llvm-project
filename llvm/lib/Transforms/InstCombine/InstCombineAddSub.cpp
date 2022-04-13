@@ -693,9 +693,6 @@ unsigned FAddCombine::calcInstrNumber(const AddendVect &Opnds) {
   unsigned OpndNum = Opnds.size();
   unsigned InstrNeeded = OpndNum - 1;
 
-  // The number of addends in the form of "(-1)*x".
-  unsigned NegOpndNum = 0;
-
   // Adjust the number of instructions needed to emit the N-ary add.
   for (const FAddend *Opnd : Opnds) {
     if (Opnd->isConstant())
@@ -707,9 +704,6 @@ unsigned FAddCombine::calcInstrNumber(const AddendVect &Opnds) {
       continue;
 
     const FAddendCoef &CE = Opnd->getCoef();
-    if (CE.isMinusOne() || CE.isMinusTwo())
-      NegOpndNum++;
-
     // Let the addend be "c * x". If "c == +/-1", the value of the addend
     // is immediately available; otherwise, it needs exactly one instruction
     // to evaluate the value.
@@ -2015,6 +2009,22 @@ Instruction *InstCombinerImpl::visitSub(BinaryOperator &I) {
   }
 
   {
+    // sub(add(X,Y), s/umin(X,Y)) --> s/umax(X,Y)
+    // sub(add(X,Y), s/umax(X,Y)) --> s/umin(X,Y)
+    // TODO: generalize to sub(add(Z,Y),umin(X,Y)) --> add(Z,usub.sat(Y,X))?
+    if (auto *II = dyn_cast<MinMaxIntrinsic>(Op1)) {
+      Value *X = II->getLHS();
+      Value *Y = II->getRHS();
+      if (match(Op0, m_c_Add(m_Specific(X), m_Specific(Y))) &&
+          (Op0->hasOneUse() || Op1->hasOneUse())) {
+        Intrinsic::ID InvID = getInverseMinMaxIntrinsic(II->getIntrinsicID());
+        Value *InvMaxMin = Builder.CreateBinaryIntrinsic(InvID, X, Y);
+        return replaceInstUsesWith(I, InvMaxMin);
+      }
+    }
+  }
+
+  {
     // If we have a subtraction between some value and a select between
     // said value and something else, sink subtraction into select hands, i.e.:
     //   sub (select %Cond, %TrueVal, %FalseVal), %Op1
@@ -2268,10 +2278,10 @@ Instruction *InstCombinerImpl::visitFNeg(UnaryOperator &I) {
     // Unlike most transforms, this one is not safe to propagate nsz unless
     // it is present on the original select. (We are conservatively intersecting
     // the nsz flags from the select and root fneg instruction.)
-    auto propagateSelectFMF = [&](SelectInst *S) {
+    auto propagateSelectFMF = [&](SelectInst *S, bool CommonOperand) {
       S->copyFastMathFlags(&I);
       if (auto *OldSel = dyn_cast<SelectInst>(Op))
-        if (!OldSel->hasNoSignedZeros() &&
+        if (!OldSel->hasNoSignedZeros() && !CommonOperand &&
             !isGuaranteedNotToBeUndefOrPoison(OldSel->getCondition()))
           S->setHasNoSignedZeros(false);
     };
@@ -2280,14 +2290,14 @@ Instruction *InstCombinerImpl::visitFNeg(UnaryOperator &I) {
     if (match(X, m_FNeg(m_Value(P)))) {
       Value *NegY = Builder.CreateFNegFMF(Y, &I, Y->getName() + ".neg");
       SelectInst *NewSel = SelectInst::Create(Cond, P, NegY);
-      propagateSelectFMF(NewSel);
+      propagateSelectFMF(NewSel, P == Y);
       return NewSel;
     }
     // -(Cond ? X : -P) --> Cond ? -X : P
     if (match(Y, m_FNeg(m_Value(P)))) {
       Value *NegX = Builder.CreateFNegFMF(X, &I, X->getName() + ".neg");
       SelectInst *NewSel = SelectInst::Create(Cond, NegX, P);
-      propagateSelectFMF(NewSel);
+      propagateSelectFMF(NewSel, P == X);
       return NewSel;
     }
   }

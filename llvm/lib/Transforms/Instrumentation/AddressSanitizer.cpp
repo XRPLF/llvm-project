@@ -42,14 +42,12 @@
 #include "llvm/IR/DebugInfoMetadata.h"
 #include "llvm/IR/DebugLoc.h"
 #include "llvm/IR/DerivedTypes.h"
-#include "llvm/IR/Dominators.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalAlias.h"
 #include "llvm/IR/GlobalValue.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/InlineAsm.h"
-#include "llvm/IR/InstIterator.h"
 #include "llvm/IR/InstVisitor.h"
 #include "llvm/IR/InstrTypes.h"
 #include "llvm/IR/Instruction.h"
@@ -71,7 +69,6 @@
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/MathExtras.h"
-#include "llvm/Support/ScopedPrinter.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Transforms/Instrumentation.h"
 #include "llvm/Transforms/Instrumentation/AddressSanitizerCommon.h"
@@ -87,7 +84,6 @@
 #include <cstdint>
 #include <iomanip>
 #include <limits>
-#include <memory>
 #include <sstream>
 #include <string>
 #include <tuple>
@@ -116,7 +112,7 @@ static const uint64_t kFreeBSDKasan_ShadowOffset64 = 0xdffff7c000000000;
 static const uint64_t kNetBSD_ShadowOffset32 = 1ULL << 30;
 static const uint64_t kNetBSD_ShadowOffset64 = 1ULL << 46;
 static const uint64_t kNetBSDKasan_ShadowOffset64 = 0xdfff900000000000;
-static const uint64_t kPS4CPU_ShadowOffset64 = 1ULL << 40;
+static const uint64_t kPS4_ShadowOffset64 = 1ULL << 40;
 static const uint64_t kWindowsShadowOffset32 = 3ULL << 28;
 static const uint64_t kEmscriptenShadowOffset = 0;
 
@@ -335,6 +331,11 @@ static cl::opt<std::string> ClMemoryAccessCallbackPrefix(
     cl::desc("Prefix for memory access callbacks"), cl::Hidden,
     cl::init("__asan_"));
 
+static cl::opt<bool> ClKasanMemIntrinCallbackPrefix(
+    "asan-kernel-mem-intrinsic-prefix",
+    cl::desc("Use prefix for memory intrinsics in KASAN mode"), cl::Hidden,
+    cl::init(false));
+
 static cl::opt<bool>
     ClInstrumentDynamicAllocas("asan-instrument-dynamic-allocas",
                                cl::desc("instrument dynamic allocas"),
@@ -470,7 +471,7 @@ static ShadowMapping getShadowMapping(const Triple &TargetTriple, int LongSize,
   bool IsMacOS = TargetTriple.isMacOSX();
   bool IsFreeBSD = TargetTriple.isOSFreeBSD();
   bool IsNetBSD = TargetTriple.isOSNetBSD();
-  bool IsPS4CPU = TargetTriple.isPS4CPU();
+  bool IsPS4 = TargetTriple.isPS4();
   bool IsLinux = TargetTriple.isOSLinux();
   bool IsPPC64 = TargetTriple.getArch() == Triple::ppc64 ||
                  TargetTriple.getArch() == Triple::ppc64le;
@@ -529,8 +530,8 @@ static ShadowMapping getShadowMapping(const Triple &TargetTriple, int LongSize,
         Mapping.Offset = kNetBSDKasan_ShadowOffset64;
       else
         Mapping.Offset = kNetBSD_ShadowOffset64;
-    } else if (IsPS4CPU)
-      Mapping.Offset = kPS4CPU_ShadowOffset64;
+    } else if (IsPS4)
+      Mapping.Offset = kPS4_ShadowOffset64;
     else if (IsLinux && IsX86_64) {
       if (IsKasan)
         Mapping.Offset = kLinuxKasan_ShadowOffset64;
@@ -569,7 +570,7 @@ static ShadowMapping getShadowMapping(const Triple &TargetTriple, int LongSize,
   // offset is not necessary 1/8-th of the address space.  On SystemZ,
   // we could OR the constant in a single instruction, but it's more
   // efficient to load it once and use indexed addressing.
-  Mapping.OrShadowOffset = !IsAArch64 && !IsPPC64 && !IsSystemZ && !IsPS4CPU &&
+  Mapping.OrShadowOffset = !IsAArch64 && !IsPPC64 && !IsSystemZ && !IsPS4 &&
                            !IsRISCV64 &&
                            !(Mapping.Offset & (Mapping.Offset - 1)) &&
                            Mapping.Offset != kDynamicShadowSentinel;
@@ -2110,6 +2111,7 @@ StringRef ModuleAddressSanitizer::getGlobalMetadataSection() const {
   case Triple::Wasm:
   case Triple::GOFF:
   case Triple::XCOFF:
+  case Triple::DXContainer:
     report_fatal_error(
         "ModuleAddressSanitizer not implemented for object file format");
   case Triple::UnknownObjectFormat:
@@ -2732,7 +2734,9 @@ void AddressSanitizer::initializeCallbacks(Module &M) {
   }
 
   const std::string MemIntrinCallbackPrefix =
-      CompileKernel ? std::string("") : ClMemoryAccessCallbackPrefix;
+      (CompileKernel && !ClKasanMemIntrinCallbackPrefix)
+          ? std::string("")
+          : ClMemoryAccessCallbackPrefix;
   AsanMemmove = M.getOrInsertFunction(MemIntrinCallbackPrefix + "memmove",
                                       IRB.getInt8PtrTy(), IRB.getInt8PtrTy(),
                                       IRB.getInt8PtrTy(), IntptrTy);
@@ -2884,7 +2888,6 @@ bool AddressSanitizer::instrumentFunction(Function &F,
   SmallVector<Instruction *, 8> NoReturnCalls;
   SmallVector<BasicBlock *, 16> AllBlocks;
   SmallVector<Instruction *, 16> PointerComparisonsOrSubtracts;
-  int NumAllocas = 0;
 
   // Fill the set of memory operations to instrument.
   for (auto &BB : F) {
@@ -2924,7 +2927,6 @@ bool AddressSanitizer::instrumentFunction(Function &F,
         IntrinToInstrument.push_back(MI);
         NumInsnsPerBB++;
       } else {
-        if (isa<AllocaInst>(Inst)) NumAllocas++;
         if (auto *CB = dyn_cast<CallBase>(&Inst)) {
           // A call inside BB.
           TempsToInstrument.clear();

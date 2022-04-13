@@ -428,6 +428,23 @@ std::pair<IteratorT, bool> findAttrSorted(IteratorT first, IteratorT last,
   return findAttrUnsorted(first, last, name);
 }
 
+/// Get an attribute from a sorted range of named attributes. Returns null if
+/// the attribute was not found.
+template <typename IteratorT, typename NameT>
+Attribute getAttrFromSortedRange(IteratorT first, IteratorT last, NameT name) {
+  std::pair<IteratorT, bool> result = findAttrSorted(first, last, name);
+  return result.second ? result.first->getValue() : Attribute();
+}
+
+/// Get an attribute from a sorted range of named attributes. Returns None if
+/// the attribute was not found.
+template <typename IteratorT, typename NameT>
+Optional<NamedAttribute>
+getNamedAttrFromSortedRange(IteratorT first, IteratorT last, NameT name) {
+  std::pair<IteratorT, bool> result = findAttrSorted(first, last, name);
+  return result.second ? *result.first : Optional<NamedAttribute>();
+}
+
 } // namespace impl
 
 //===----------------------------------------------------------------------===//
@@ -447,7 +464,7 @@ public:
   NamedAttrList() : dictionarySorted({}, true) {}
   NamedAttrList(ArrayRef<NamedAttribute> attributes);
   NamedAttrList(DictionaryAttr attributes);
-  NamedAttrList(const_iterator in_start, const_iterator in_end);
+  NamedAttrList(const_iterator inStart, const_iterator inEnd);
 
   bool operator!=(const NamedAttrList &other) const {
     return !(*this == other);
@@ -478,15 +495,15 @@ public:
             typename = std::enable_if_t<std::is_convertible<
                 typename std::iterator_traits<IteratorT>::iterator_category,
                 std::input_iterator_tag>::value>>
-  void append(IteratorT in_start, IteratorT in_end) {
+  void append(IteratorT inStart, IteratorT inEnd) {
     // TODO: expand to handle case where values appended are in order & after
     // end of current list.
     dictionarySorted.setPointerAndInt(nullptr, false);
-    attrs.append(in_start, in_end);
+    attrs.append(inStart, inEnd);
   }
 
   /// Replaces the attributes with new list of attributes.
-  void assign(const_iterator in_start, const_iterator in_end);
+  void assign(const_iterator inStart, const_iterator inEnd);
 
   /// Replaces the attributes with new list of attributes.
   void assign(ArrayRef<NamedAttribute> range) {
@@ -726,6 +743,9 @@ public:
   /// Always print operations in the generic form.
   OpPrintingFlags &printGenericOpForm();
 
+  /// Do not verify the operation when using custom operation printers.
+  OpPrintingFlags &assumeVerified();
+
   /// Use local scope when printing the operation. This allows for using the
   /// printer in a more localized and thread-safe setting, but may not
   /// necessarily be identical to what the IR will look like when dumping
@@ -747,6 +767,9 @@ public:
   /// Return if operations should be printed in the generic form.
   bool shouldPrintGenericOpForm() const;
 
+  /// Return if operation verification should be skipped.
+  bool shouldAssumeVerified() const;
+
   /// Return if the printer should use local scope when dumping the IR.
   bool shouldUseLocalScope() const;
 
@@ -761,6 +784,9 @@ private:
 
   /// Print operations in the generic form.
   bool printGenericOpFormFlag : 1;
+
+  /// Skip operation verification.
+  bool assumeVerifiedFlag : 1;
 
   /// Print operations with numberings local to the current operation.
   bool printLocalScope : 1;
@@ -897,6 +923,11 @@ public:
   /// Split this range into a set of contiguous subranges using the given
   /// elements attribute, which contains the sizes of the sub ranges.
   MutableOperandRangeRange split(NamedAttribute segmentSizes) const;
+
+  /// Returns the value at the given index.
+  Value operator[](unsigned index) const {
+    return operator OperandRange()[index];
+  }
 
 private:
   /// Update the length of this range to the one provided.
