@@ -15,13 +15,14 @@
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/IR/FPEnv.h>
 #include <llvm/IR/Instructions.h>
+#include <llvm/IR/IntrinsicInst.h>
 #include <llvm/IR/Intrinsics.h>
 #include <llvm/IR/VectorBuilder.h>
 
 namespace llvm {
 
 void VectorBuilder::handleError(const char *ErrorMsg) const {
-  if (Behavior == Behavior::SilentlyReturnNone)
+  if (ErrorHandling == Behavior::SilentlyReturnNone)
     return;
   report_fatal_error(ErrorMsg);
 }

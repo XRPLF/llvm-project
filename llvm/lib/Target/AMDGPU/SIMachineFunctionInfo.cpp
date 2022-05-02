@@ -47,8 +47,6 @@ SIMachineFunctionInfo::SIMachineFunctionInfo(const MachineFunction &MF)
     WorkItemIDZ(false),
     ImplicitBufferPtr(false),
     ImplicitArgPtr(false),
-    HostcallPtr(false),
-    HeapPtr(false),
     GITPtrHigh(0xffffffff),
     HighBitsOf32BitAddress(0),
     GDSSize(0) {
@@ -143,12 +141,6 @@ SIMachineFunctionInfo::SIMachineFunctionInfo(const MachineFunction &MF)
 
     if (!F.hasFnAttribute("amdgpu-no-dispatch-id"))
       DispatchID = true;
-
-    if (!F.hasFnAttribute("amdgpu-no-hostcall-ptr"))
-      HostcallPtr = true;
-
-    if (!F.hasFnAttribute("amdgpu-no-heap-ptr"))
-      HeapPtr = true;
   }
 
   // FIXME: This attribute is a hack, we just need an analysis on the function
@@ -195,6 +187,12 @@ SIMachineFunctionInfo::SIMachineFunctionInfo(const MachineFunction &MF)
   S = F.getFnAttribute("amdgpu-gds-size").getValueAsString();
   if (!S.empty())
     S.consumeInteger(0, GDSSize);
+
+  // On GFX908, in order to guarantee copying between AGPRs, we need a scratch
+  // VGPR available at all times.
+  if (ST.hasMAIInsts() && !ST.hasGFX90AInsts()) {
+    VGPRForAGPRCopy = AMDGPU::VGPR_32RegClass.getRegister(32);
+  }
 }
 
 void SIMachineFunctionInfo::limitOccupancy(const MachineFunction &MF) {

@@ -18,7 +18,6 @@
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/InstrTypes.h>
 #include <llvm/IR/Instruction.h>
-#include <llvm/IR/PatternMatch.h>
 #include <llvm/IR/Value.h>
 
 namespace llvm {
@@ -37,8 +36,8 @@ public:
   };
 
 private:
-  IRBuilder<> &Builder;
-  Behavior Behavior;
+  IRBuilderBase &Builder;
+  Behavior ErrorHandling;
 
   // Explicit mask parameter.
   Value *Mask;
@@ -59,9 +58,9 @@ private:
   }
 
 public:
-  VectorBuilder(IRBuilder<> &Builder,
-                enum Behavior Behavior = Behavior::ReportAndAbort)
-      : Builder(Builder), Behavior(Behavior), Mask(nullptr),
+  VectorBuilder(IRBuilderBase &Builder,
+                Behavior ErrorHandling = Behavior::ReportAndAbort)
+      : Builder(Builder), ErrorHandling(ErrorHandling), Mask(nullptr),
         ExplicitVectorLength(nullptr),
         StaticVectorLength(ElementCount::getFixed(0)) {}
 

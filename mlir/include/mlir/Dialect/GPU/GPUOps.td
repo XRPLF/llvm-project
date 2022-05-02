@@ -96,6 +96,19 @@ def GPU_ThreadIdOp : GPU_IndexOp<"thread_id"> {
   }];
 }
 
+def GPU_LaneIdOp : GPU_Op<"lane_id", [NoSideEffect]> {
+  let description = [{
+    Returns the lane id within the subgroup (warp/wave).
+
+    Example:
+    ```mlir
+    %laneId = gpu.lane_id
+    ```
+  }];
+  let results = (outs Index:$result);
+  let assemblyFormat = "attr-dict";
+}
+
 def GPU_SubgroupIdOp : GPU_Op<"subgroup_id", [NoSideEffect]>,
     Arguments<(ins)>, Results<(outs Index:$result)> {
   let description = [{
@@ -111,6 +124,21 @@ def GPU_SubgroupIdOp : GPU_Op<"subgroup_id", [NoSideEffect]>,
 
   let assemblyFormat = "attr-dict `:` type($result)";
 }
+
+def GPU_GlobalIdOp : GPU_IndexOp<"global_id"> {
+  let description = [{
+    Returns the unique global workitem/thread id, i.e., the unique index of the
+    current workitem/thread within all workgroups / grid along the x, y, or z
+    `dimension`.
+
+    Example:
+
+    ```mlir
+    %gidX = gpu.global_id x
+    ```
+  }];
+}
+
 
 def GPU_NumSubgroupsOp : GPU_Op<"num_subgroups", [NoSideEffect]>,
     Arguments<(ins)>, Results<(outs Index:$result)> {
@@ -206,6 +234,7 @@ def GPU_GPUFuncOp : GPU_Op<"func", [
     attribution.
   }];
 
+  let arguments = (ins TypeAttrOf<FunctionType>:$function_type);
   let regions = (region AnyRegion:$body);
 
   let skipDefaultBuilders = 1;
@@ -235,7 +264,7 @@ def GPU_GPUFuncOp : GPU_Op<"func", [
     /// the workgroup memory
     ArrayRef<BlockArgument> getWorkgroupAttributions() {
       auto begin =
-          std::next(getBody().args_begin(), getType().getNumInputs());
+          std::next(getBody().args_begin(), getFunctionType().getNumInputs());
       auto end = std::next(begin, getNumWorkgroupAttributions());
       return {begin, end};
     }
@@ -246,7 +275,7 @@ def GPU_GPUFuncOp : GPU_Op<"func", [
 
     /// Returns the number of buffers located in the private memory.
     unsigned getNumPrivateAttributions() {
-      return getBody().getNumArguments() - getType().getNumInputs() -
+      return getBody().getNumArguments() - getFunctionType().getNumInputs() -
           getNumWorkgroupAttributions();
     }
 
@@ -257,7 +286,7 @@ def GPU_GPUFuncOp : GPU_Op<"func", [
       // memory.
       auto begin =
           std::next(getBody().args_begin(),
-                    getType().getNumInputs() + getNumWorkgroupAttributions());
+                    getFunctionType().getNumInputs() + getNumWorkgroupAttributions());
       return {begin, getBody().args_end()};
     }
 
@@ -272,16 +301,14 @@ def GPU_GPUFuncOp : GPU_Op<"func", [
     }
 
     /// Returns the type of this function.
-    /// FIXME: We should drive this via the ODS `type` param.
-    FunctionType getType() {
-      return getTypeAttr().getValue().cast<FunctionType>();
-    }
+    /// FIXME: Remove when GPU uses prefixed accessors.
+    FunctionType getFunctionType() { return function_type(); }
 
     /// Returns the argument types of this function.
-    ArrayRef<Type> getArgumentTypes() { return getType().getInputs(); }
+    ArrayRef<Type> getArgumentTypes() { return getFunctionType().getInputs(); }
 
     /// Returns the result types of this function.
-    ArrayRef<Type> getResultTypes() { return getType().getResults(); }
+    ArrayRef<Type> getResultTypes() { return getFunctionType().getResults(); }
 
     /// Returns the keywords used in the custom syntax for this Op.
     static StringRef getWorkgroupKeyword() { return "workgroup"; }
@@ -556,7 +583,7 @@ def GPU_LaunchOp : GPU_Op<"launch", [AutomaticAllocationScope]>,
 
   let hasCanonicalizer = 1;
   let hasCustomAssemblyFormat = 1;
-  let hasVerifier = 1;
+  let hasRegionVerifier = 1;
 }
 
 def GPU_PrintfOp : GPU_Op<"printf", [MemoryEffects<[MemWrite]>]>,
@@ -677,7 +704,7 @@ def GPU_AllReduceOp : GPU_Op<"all_reduce",
   let regions = (region AnyRegion:$body);
   let assemblyFormat = [{ custom<AllReduceOperation>($op) $value $body attr-dict
                           `:` functional-type(operands, results) }];
-  let hasVerifier = 1;
+  let hasRegionVerifier = 1;
 }
 
 def GPU_ShuffleOpXor  : I32EnumAttrCase<"XOR",  0, "xor">;
@@ -861,6 +888,8 @@ def GPU_WaitOp : GPU_Op<"wait", [GPU_AsyncOpInterface]> {
   let assemblyFormat = [{
     custom<AsyncDependencies>(type($asyncToken), $asyncDependencies) attr-dict
   }];
+
+  let hasCanonicalizer = 1;
 }
 
 def GPU_AllocOp : GPU_Op<"alloc", [
@@ -901,7 +930,7 @@ def GPU_AllocOp : GPU_Op<"alloc", [
     `(` $dynamicSizes `)` (`` `[` $symbolOperands^ `]`)? attr-dict `:` type($memref)
   }];
 
-  let verifier = [{ return ::verify(*this); }];
+  let hasVerifier = 1;
   let hasCanonicalizer = 1;
 }
 
@@ -1337,6 +1366,60 @@ def GPU_DeviceAsyncWaitOp : GPU_Op<"device_async_wait", []> {
                        OptionalAttr<I32Attr>:$numGroups);
   let assemblyFormat = [{
     $asyncDependencies attr-dict
+  }];
+}
+
+def GPU_MmaLdMatrixOp : GPU_Op<"mma.ldmatrix", 
+                                [MemoryEffects<[MemRead]>]> {
+  let description = [{
+  The `gpu.mma.ldmatrix` op represents loading a matrix fragment from
+  memory. The load source and result type must be compatible with lowering 
+  to the `nvvm.ldmatrix` instruction. This op is meant to represent 
+  the distributed version of a `vector.transfer_read` as an intermediate 
+  step between lowering from `vector.transfer_read` to `nvvm.ldmatrix`.
+  
+  Example:
+
+  ```mlir
+  gpu.mma.ldmatrix %shm_buffer[%c0, %c0] : memref<16x16xf16, 3> -> vector<4x2xf16>
+  ```
+  }];                                
+
+  let arguments = (ins Arg<AnyMemRef, "", [MemRead]>:$srcMemref,
+                      Variadic<Index>:$indices, BoolAttr:$transpose,
+                      I32Attr:$numTiles);
+  let results = (outs AnyVector:$res);
+  let assemblyFormat = [{
+    $srcMemref`[` $indices `]` attr-dict `:` type($srcMemref) `->` type($res)
+  }];                      
+}
+
+def GPU_MmaSyncOp : GPU_Op<"mma.sync", [NoSideEffect]> {
+  let description = [{
+  The `gpu.mma.sync` op represents the distributed form of a collective
+  matrix-multiply-and-accumulate (mma) operation that is compatible with
+  `nvvm.mma.sync`. The operands and results are fragments of the full matrix 
+  operands. The full shape of the distributed mma operation is given by the
+  `mmaShape` attribute in the form of a list of dimensions `[m, n, k]`.  
+
+  This operation is meant to be lowered to the `nvvm.mma.sync` instruction, and
+  is an intermediate point between lowering from `vector.contract` to
+  `nvvm.mma.sync`.
+  
+  Example:
+
+  ```mlir
+  gpu.mma.sync (%a, %b, %c) : (vector<4x2xf16>, vector<2x2xf16>, vector<2x2xf16>) -> vector<2x2xf16>
+  ```
+  }];   
+  let arguments = (ins AnyVector:$matrixA, AnyVector:$matrixB, AnyVector:$matrixC,
+    I64ArrayAttr:$mmaShape);
+
+  let results = (outs AnyVector:$res);
+
+  let assemblyFormat = [{
+    `(` $matrixA`,` $matrixB`,` $matrixC `)` attr-dict
+    `:` `(` type($matrixA) `,` type($matrixB) `,` type($matrixC) `)` `->` type($res)
   }];
 }
 

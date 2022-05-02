@@ -19,6 +19,7 @@
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/CodeGen/CallingConvLower.h"
 #include "llvm/CodeGen/MIRYamlMapping.h"
+#include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/IR/Function.h"
 #include "llvm/MC/MCLinkerOptimizationHint.h"
@@ -177,7 +178,7 @@ class AArch64FunctionInfo final : public MachineFunctionInfo {
   mutable Optional<bool> NeedsDwarfUnwindInfo;
 
   /// True if the function need asynchronous unwind information.
-  mutable Optional<bool> NeedsDwarfAsyncUnwindInfo;
+  mutable Optional<bool> NeedsAsyncDwarfUnwindInfo;
 
 public:
   explicit AArch64FunctionInfo(MachineFunction &MF);
