@@ -149,6 +149,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-control-string-arg
+  <clang-tidy/checks/hooks-control-string-arg>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-detail-buf-len
   <clang-tidy/checks/hooks-detail-buf-len>` check.
 

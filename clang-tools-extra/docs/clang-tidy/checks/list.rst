@@ -207,6 +207,7 @@ Clang-Tidy Checks
    `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
    `hooks-array-buf-len <hooks-array-buf-len.html>`_,
    `hooks-burden-prereq <hooks-burden-prereq.html>`_,
+   `hooks-control-string-arg <hooks-control-string-arg.html>`_, "Yes"
    `hooks-detail-buf-len <hooks-detail-buf-len.html>`_,
    `hooks-detail-prereq <hooks-detail-prereq.html>`_,
    `hooks-emit-buf-len <hooks-emit-buf-len.html>`_,
@@ -235,7 +236,7 @@ Clang-Tidy Checks
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
-   `hooks-skip-hash-buf-len <hooks-skip-hash-buf-len.html>`_, "Yes"
+   `hooks-skip-hash-buf-len <hooks-skip-hash-buf-len.html>`_,
    `hooks-slot-hash-buf-len <hooks-slot-hash-buf-len.html>`_,
    `hooks-slot-keylet-buf-len <hooks-slot-keylet-buf-len.html>`_,
    `hooks-slot-limit <hooks-slot-limit.html>`_,

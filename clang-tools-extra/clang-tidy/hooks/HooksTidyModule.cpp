@@ -14,6 +14,7 @@
 #include "AccountConvPureCheck.h"
 #include "ArrayBufLenCheck.h"
 #include "BurdenPrereqCheck.h"
+#include "ControlStringArgCheck.h"
 #include "DetailBufLenCheck.h"
 #include "DetailPrereqCheck.h"
 #include "EmitBufLenCheck.h"
@@ -71,6 +72,8 @@ public:
         "hooks-array-buf-len");
     CheckFactories.registerCheck<BurdenPrereqCheck>(
         "hooks-burden-prereq");
+    CheckFactories.registerCheck<ControlStringArgCheck>(
+        "hooks-control-string-arg");
     CheckFactories.registerCheck<DetailBufLenCheck>(
         "hooks-detail-buf-len");
     CheckFactories.registerCheck<DetailPrereqCheck>(
