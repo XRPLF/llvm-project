@@ -293,6 +293,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-release-define
+  <clang-tidy/checks/hooks-release-define>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-reserve-limit
   <clang-tidy/checks/hooks-reserve-limit>` check.
 

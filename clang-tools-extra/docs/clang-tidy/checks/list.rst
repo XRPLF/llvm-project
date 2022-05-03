@@ -113,7 +113,7 @@ Clang-Tidy Checks
    `bugprone-unused-return-value <bugprone-unused-return-value.html>`_,
    `bugprone-use-after-move <bugprone-use-after-move.html>`_,
    `bugprone-virtual-near-miss <bugprone-virtual-near-miss.html>`_, "Yes"
-   `cert-dcl21-cpp <cert-dcl21-cpp.html>`_, "Yes"
+   `cert-dcl21-cpp <cert-dcl21-cpp.html>`_,
    `cert-dcl50-cpp <cert-dcl50-cpp.html>`_,
    `cert-dcl58-cpp <cert-dcl58-cpp.html>`_,
    `cert-env33-c <cert-env33-c.html>`_,
@@ -207,7 +207,7 @@ Clang-Tidy Checks
    `hooks-account-conv-pure <hooks-account-conv-pure.html>`_, "Yes"
    `hooks-array-buf-len <hooks-array-buf-len.html>`_,
    `hooks-burden-prereq <hooks-burden-prereq.html>`_,
-   `hooks-control-string-arg <hooks-control-string-arg.html>`_, "Yes"
+   `hooks-control-string-arg <hooks-control-string-arg.html>`_,
    `hooks-detail-buf-len <hooks-detail-buf-len.html>`_,
    `hooks-detail-prereq <hooks-detail-prereq.html>`_,
    `hooks-emit-buf-len <hooks-emit-buf-len.html>`_,
@@ -235,6 +235,7 @@ Clang-Tidy Checks
    `hooks-param-set-buf-len <hooks-param-set-buf-len.html>`_,
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
+   `hooks-release-define <hooks-release-define.html>`_, "Yes"
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
    `hooks-skip-hash-buf-len <hooks-skip-hash-buf-len.html>`_,
    `hooks-slot-hash-buf-len <hooks-slot-hash-buf-len.html>`_,
