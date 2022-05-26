@@ -38,7 +38,7 @@ void FieldAddBufLenCheck::check(const MatchFinder::MatchResult &Result) {
   Optional<llvm::APSInt> SourceSizeValue = SourceSize->getIntegerConstantExpr(Context);  
   Optional<llvm::APSInt> FieldSizeValue = FieldSize->getIntegerConstantExpr(Context);
 
-  if (OutputSizeValue && SourceSizeValue && FieldSizeValue && (*OutputSizeValue < (*SourceSizeValue + *SourceSizeValue))) {
+  if (OutputSizeValue && SourceSizeValue && FieldSizeValue && (*OutputSizeValue < (*SourceSizeValue + *FieldSizeValue))) {
     diag(OutputSize->getBeginLoc(), "output buffer of sto_emplace too small for input object + input field");
   }
 

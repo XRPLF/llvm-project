@@ -23,5 +23,6 @@ int64_t hook(int64_t reserved)
 // CHECK-MESSAGES: :[[@LINE-1]]:25: warning: output buffer of sto_emplace too small for input object + input field [hooks-field-add-buf-len]
 
     sto_emplace(buffer, sizeof(buffer), memos, sizeof(memos), zeroed, sizeof(buffer) + sizeof(memos), sfSequence);    
-// CHECK-MESSAGES: :[[@LINE-1]]:71: warning: input field of sto_emplace can have at most 4096 bytes [hooks-field-add-buf-len]
+// CHECK-MESSAGES: :[[@LINE-1]]:25: warning: output buffer of sto_emplace too small for input object + input field [hooks-field-add-buf-len]
+// CHECK-MESSAGES: :[[@LINE-2]]:71: warning: input field of sto_emplace can have at most 4096 bytes [hooks-field-add-buf-len]
 }
