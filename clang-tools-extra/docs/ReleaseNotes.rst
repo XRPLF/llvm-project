@@ -348,6 +348,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-trivial-cbak
+  <clang-tidy/checks/hooks-trivial-cbak>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-validate-buf-len
   <clang-tidy/checks/hooks-validate-buf-len>` check.
 

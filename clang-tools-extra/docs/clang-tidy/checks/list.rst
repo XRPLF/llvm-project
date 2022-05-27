@@ -235,7 +235,7 @@ Clang-Tidy Checks
    `hooks-param-set-buf-len <hooks-param-set-buf-len.html>`_,
    `hooks-raddr-conv-buf-len <hooks-raddr-conv-buf-len.html>`_,
    `hooks-raddr-conv-pure <hooks-raddr-conv-pure.html>`_, "Yes"
-   `hooks-release-define <hooks-release-define.html>`_, "Yes"
+   `hooks-release-define <hooks-release-define.html>`_,
    `hooks-reserve-limit <hooks-reserve-limit.html>`_, "Yes"
    `hooks-skip-hash-buf-len <hooks-skip-hash-buf-len.html>`_,
    `hooks-slot-hash-buf-len <hooks-slot-hash-buf-len.html>`_,
@@ -246,6 +246,7 @@ Clang-Tidy Checks
    `hooks-state-buf-len <hooks-state-buf-len.html>`_,
    `hooks-transaction-hash-buf-len <hooks-transaction-hash-buf-len.html>`_,
    `hooks-transaction-slot-limit <hooks-transaction-slot-limit.html>`_,
+   `hooks-trivial-cbak <hooks-trivial-cbak.html>`_, "Yes"
    `hooks-validate-buf-len <hooks-validate-buf-len.html>`_,
    `hooks-verify-buf-len <hooks-verify-buf-len.html>`_,
    `linuxkernel-must-use-errs <linuxkernel-must-use-errs.html>`_,

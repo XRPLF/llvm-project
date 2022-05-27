@@ -53,6 +53,7 @@
 #include "StateBufLenCheck.h"
 #include "TransactionHashBufLenCheck.h"
 #include "TransactionSlotLimitCheck.h"
+#include "TrivialCbakCheck.h"
 #include "ValidateBufLenCheck.h"
 #include "VerifyBufLenCheck.h"
 
@@ -151,6 +152,8 @@ public:
         "hooks-transaction-hash-buf-len");
     CheckFactories.registerCheck<TransactionSlotLimitCheck>(
         "hooks-transaction-slot-limit");
+    CheckFactories.registerCheck<TrivialCbakCheck>(
+        "hooks-trivial-cbak");
     CheckFactories.registerCheck<ValidateBufLenCheck>(
         "hooks-validate-buf-len");
     CheckFactories.registerCheck<VerifyBufLenCheck>(
