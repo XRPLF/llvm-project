@@ -17,48 +17,28 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-const char *EntryPointsCheck::Names[] = { "cbak", "hook" };
-
-const char *EntryPointsCheck::DefaultFunctions[] = {
-   "int64_t cbak(uint32_t what) { return 0; }\n",
-   "int64_t hook(uint32_t reserved) { }\n"
-};
-
 void EntryPointsCheck::registerMatchers(MatchFinder *Finder) {
-  for (size_t i = 0; i < sizeof(Names) / sizeof(Names[0]); ++i) {
-    const char *Name = Names[i];
-    Finder->addMatcher(translationUnitDecl(unless(hasDescendant(functionDecl(isDefinition(), hasName(Name))))).bind(getMatchName(Name)), this);
-  }
+  Finder->addMatcher(translationUnitDecl(unless(hasDescendant(functionDecl(isDefinition(), hasName("hook"))))).bind("~hook"), this);
 }
 
 void EntryPointsCheck::check(const MatchFinder::MatchResult &Result) {
-  for (size_t i = 0; i < sizeof(Names) / sizeof(Names[0]); ++i) {
-    const char *Name = Names[i];
-    const auto *Matched = Result.Nodes.getNodeAs<TranslationUnitDecl>(getMatchName(Name));
-    if (Matched) {
-      // TranslationUnitDecl has a location retrieval interface, but
-      // the location is usually invalid, while the call to diag must
-      // have a valid location for clangd to show the diagnostics.
-      ASTContext &Context = Matched->getASTContext();
-      SourceManager &Manager = Context.getSourceManager();
-      FileID MainFileID = Manager.getMainFileID();
+  const auto *Matched = Result.Nodes.getNodeAs<TranslationUnitDecl>("~hook");
+  if (Matched) {
+    // TranslationUnitDecl has a location retrieval interface, but
+    // the location is usually invalid, while the call to diag must
+    // have a valid location for clangd to show the diagnostics.
+    ASTContext &Context = Matched->getASTContext();
+    SourceManager &Manager = Context.getSourceManager();
+    FileID MainFileID = Manager.getMainFileID();
 
-      // definition can be missing only in a source file (not header)
-      const FileEntry *Entry = Manager.getFileEntryForID(MainFileID);
-      llvm::StringRef MainFileName = Entry->getName();
-      if (MainFileName.endswith_insensitive(".c")) {
-	SourceLocation End = Manager.getLocForEndOfFile(MainFileID);
-	diag(End, "missing function '%0'", DiagnosticIDs::Error) << Name << FixItHint::CreateInsertion(End, DefaultFunctions[i]);
-      }
+    // definition can be missing only in a source file (not header)
+    const FileEntry *Entry = Manager.getFileEntryForID(MainFileID);
+    llvm::StringRef MainFileName = Entry->getName();
+    if (MainFileName.endswith_insensitive(".c")) {
+      SourceLocation End = Manager.getLocForEndOfFile(MainFileID);
+      diag(End, "missing function 'hook'", DiagnosticIDs::Error) << FixItHint::CreateInsertion(End, "int64_t hook(uint32_t ctx) { }\n");
     }
   }
-}
-
-std::string EntryPointsCheck::getMatchName(const char *Name) const {
-  assert(Name);
-  std::string MatchName("~");
-  MatchName += Name;
-  return MatchName;
 }
 
 } // namespace hooks

@@ -16,7 +16,8 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-/// A Hook always implements and exports exactly two functions: cbak and hook.
+/// A Hook always implements and exports exactly one or both of hook
+/// (required) and cbak (optional).
 class EntryPointsCheck : public ClangTidyCheck {
 public:
   EntryPointsCheck(StringRef Name, ClangTidyContext *Context)
@@ -24,13 +25,6 @@ public:
 
   void registerMatchers(ast_matchers::MatchFinder *Finder) override;
   void check(const ast_matchers::MatchFinder::MatchResult &Result) override;
-
-private:
-  std::string getMatchName(const char *Name) const;
-
-  static const char *Names[];
-
-  static const char *DefaultFunctions[];
 };
 
 } // namespace hooks
