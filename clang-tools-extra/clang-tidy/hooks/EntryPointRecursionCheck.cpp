@@ -17,7 +17,7 @@ namespace tidy {
 namespace hooks {
 
 void EntryPointRecursionCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(callExpr(callee(functionDecl(anyOf(hasName("cbak"), hasName("hook"))))).bind("recursion"), this);
+  Finder->addMatcher(callExpr(callee(functionDecl(hasAnyName("cbak", "hook")))).bind("recursion"), this);
 }
 
 void EntryPointRecursionCheck::check(const MatchFinder::MatchResult &Result) {
