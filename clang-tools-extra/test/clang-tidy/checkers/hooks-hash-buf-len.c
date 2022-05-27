@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+extern int64_t etxn_nonce(uint32_t write_ptr,  uint32_t write_len);
+
+extern int64_t ledger_nonce(uint32_t write_ptr, uint32_t write_len);
+
 extern int64_t util_sha512h(uint32_t write_ptr, uint32_t write_len,
 			    uint32_t read_ptr,  uint32_t read_len);
 
@@ -30,7 +34,10 @@ int64_t hook(int64_t reserved)
     ledger_last_hash(SBUF(hash));
 // CHECK-MESSAGES: :[[@LINE-1]]:22: warning: output buffer of ledger_last_hash needs 32 bytes for the hash [hooks-hash-buf-len]
 
-    nonce(SBUF(digest));
+    etxn_nonce(SBUF(digest));
+
+    ledger_nonce(SBUF(hash));
+// CHECK-MESSAGES: :[[@LINE-1]]:18: warning: output buffer of ledger_nonce needs 32 bytes for the hash [hooks-hash-buf-len]
 
     return reserved;
 }
