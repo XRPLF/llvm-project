@@ -33,14 +33,14 @@ int64_t hook(int64_t reserved)
 
     // also, recognized forms of a simple iteration are very limited
     for (int i = 0; 2 > i; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call '_g' [hooks-guard-in-for]
     {
 	trace_num("four", 3, i);
     }
 
     int i;
     for (i = 1; i < 3; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
+// CHECK-MESSAGES: :[[@LINE-1]]:17: warning: for loop does not call '_g' [hooks-guard-in-for]
     {
 	trace_num("five", 3, i);
     }
