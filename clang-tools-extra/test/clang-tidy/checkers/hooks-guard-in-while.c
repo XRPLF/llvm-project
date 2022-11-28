@@ -24,7 +24,7 @@ int64_t hook(int64_t reserved)
 	i += 1;
     }
 
-    while (true)
+    while (1)
       ;
 // CHECK-MESSAGES: :[[@LINE-2]]:5: warning: while loop does not call '_g' [hooks-guard-in-while]
 
