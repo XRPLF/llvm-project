@@ -16,6 +16,8 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
+namespace {
+
 const int64_t MAX_FOR_LIMIT = 10000;
 
 bool areSameVariable(const ValueDecl *First, const ValueDecl *Second) {
@@ -23,52 +25,56 @@ bool areSameVariable(const ValueDecl *First, const ValueDecl *Second) {
     First->getCanonicalDecl() == Second->getCanonicalDecl();
 }
 
+}
+
 void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
   // based on https://clang.llvm.org/docs/LibASTMatchersTutorial.html
   const auto CondVarNameExpr = ignoringParenImpCasts(declRefExpr(
-		      to(varDecl(hasType(isInteger())).bind("condVarName"))));
+          to(varDecl(hasType(isInteger())).bind("condVarName"))));
 
   const auto CondLimitExpr = expr().bind("constLimit");
 
   //for(int i = 0;...)
   const auto LoopVarInitInsideLoopExpr = declStmt(
     hasSingleDecl(varDecl(hasInitializer(expr().bind("constInit")))
-				    .bind("initVarName")));
+          .bind("initVarName")));
 
   //int i; for(i = 0;...)
   const auto LoopVarInitOutsideLoopExpr = binaryOperator(
           hasLHS(declRefExpr(to(varDecl().bind("initVarName")))),
-          hasRHS(ignoringParenImpCasts(integerLiteral().bind("constInit"))));  
+          hasRHS(ignoringParenImpCasts(integerLiteral().bind("constInit")))); 
+
+  const auto UnguardedExpr = unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))));
 
   //matches "standard" loops, e.g.: for (int i = 0; i < 2; i++), for (int i = 0; 2 > i; i++), int i; for (i = 0; i < 2; i++)
-  StatementMatcher StandardLoopMatcher =
-    forStmt(unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g")))))))),
+  StatementMatcher StrictLoopMatcher =
+    forStmt(UnguardedExpr,
       isExpansionInMainFile(),
-	    hasLoopInit(
+      hasLoopInit(
         anyOf(
           LoopVarInitInsideLoopExpr,  
           LoopVarInitOutsideLoopExpr
       )),
-	    hasIncrement(unaryOperator(
-		    hasOperatorName("++"),
-		    hasUnaryOperand(declRefExpr(
-		      to(varDecl(hasType(isInteger())).bind("incVarName")))))),
-	    hasCondition(
-		    anyOf(
+      hasIncrement(unaryOperator(
+        hasOperatorName("++"),
+        hasUnaryOperand(declRefExpr(
+          to(varDecl(hasType(isInteger())).bind("incVarName")))))),
+      hasCondition(
+        anyOf(
           binaryOperator(hasOperatorName("<"),    // i < 2
-		        hasLHS(CondVarNameExpr),
-		        hasRHS(CondLimitExpr)).bind("condOp"),
+            hasLHS(CondVarNameExpr),
+            hasRHS(CondLimitExpr)).bind("condOp"),
           binaryOperator(hasOperatorName(">"),    // 2 > i
             hasLHS(CondLimitExpr),
-		        hasRHS(CondVarNameExpr)).bind("condOp")
+            hasRHS(CondVarNameExpr)).bind("condOp")
         )
       )
     ).bind("standardLoop");
 
   //matches e.g. for(;;), for(int i = 0; 1; ++i), etc. Basically any "non standard" loop that is not matched by the StandardLoopMatcher
-  StatementMatcher AnyLoopMatcher = forStmt(unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))))).bind("anyLoop");
+  StatementMatcher AnyLoopMatcher = forStmt(UnguardedExpr, isExpansionInMainFile()).bind("anyLoop");
 
-  Finder->addMatcher(stmt(anyOf(StandardLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
+  Finder->addMatcher(stmt(anyOf(StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
 }
 
 void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {

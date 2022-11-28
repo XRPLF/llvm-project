@@ -31,7 +31,6 @@ int64_t hook(int64_t reserved)
     for (;;);
 // CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
 
-    // also, recognized forms of a simple iteration are very limited
     for (int i = 0; 2 > i; ++i)
 // CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call '_g' [hooks-guard-in-for]
     {
