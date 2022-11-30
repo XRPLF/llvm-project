@@ -54,7 +54,7 @@ auto greaterThanCondition(int nestingLevel) {
 auto loopCondition(int nestingLevel) {
   return hasCondition(
 		    anyOf(
-          binaryOperator(hasOperatorName(","),    //this is for nested loops only - even if one of ancestor loops is guarded,
+          binaryOperator(hasOperatorName(","),    //catch loop that is guarded, this is for nested loops only - even if one of ancestor loops is guarded,
                                                   //it's condition limit still need to be used to calculate GUARD limit for the most descendant loop
             anyOf(hasRHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel))),    // e.g. GUARD(...), i < 2 or GUARD(...), 2 > i
                   hasLHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel)))     // e.g. i < 2, GUARD(...) or 2 > i, GUARD(...)
@@ -97,7 +97,7 @@ auto loopInit(int nestingLevel) {
 
 //creates nested loop statement recursively for the specified nesting level
 //if one of the nested loops is not "strict" (no init value or no condition) it is bound as "nonStrictNestedLoop"
-//in such a case guard limit value will not be calculated
+//in such a case guard limit value will not be calculated and only warning will be displayed without hints
 auto nestedForStmt(int totalNestingLevels, int initialNestingLevel = 1) {
   if (initialNestingLevel == totalNestingLevels) {
     return stmt(anyOf(forStmt(loopInit(totalNestingLevels), loopIncrement(totalNestingLevels), loopCondition(totalNestingLevels)),
@@ -122,7 +122,7 @@ class LoopHandler {
 public:
 
   int GuardLimit;
-  bool FoundCond = false;
+  bool Found = false;
   SourceLocation CondBegLoc;
 
   void processLoop(const ast_matchers::MatchFinder::MatchResult &Result, int nestingLevel) {
@@ -133,7 +133,7 @@ public:
       const auto *NonStrictLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("nonStrictNestedLoop-" + std::to_string(i));
       if (NonStrictLoopNestedMatched) {
         //found non strict loop, skip guard limit calculation and show only warning without any hint
-        FoundCond = false;
+        Found = false;
         return;
       }
 
@@ -154,15 +154,12 @@ public:
           llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
           int64_t LimitedValue = Value.getExtValue();
           if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
-            if (i == 0) {
-              ++LimitedValue;
-            }
             GuardLimit *= static_cast<int>(LimitedValue);
             if (GuardLimit >= MAX_FOR_LIMIT) {
-              FoundCond = false;
+              Found = false;
               return;
             }
-            FoundCond = true;
+            Found = true;
           }
         }
       }
@@ -238,7 +235,7 @@ void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
     }
   }
 
-  if (Handler.FoundCond) {
+  if (Handler.Found) {
       std::string Fix("GUARD(" + std::to_string(Handler.GuardLimit) + "), ");
 
       diag(Handler.CondBegLoc, "for loop does not call 'GUARD'") <<
