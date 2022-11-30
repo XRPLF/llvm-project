@@ -19,116 +19,234 @@ namespace hooks {
 namespace {
 
 const int64_t MAX_FOR_LIMIT = 10000;
+const int MAX_NESTED_LOOP_LEVEL = 10;
 
 bool areSameVariable(const ValueDecl *First, const ValueDecl *Second) {
   return First && Second &&
     First->getCanonicalDecl() == Second->getCanonicalDecl();
 }
 
+auto isUnguarded()  {
+  return unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))));
 }
 
-void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
-  // based on https://clang.llvm.org/docs/LibASTMatchersTutorial.html
-  const auto CondVarNameExpr = ignoringParenImpCasts(declRefExpr(
-          to(varDecl(hasType(isInteger())).bind("condVarName"))));
+auto conditionLimit(int nestingLevel) {
+  return expr().bind("constLimit-" + std::to_string(nestingLevel));
+}
 
-  const auto CondLimitExpr = expr().bind("constLimit");
+auto conditionVarName(int nestingLevel) {
+  return ignoringParenImpCasts(declRefExpr(
+          to(varDecl(hasType(isInteger())).bind("condVarName-" + std::to_string(nestingLevel)))));
+}
 
-  //for(int i = 0;...)
-  const auto LoopVarInitInsideLoopExpr = declStmt(
-    hasSingleDecl(varDecl(hasInitializer(expr().bind("constInit")))
-          .bind("initVarName")));
+auto lessThanCondition(int nestingLevel) {
+  return binaryOperator(hasOperatorName("<"),    //e.g. i < 2
+            hasLHS(conditionVarName(nestingLevel)),
+            hasRHS(conditionLimit(nestingLevel))).bind("condOp-" + std::to_string(nestingLevel));
+}
 
-  //int i; for(i = 0;...)
-  const auto LoopVarInitOutsideLoopExpr = binaryOperator(
-          hasLHS(declRefExpr(to(varDecl().bind("initVarName")))),
-          hasRHS(ignoringParenImpCasts(integerLiteral().bind("constInit")))); 
+auto greaterThanCondition(int nestingLevel) {
+  return binaryOperator(hasOperatorName(">"),    //e.g. 2 > i
+            hasLHS(conditionLimit(nestingLevel)),
+            hasRHS(conditionVarName(nestingLevel))).bind("condOp-" + std::to_string(nestingLevel));
+}
 
-  const auto UnguardedExpr = unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))));
-
-  //matches "standard" loops, e.g.: for (int i = 0; i < 2; i++), for (int i = 0; 2 > i; i++), int i; for (i = 0; i < 2; i++)
-  StatementMatcher StrictLoopMatcher =
-    forStmt(UnguardedExpr,
-      isExpansionInMainFile(),
-      hasLoopInit(
-        anyOf(
-          LoopVarInitInsideLoopExpr,  
-          LoopVarInitOutsideLoopExpr
-      )),
-      hasIncrement(unaryOperator(
-        hasOperatorName("++"),
-        hasUnaryOperand(declRefExpr(
-          to(varDecl(hasType(isInteger())).bind("incVarName")))))),
-      hasCondition(
-        anyOf(
-          binaryOperator(hasOperatorName("<"),    // i < 2
-            hasLHS(CondVarNameExpr),
-            hasRHS(CondLimitExpr)).bind("condOp"),
-          binaryOperator(hasOperatorName(">"),    // 2 > i
-            hasLHS(CondLimitExpr),
-            hasRHS(CondVarNameExpr)).bind("condOp")
+auto loopCondition(int nestingLevel) {
+  return hasCondition(
+		    anyOf(
+          binaryOperator(hasOperatorName(","),    //this is for nested loops only - even if one of ancestor loops is guarded,
+                                                  //it's condition limit still need to be used to calculate GUARD limit for the most descendant loop
+            anyOf(hasRHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel))),    // e.g. GUARD(...), i < 2 or GUARD(...), 2 > i
+                  hasLHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel)))     // e.g. i < 2, GUARD(...) or 2 > i, GUARD(...)
+            )),
+          lessThanCondition(nestingLevel),
+          greaterThanCondition(nestingLevel)
         )
-      )
-    ).bind("standardLoop");
-
-  //matches e.g. for(;;), for(int i = 0; 1; ++i), etc. Basically any "non standard" loop that is not matched by the StandardLoopMatcher
-  StatementMatcher AnyLoopMatcher = forStmt(UnguardedExpr, isExpansionInMainFile()).bind("anyLoop");
-
-  Finder->addMatcher(stmt(anyOf(StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
+      );
 }
 
-void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
-  const auto *UngardedLoopMatched = Result.Nodes.getNodeAs<Stmt>("unguarded");
-  assert(UngardedLoopMatched);
+auto loopIncrement(int nestingLevel) {
+  return hasIncrement(
+          unaryOperator(
+            hasOperatorName("++"),
+            hasUnaryOperand(declRefExpr(
+              to(varDecl(hasType(isInteger())).bind("incVarName-" + std::to_string(nestingLevel))))
+            )
+          )
+        );
+}
 
-  const auto *StandardLoopMatched = Result.Nodes.getNodeAs<ForStmt>("standardLoop");
-  const auto *AnyLoopMatched = Result.Nodes.getNodeAs<ForStmt>("anyLoop");
+auto loopInit(int nestingLevel) {
+  //e.g. for(int i = 0;...)
+  const auto LoopVarInitInsideLoopExpr = declStmt(
+    hasSingleDecl(varDecl(hasInitializer(expr().bind("constInit-" + std::to_string(nestingLevel))))
+          .bind("initVarName-" + std::to_string(nestingLevel))));
 
+  //e.g. int i; for(i = 0;...)
+  const auto LoopVarInitOutsideLoopExpr = binaryOperator(
+          hasLHS(declRefExpr(to(varDecl().bind("initVarName-" + std::to_string(nestingLevel))))),
+          hasRHS(ignoringParenImpCasts(integerLiteral().bind("constInit-" + std::to_string(nestingLevel)))));
+
+  return hasLoopInit(
+          anyOf(
+            LoopVarInitInsideLoopExpr,
+            LoopVarInitOutsideLoopExpr
+          )
+        );
+}
+
+//creates nested loop statement recursively for the specified nesting level
+//if one of the nested loops is not "strict" (no init value or no condition) it is bound as "nonStrictNestedLoop"
+//in such a case guard limit value will not be calculated
+auto nestedForStmt(int totalNestingLevels, int initialNestingLevel = 1) {
+  if (initialNestingLevel == totalNestingLevels) {
+    return stmt(anyOf(forStmt(loopInit(totalNestingLevels), loopIncrement(totalNestingLevels), loopCondition(totalNestingLevels)),
+                      forStmt().bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel))));
+  }
+  return stmt(anyOf(forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1)),
+                      loopInit(initialNestingLevel), loopIncrement(initialNestingLevel), loopCondition(initialNestingLevel)),
+                    forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel))));
+}
+
+template<std::size_t... S>
+auto anyOfFromVector(const std::vector<StatementMatcher>& vec, std::index_sequence<S...>) {
+    return anyOf(vec[S]...);
+}
+
+template<std::size_t size>
+auto anyOfFromVector(const std::vector<StatementMatcher>& vec) {
+    return anyOfFromVector(vec, std::make_index_sequence<size>());
+}
+
+class LoopHandler {
+public:
+
+  int GuardLimit;
   bool FoundCond = false;
-  int GuardLimit = 0;
-  SourceLocation CondBegLoc = UngardedLoopMatched->getBeginLoc();
-  SourceLocation CondEndLoc = UngardedLoopMatched->getEndLoc();
+  SourceLocation CondBegLoc;
 
-  if (StandardLoopMatched) {  
-    const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>("constInit");  
-    const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>("incVarName");
-    const VarDecl *CondVar = Result.Nodes.getNodeAs<VarDecl>("condVarName");
-    const VarDecl *InitVar = Result.Nodes.getNodeAs<VarDecl>("initVarName");
-    const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>("condOp");
-    const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>("constLimit");
-    CondBegLoc = CondOp->getBeginLoc();
-    CondEndLoc = CondOp->getEndLoc();    
+  void processLoop(const ast_matchers::MatchFinder::MatchResult &Result, int nestingLevel) {
+    GuardLimit = 1;
+    ASTContext &Context = *(Result.Context);
 
-    assert(Result.Context);
-      ASTContext &Context = *(Result.Context);
+    for (int i = nestingLevel; i >= 0; --i) {
+      const auto *NonStrictLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("nonStrictNestedLoop-" + std::to_string(i));
+      if (NonStrictLoopNestedMatched) {
+        //found non strict loop, skip guard limit calculation and show only warning without any hint
+        FoundCond = false;
+        return;
+      }
 
-    if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
-      
-      Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
-      Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
-      
-      if (ConstInitValue && ConstLimitValue) {
-        llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
-        int64_t LimitedValue = Value.getExtValue();
-        if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
-          GuardLimit = static_cast<int>(LimitedValue) + 1;
-          FoundCond = true;
+      const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>("constInit-" + std::to_string(i));
+      const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>("incVarName-" + std::to_string(i));
+      const VarDecl *CondVar = Result.Nodes.getNodeAs<VarDecl>("condVarName-" + std::to_string(i));
+      const VarDecl *InitVar = Result.Nodes.getNodeAs<VarDecl>("initVarName-" + std::to_string(i));
+      const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>("condOp-" + std::to_string(i));
+      const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>("constLimit-" + std::to_string(i));
+
+      CondBegLoc = CondOp->getBeginLoc();
+
+      if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
+        Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
+        Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
+        
+        if (ConstInitValue && ConstLimitValue) {
+          llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
+          int64_t LimitedValue = Value.getExtValue();
+          if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
+            if (i == 0) {
+              ++LimitedValue;
+            }
+            GuardLimit *= static_cast<int>(LimitedValue);
+            if (GuardLimit >= MAX_FOR_LIMIT) {
+              FoundCond = false;
+              return;
+            }
+            FoundCond = true;
+          }
         }
       }
     }
-  } else if (AnyLoopMatched) {
-    CondEndLoc = AnyLoopMatched->getRParenLoc();
+  }
+};
+
+}
+
+void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
+  // based on https://clang.llvm.org/docs/LibASTMatchersTutorial.htmls
+
+  //matches "standard" loops, e.g.: for (int i = 0; i < 2; i++), for (int i = 0; 2 > i; i++), int i; for (i = 0; i < 2; i++)
+  StatementMatcher StrictLoopMatcher =
+    forStmt(isUnguarded(),
+      isExpansionInMainFile(),
+      loopInit(0),
+      loopIncrement(0),
+      loopCondition(0)
+    ).bind("strictLoop");
+
+  //matches nested loops (e.g. for (...) { for(...)} ) up to 10 nesting level
+  std::vector<StatementMatcher> NestedLoopMatcherArray;
+  NestedLoopMatcherArray.reserve(MAX_NESTED_LOOP_LEVEL);
+  for (int i = MAX_NESTED_LOOP_LEVEL; i >= 1; --i) {
+    NestedLoopMatcherArray.push_back(forStmt(
+        isUnguarded(), 
+        isExpansionInMainFile(),
+        hasAncestor(nestedForStmt(i)),
+        loopInit(0),
+        loopIncrement(0),
+        loopCondition(0)
+      ).bind("nestedLoop-" + std::to_string(i))
+    );
+  }
+  StatementMatcher NestedLoopsMatcher = stmt(anyOfFromVector<MAX_NESTED_LOOP_LEVEL>(NestedLoopMatcherArray));
+
+  //matches e.g. for(;;), for(int i = 0; 1; ++i), etc. Basically any "non standard" loop that is not matched by the StrictLoopMatcher
+  StatementMatcher AnyLoopMatcher = forStmt(isUnguarded(), isExpansionInMainFile()).bind("anyLoop");
+
+  Finder->addMatcher(stmt(anyOf(NestedLoopsMatcher, StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
+}
+
+void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
+  assert(Result.Context);
+
+  const auto *UngardedLoopMatched = Result.Nodes.getNodeAs<Stmt>("unguarded");
+  assert(UngardedLoopMatched);
+
+  const auto *StrictLoopMatched = Result.Nodes.getNodeAs<ForStmt>("strictLoop");
+  const auto *AnyLoopMatched = Result.Nodes.getNodeAs<ForStmt>("anyLoop");
+  
+  SourceLocation CondEndLoc = UngardedLoopMatched->getEndLoc();
+
+  LoopHandler Handler;
+  bool FoundNestedLoop = false;
+  for (int i = MAX_NESTED_LOOP_LEVEL; i >= 1; --i) {
+    const auto *NestedLoopMatched = Result.Nodes.getNodeAs<ForStmt>("nestedLoop-" + std::to_string(i));
+    if (NestedLoopMatched) {
+      CondEndLoc = NestedLoopMatched->getRParenLoc();
+      Handler.processLoop(Result, i);
+      FoundNestedLoop = true;
+      break;
+    }
   }
 
-  if (FoundCond) {
-      std::string Fix("_g(__LINE__, " + std::to_string(GuardLimit) + "), ");
+  if (!FoundNestedLoop) {
+    if (StrictLoopMatched) {
+      Handler.processLoop(Result, 0);
+      CondEndLoc = StrictLoopMatched->getRParenLoc();
+    } else if (AnyLoopMatched) {
+      CondEndLoc = AnyLoopMatched->getRParenLoc();
+    }
+  }
 
-      diag(CondBegLoc, "for loop does not call '_g'") <<
-        SourceRange(CondBegLoc, CondEndLoc) <<
-        FixItHint::CreateInsertion(CondBegLoc, Fix);
+  if (Handler.FoundCond) {
+      std::string Fix("GUARD(" + std::to_string(Handler.GuardLimit) + "), ");
+
+      diag(Handler.CondBegLoc, "for loop does not call 'GUARD'") <<
+        SourceRange(UngardedLoopMatched->getBeginLoc(), CondEndLoc) <<
+        FixItHint::CreateInsertion(Handler.CondBegLoc, Fix);
   } else {
-    diag(CondBegLoc, "for loop does not call '_g'") <<
-      SourceRange(CondBegLoc, CondEndLoc);
+    diag(UngardedLoopMatched->getBeginLoc(), "for loop does not call 'GUARD'") <<
+      SourceRange(UngardedLoopMatched->getBeginLoc(), CondEndLoc);
   }
 }
 

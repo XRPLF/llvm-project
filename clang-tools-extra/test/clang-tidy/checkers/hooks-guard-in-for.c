@@ -29,19 +29,38 @@ int64_t hook(int64_t reserved)
 
     // ...but infinite looping certainly isn't allowed
     for (;;);
-// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call '_g' [hooks-guard-in-for]
+// CHECK-MESSAGES: :[[@LINE-1]]:5: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
 
     for (int i = 0; 2 > i; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call '_g' [hooks-guard-in-for]
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
     {
-	trace_num("four", 3, i);
+	trace_num("four", 4, i);
     }
 
     int i;
     for (i = 1; i < 3; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:17: warning: for loop does not call '_g' [hooks-guard-in-for]
+// CHECK-MESSAGES: :[[@LINE-1]]:17: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
     {
-	trace_num("five", 3, i);
+	trace_num("five", 4, i);
+    }
+
+    for (int i = 0; i < 1; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+    {
+        trace_num("six", 3, i);
+        for (int j = 0; j < 2; ++j)
+// CHECK-MESSAGES: :[[@LINE-1]]:25: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+        {
+            trace_num("seven", 5, j);
+            for (int k = 0; GUARD(4), k < 3; ++k)
+            {
+                for (int w = 0; w < 4; ++w)
+// CHECK-MESSAGES: :[[@LINE-1]]:33: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+                {
+                    trace_num("eight", 5, w);
+                }
+            }
+        }
     }
 
     return 0;
