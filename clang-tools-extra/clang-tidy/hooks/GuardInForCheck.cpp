@@ -53,7 +53,7 @@ auto greaterThanCondition(int nestingLevel) {
 
 auto loopCondition(int nestingLevel) {
   return hasCondition(
-		    anyOf(
+        anyOf(
           binaryOperator(hasOperatorName(","),    //catch loop that is guarded, this is for nested loops only - even if one of ancestor loops is guarded,
                                                   //it's condition limit still need to be used to calculate GUARD limit for the most descendant loop
             anyOf(hasRHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel))),    // e.g. GUARD(...), i < 2 or GUARD(...), 2 > i
@@ -98,14 +98,17 @@ auto loopInit(int nestingLevel) {
 //creates nested loop statement recursively for the specified nesting level
 //if one of the nested loops is not "strict" (no init value or no condition) it is bound as "nonStrictNestedLoop"
 //in such a case guard limit value will not be calculated and only warning will be displayed without hints
+//similar if one of nested loops is while loop - for such we can't calculate the limit too
 auto nestedForStmt(int totalNestingLevels, int initialNestingLevel = 1) {
   if (initialNestingLevel == totalNestingLevels) {
     return stmt(anyOf(forStmt(loopInit(totalNestingLevels), loopIncrement(totalNestingLevels), loopCondition(totalNestingLevels)),
-                      forStmt().bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel))));
+                      forStmt().bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel)),
+                      whileStmt().bind("whileNestedLoop-" + std::to_string(initialNestingLevel))));
   }
   return stmt(anyOf(forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1)),
                       loopInit(initialNestingLevel), loopIncrement(initialNestingLevel), loopCondition(initialNestingLevel)),
-                    forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel))));
+                    forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel)),
+                    whileStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("whileNestedLoop-" + std::to_string(initialNestingLevel))));
 }
 
 template<std::size_t... S>
@@ -130,9 +133,11 @@ public:
     ASTContext &Context = *(Result.Context);
 
     for (int i = nestingLevel; i >= 0; --i) {
+      bool LoopProcessedProperly = false;
       const auto *NonStrictLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("nonStrictNestedLoop-" + std::to_string(i));
-      if (NonStrictLoopNestedMatched) {
-        //found non strict loop, skip guard limit calculation and show only warning without any hint
+      const auto *WhileLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("whileNestedLoop-" + std::to_string(i));
+      if (NonStrictLoopNestedMatched || WhileLoopNestedMatched) {
+        //found non strict/while loop, skip guard limit calculation and show only warning without any hint
         Found = false;
         return;
       }
@@ -149,19 +154,22 @@ public:
       if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
         Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
         Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
-        
+
         if (ConstInitValue && ConstLimitValue) {
           llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
           int64_t LimitedValue = Value.getExtValue();
           if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
-            GuardLimit *= static_cast<int>(LimitedValue);
-            if (GuardLimit >= MAX_FOR_LIMIT) {
-              Found = false;
-              return;
+            if (i == 0) {
+              ++LimitedValue;
             }
-            Found = true;
+            GuardLimit *= static_cast<int>(LimitedValue);
+            Found = LoopProcessedProperly = (GuardLimit < MAX_FOR_LIMIT);
           }
         }
+      }
+      if (!LoopProcessedProperly) {
+        Found = false;
+        return;
       }
     }
   }
@@ -236,7 +244,8 @@ void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
   }
 
   if (Handler.Found) {
-      std::string Fix("GUARD(" + std::to_string(Handler.GuardLimit) + "), ");
+      //GUARD macro adds 1 to iterations
+      std::string Fix("GUARD(" + std::to_string(Handler.GuardLimit - 1) + "), ");
 
       diag(Handler.CondBegLoc, "for loop does not call 'GUARD'") <<
         SourceRange(UngardedLoopMatched->getBeginLoc(), CondEndLoc) <<
