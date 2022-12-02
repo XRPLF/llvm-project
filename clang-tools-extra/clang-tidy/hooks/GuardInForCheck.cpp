@@ -30,37 +30,57 @@ auto isUnguarded()  {
   return unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))));
 }
 
+std::string buildStr(std::string str, int nestingLevel) {
+  return str + std::to_string(nestingLevel);
+}
+
 auto conditionLimit(int nestingLevel) {
-  return expr().bind("constLimit-" + std::to_string(nestingLevel));
+  return expr().bind(buildStr("constLimit-", nestingLevel));
 }
 
 auto conditionVarName(int nestingLevel) {
   return ignoringParenImpCasts(declRefExpr(
-          to(varDecl(hasType(isInteger())).bind("condVarName-" + std::to_string(nestingLevel)))));
+          to(varDecl(hasType(isInteger())).bind(buildStr("condVarName-", nestingLevel)))));
 }
 
 auto lessThanCondition(int nestingLevel) {
-  return binaryOperator(hasOperatorName("<"),    //e.g. i < 2
-            hasLHS(conditionVarName(nestingLevel)),
-            hasRHS(conditionLimit(nestingLevel))).bind("condOp-" + std::to_string(nestingLevel));
+  return binaryOperator(anyOf(hasOperatorName("<"), hasOperatorName("<=")),    //e.g. i < 2 or 2 < i
+            hasLHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel))),
+            hasRHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel)))
+          ).bind(buildStr("condOp-", nestingLevel));
 }
 
 auto greaterThanCondition(int nestingLevel) {
-  return binaryOperator(hasOperatorName(">"),    //e.g. 2 > i
-            hasLHS(conditionLimit(nestingLevel)),
-            hasRHS(conditionVarName(nestingLevel))).bind("condOp-" + std::to_string(nestingLevel));
+  return binaryOperator(anyOf(hasOperatorName(">"), hasOperatorName(">=")),   //e.g. 2 > i or i > 2
+            hasLHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel))),
+            hasRHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel)))
+          ).bind(buildStr("condOp-", nestingLevel));
+}
+
+auto notEqualCondition(int nestingLevel) {
+  return binaryOperator(hasOperatorName("!="),    //e.g. i != 2 or 2 != i
+            hasLHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel))),
+            hasRHS(anyOf(conditionVarName(nestingLevel), conditionLimit(nestingLevel)))).bind(buildStr("condOp-", nestingLevel));
+}
+
+auto conditionHasGuard(int nestingLevel) {
+  return binaryOperator(hasOperatorName(","),
+    hasEitherOperand(callExpr(callee(functionDecl(
+      hasName("_g"))),
+      hasArgument(1, expr().bind(buildStr("constLimit-", nestingLevel))))
+    )
+  ).bind(buildStr("guarded-", nestingLevel));
 }
 
 auto loopCondition(int nestingLevel) {
   return hasCondition(
         anyOf(
-          binaryOperator(hasOperatorName(","),    //catch loop that is guarded, this is for nested loops only - even if one of ancestor loops is guarded,
-                                                  //it's condition limit still need to be used to calculate GUARD limit for the most descendant loop
-            anyOf(hasRHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel))),    // e.g. GUARD(...), i < 2 or GUARD(...), 2 > i
-                  hasLHS(anyOf(lessThanCondition(nestingLevel), greaterThanCondition(nestingLevel)))     // e.g. i < 2, GUARD(...) or 2 > i, GUARD(...)
-            )),
+          conditionHasGuard(nestingLevel),    //catch loop that is guarded, this is for nested loops only - even if one of ancestor loops is guarded,
+                                              //it's condition limit still need to be used (together with limits of all other ancestors)
+                                              //to calculate GUARD limit for the most descendant loop
           lessThanCondition(nestingLevel),
-          greaterThanCondition(nestingLevel)
+          greaterThanCondition(nestingLevel),
+          notEqualCondition(nestingLevel)
         )
       );
 }
@@ -68,9 +88,9 @@ auto loopCondition(int nestingLevel) {
 auto loopIncrement(int nestingLevel) {
   return hasIncrement(
           unaryOperator(
-            hasOperatorName("++"),
+            anyOf(hasOperatorName("++"), hasOperatorName("--")),
             hasUnaryOperand(declRefExpr(
-              to(varDecl(hasType(isInteger())).bind("incVarName-" + std::to_string(nestingLevel))))
+              to(varDecl(hasType(isInteger())).bind(buildStr("incVarName-", nestingLevel))))
             )
           )
         );
@@ -79,13 +99,13 @@ auto loopIncrement(int nestingLevel) {
 auto loopInit(int nestingLevel) {
   //e.g. for(int i = 0;...)
   const auto LoopVarInitInsideLoopExpr = declStmt(
-    hasSingleDecl(varDecl(hasInitializer(expr().bind("constInit-" + std::to_string(nestingLevel))))
-          .bind("initVarName-" + std::to_string(nestingLevel))));
+    hasSingleDecl(varDecl(hasInitializer(expr().bind(buildStr("constInit-", nestingLevel))))
+          .bind(buildStr("initVarName-", nestingLevel))));
 
   //e.g. int i; for(i = 0;...)
   const auto LoopVarInitOutsideLoopExpr = binaryOperator(
-          hasLHS(declRefExpr(to(varDecl().bind("initVarName-" + std::to_string(nestingLevel))))),
-          hasRHS(ignoringParenImpCasts(integerLiteral().bind("constInit-" + std::to_string(nestingLevel)))));
+          hasLHS(declRefExpr(to(varDecl().bind(buildStr("initVarName-", nestingLevel))))),
+          hasRHS(ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel)))));
 
   return hasLoopInit(
           anyOf(
@@ -102,13 +122,13 @@ auto loopInit(int nestingLevel) {
 auto nestedForStmt(int totalNestingLevels, int initialNestingLevel = 1) {
   if (initialNestingLevel == totalNestingLevels) {
     return stmt(anyOf(forStmt(loopInit(totalNestingLevels), loopIncrement(totalNestingLevels), loopCondition(totalNestingLevels)),
-                      forStmt().bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel)),
-                      whileStmt().bind("whileNestedLoop-" + std::to_string(initialNestingLevel))));
+                      forStmt().bind(buildStr("nonStrictNestedLoop-", initialNestingLevel)),
+                      whileStmt().bind(buildStr("whileNestedLoop-", initialNestingLevel))));
   }
   return stmt(anyOf(forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1)),
                       loopInit(initialNestingLevel), loopIncrement(initialNestingLevel), loopCondition(initialNestingLevel)),
-                    forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("nonStrictNestedLoop-" + std::to_string(initialNestingLevel)),
-                    whileStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind("whileNestedLoop-" + std::to_string(initialNestingLevel))));
+                    forStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind(buildStr("nonStrictNestedLoop-", initialNestingLevel)),
+                    whileStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind(buildStr("whileNestedLoop-", initialNestingLevel))));
 }
 
 template<std::size_t... S>
@@ -119,6 +139,21 @@ auto anyOfFromVector(const std::vector<StatementMatcher>& vec, std::index_sequen
 template<std::size_t size>
 auto anyOfFromVector(const std::vector<StatementMatcher>& vec) {
     return anyOfFromVector(vec, std::make_index_sequence<size>());
+}
+
+void fixLimitForSpecialCases(int64_t &limitedValue, const BinaryOperator *condOp, bool isGuarded, int nestingIndex) {
+  if (condOp && 
+      (condOp->getOpcodeStr().str() == "<=" || condOp->getOpcodeStr().str() == ">=")) {
+    limitedValue++;
+  }
+  if (isGuarded) {
+    //guard value is always number of iterations + 1
+    limitedValue--;
+  }
+  //increase guard limit by 1 for most descendant loop
+  if (nestingIndex == 0) {
+    ++limitedValue;
+  }
 }
 
 class LoopHandler {
@@ -134,34 +169,39 @@ public:
 
     for (int i = nestingLevel; i >= 0; --i) {
       bool LoopProcessedProperly = false;
-      const auto *NonStrictLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("nonStrictNestedLoop-" + std::to_string(i));
-      const auto *WhileLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>("whileNestedLoop-" + std::to_string(i));
+      const auto *NonStrictLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>(buildStr("nonStrictNestedLoop-", i));
+      const auto *WhileLoopNestedMatched = Result.Nodes.getNodeAs<Stmt>(buildStr("whileNestedLoop-", i));
       if (NonStrictLoopNestedMatched || WhileLoopNestedMatched) {
         //found non strict/while loop, skip guard limit calculation and show only warning without any hint
         Found = false;
         return;
       }
 
-      const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>("constInit-" + std::to_string(i));
-      const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>("incVarName-" + std::to_string(i));
-      const VarDecl *CondVar = Result.Nodes.getNodeAs<VarDecl>("condVarName-" + std::to_string(i));
-      const VarDecl *InitVar = Result.Nodes.getNodeAs<VarDecl>("initVarName-" + std::to_string(i));
-      const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>("condOp-" + std::to_string(i));
-      const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>("constLimit-" + std::to_string(i));
+      const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>(buildStr("constInit-", i));
+      const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>(buildStr("incVarName-", i));
+      const VarDecl *CondVar = Result.Nodes.getNodeAs<VarDecl>(buildStr("condVarName-", i));
+      const VarDecl *InitVar = Result.Nodes.getNodeAs<VarDecl>(buildStr("initVarName-", i));
+      const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("condOp-", i));
+      const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>(buildStr("constLimit-", i));
+      const Expr *Guarded = Result.Nodes.getNodeAs<Expr>(buildStr("guarded-", i));
 
-      CondBegLoc = CondOp->getBeginLoc();
+      if (Guarded) {
+          CondBegLoc = Guarded->getBeginLoc();
+      } else {
+        CondBegLoc = CondOp->getBeginLoc();
+      }
 
-      if (areSameVariable(IncVar, CondVar) && areSameVariable(IncVar, InitVar)) {
+      if ((Guarded || areSameVariable(IncVar, CondVar)) && areSameVariable(IncVar, InitVar)) {
         Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
         Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
 
         if (ConstInitValue && ConstLimitValue) {
           llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
-          int64_t LimitedValue = Value.getExtValue();
-          if ((0 < LimitedValue) && LimitedValue < MAX_FOR_LIMIT) {
-            if (i == 0) {
-              ++LimitedValue;
-            }
+          int64_t LimitedValue = std::abs(Value.getExtValue());
+
+          fixLimitForSpecialCases(LimitedValue, CondOp, Guarded, i);
+          
+          if (LimitedValue < MAX_FOR_LIMIT) {
             GuardLimit *= static_cast<int>(LimitedValue);
             Found = LoopProcessedProperly = (GuardLimit < MAX_FOR_LIMIT);
           }
@@ -200,7 +240,7 @@ void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
         loopInit(0),
         loopIncrement(0),
         loopCondition(0)
-      ).bind("nestedLoop-" + std::to_string(i))
+      ).bind(buildStr("nestedLoop-", i))
     );
   }
   StatementMatcher NestedLoopsMatcher = stmt(anyOfFromVector<MAX_NESTED_LOOP_LEVEL>(NestedLoopMatcherArray));
