@@ -137,5 +137,73 @@ int64_t hook(int64_t reserved)
         trace_num("thirteen", 8, j);
     }
 
+    for (int i = 0; i < 5; ++i)
+    {
+        GUARD(5);
+        for (int j = 0; j < 3; ++j)
+// CHECK-MESSAGES: :[[@LINE-1]]:25: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(19)
+        {
+            trace_num("fourteen", 8, j);
+        }
+    }
+
+    for (int i = 0; i < 5; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(5)
+    {
+        for (int j = 0; GUARD(19), j < 3; ++j)
+        {
+            trace_num("fifteen", 7, j);
+        }
+    }
+
+    for (int i = 0; i < 5; ++i) 
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(5)
+    {
+        for (int j = 0; j < 3; ++j)
+        {
+            GUARD(19);
+            trace_num("sixteen", 7, j);
+        }
+    }
+
+    for (int i = 0; i < 10; i += 2)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(5)
+    {
+        trace_num("sixteen", 7, i);
+    }
+
+    for (int i = 1; 10 > i; i *= 2)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(4)
+    {
+        trace_num("seventeen", 9, i);
+    }
+
+    for (int i = 10; i >= 0; i = i - 2)
+// CHECK-MESSAGES: :[[@LINE-1]]:22: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(6)
+    {
+        trace_num("eighteen", 8, i);
+    }
+
+    for (int i = 10; i > 0; i = i / 2)
+// CHECK-MESSAGES: :[[@LINE-1]]:22: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(4)
+    {
+        trace_num("nineteen", 8, i);
+    }
+
+    int k = 0;
+    for (int i = 0; k < 2, i < 4; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:28: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(4)
+    {
+
+    }
+
     return 0;
 }
