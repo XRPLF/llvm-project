@@ -241,18 +241,22 @@ void fixLimitForSpecialCases(int64_t &limitedValue, const BinaryOperator *condOp
   }
 }
 
+int sgn(int val) {
+    return (0 < val) - (val < 0);
+}
+
 Optional<int64_t> calculateLoopGuardLimit(std::string op, int64_t initVal, int64_t condVal, int64_t incVal, bool condContainsEq) {
-  if (op.find("+") != std::string::npos && incVal != 0) {
+  if (op.find("+") != std::string::npos && incVal != 0 && sgn(condVal - initVal) == sgn(incVal)) {
     return std::ceil(static_cast<double>(condVal - initVal + (condContainsEq ? 1 : 0)) / static_cast<double>(incVal));
   }
-  if (op.find("-") != std::string::npos && incVal != 0) {
+  if (op.find("-") != std::string::npos && incVal != 0 && sgn(initVal - condVal) == sgn(incVal)) {
     return std::ceil(static_cast<double>(initVal - condVal + (condContainsEq ? 1 : 0)) / static_cast<double>(incVal));
   }
-  if (op.find("*") != std::string::npos && initVal != 0) { //this is a solution to eq: (a^x)*b = c
+  if (op.find("*") != std::string::npos && initVal != 0 && incVal != 1) { //this is a solution to eq: (a^x)*b = c
     int64_t x = std::floor(std::log((condVal - initVal + (condContainsEq ? 1 : 0))/initVal) / std::log(incVal)) + 1;
     return x;
   }
-  if (op.find("/") != std::string::npos && incVal != 0) {
+  if (op.find("/") != std::string::npos && incVal > 1) {
     if (condContainsEq) {
       --condVal;
     }

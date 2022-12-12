@@ -20,9 +20,8 @@ namespace hooks {
 /// #define GUARD(maxiter) _g(__LINE__, (maxiter)+1)
 /// for (int i = 0; GUARD(3), i < 3; ++i)
 ///
-/// This is the only way to satisfy the guard rule when using a
-/// for-loop in C. Guard should be placed either in a for loop
-/// condition or as a first call in loop body, e.g.
+/// To satisfy the guard rule when using a for-loop in C guard should be 
+/// place either in the condition part of the loop, or as a first call in loop body, e.g.
 ///
 /// for(int i = 0; i < 3; ++i) {
 ///   GUARD(3);
@@ -35,9 +34,8 @@ namespace hooks {
 ///   for (int j = 0; GUARD(17), j < 5; ++j)
 /// }
 /// 
-/// (most descendant loop iterations + 1) * (each parent loops iterations + 0) - 1
+/// (most descendant loop iterations + 1) * (each parent loops iterations) - 1
 ///
-/// 
 class GuardInForCheck : public ClangTidyCheck {
 public:
   GuardInForCheck(StringRef Name, ClangTidyContext *Context)
