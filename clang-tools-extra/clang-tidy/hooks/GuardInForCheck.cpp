@@ -19,7 +19,9 @@ namespace hooks {
 namespace {
 
 const int64_t MAX_FOR_LIMIT = 10000;
-const int MAX_NESTED_LOOP_LEVEL = 10;
+const int MAX_NESTED_LOOP_LEVEL = 7;
+const int MAX_LOOP_CONDITIONS = 5;
+const int MAX_LOOP_INIT_COMA = 5;
 
 std::string buildStr(std::string str, int nestingLevel) {
   return str + std::to_string(nestingLevel);
@@ -90,6 +92,7 @@ auto loopBooleanConditions(int nestingLevel) {
   );
 }
 
+//loops which are guarded are also processed to properly calculate guard limit for nested loops
 auto guardedCondition(int nestingLevel) {
   return callExpr(callee(functionDecl(
       hasName("_g"))),
@@ -109,7 +112,7 @@ auto conditionWithOperator(int nestingLevel) {
 }
 
 template<>
-auto conditionWithOperator<5>(int nestingLevel) {
+auto conditionWithOperator<MAX_LOOP_CONDITIONS>(int nestingLevel) {
   return binaryOperator(anyOf(hasOperatorName("&&"), hasOperatorName("||")),
     anyOf(
       hasLHS(guardedCondition(nestingLevel)),
@@ -124,12 +127,12 @@ auto loopVarInitInsideLoopExpr(int nestingLevel) {
           .bind(buildStr("initVarName-", nestingLevel));
 
   //handle cases where 'i' is from 0 up to 4th position in the initialization (e.g. int k = 0, i = 0)
-  return declStmt(//eachOf(
-      containsDeclaration(0, decl
-      // containsDeclaration(1, decl),
-      // containsDeclaration(2, decl),
-      // containsDeclaration(3, decl),
-      // containsDeclaration(4, decl)
+  return declStmt(eachOf(
+      containsDeclaration(0, decl),
+      containsDeclaration(1, decl),
+      containsDeclaration(2, decl),
+      containsDeclaration(3, decl),
+      containsDeclaration(4, decl)
   ));
 }
 
@@ -152,7 +155,7 @@ auto loopInitWithComa(int nestingLevel) {
 }
 
 template<>
-auto loopInitWithComa<5>(int nestingLevel) {
+auto loopInitWithComa<MAX_LOOP_INIT_COMA>(int nestingLevel) {
   return binaryOperator(hasOperatorName(","),
     hasEitherOperand(anyOf(
       loopVarInitInsideLoopExpr(nestingLevel),
@@ -174,9 +177,7 @@ auto loopInit(int nestingLevel) {
 auto loopCondition(int nestingLevel) {
   return hasCondition(
         anyOf(
-          conditionWithOperator<0>(nestingLevel),    //catch loop that is guarded, this is for nested loops only - even if one of ancestor loops is guarded,
-                                              //it's condition limit still need to be used (together with limits of all other ancestors)
-                                              //to calculate GUARD limit for the most descendant loop
+          conditionWithOperator<0>(nestingLevel),
           loopBooleanConditions(nestingLevel)
         )
       );
@@ -230,17 +231,6 @@ auto nestedForStmt(int totalNestingLevels, int initialNestingLevel = 1) {
                     whileStmt(hasAncestor(nestedForStmt(totalNestingLevels, initialNestingLevel + 1))).bind(buildStr("whileNestedLoop-", initialNestingLevel))));
 }
 
-void fixLimitForSpecialCases(int64_t &limitedValue, const BinaryOperator *condOp, bool isGuarded, int nestingIndex) {
-  if (isGuarded) {
-    //guard value is always number of iterations + 1
-    limitedValue--;
-  }
-  //increase guard limit by 1 for most descendant loop
-  if (nestingIndex == 0) {
-    limitedValue++;
-  }
-}
-
 int sgn(int val) {
     return (0 < val) - (val < 0);
 }
@@ -252,11 +242,25 @@ Optional<int64_t> calculateLoopGuardLimit(std::string op, int64_t initVal, int64
   if (op.find("-") != std::string::npos && incVal != 0 && sgn(initVal - condVal) == sgn(incVal)) {
     return std::ceil(static_cast<double>(initVal - condVal + (condContainsEq ? 1 : 0)) / static_cast<double>(incVal));
   }
-  if (op.find("*") != std::string::npos && initVal != 0 && incVal != 1) { //this is a solution to eq: (a^x)*b = c
-    int64_t x = std::floor(std::log((condVal - initVal + (condContainsEq ? 1 : 0))/initVal) / std::log(incVal)) + 1;
-    return x;
+  if (op.find("*") != std::string::npos && initVal != 0 && std::abs(incVal) != 1) {
+    if (incVal > 0) {
+      //this is a solution to eq: (a^x)*b = c
+      int64_t x = std::floor(std::log((condVal - initVal + (condContainsEq ? 1 : 0))/initVal) / std::log(incVal)) + 1;
+      return x;
+    }
+    else {
+      int64_t x = 0;
+      if (condContainsEq) {
+        ++condVal;
+      }
+      //any idea how to calc that without loop?
+      for (int i = initVal; i < condVal; i *= incVal) {
+        ++x;
+      }
+      return x;
+    }
   }
-  if (op.find("/") != std::string::npos && incVal > 1) {
+  if (op.find("/") != std::string::npos && std::abs(incVal) > 1) {
     if (condContainsEq) {
       --condVal;
     }
@@ -303,7 +307,7 @@ public:
       const BinaryOperator *SecondIncOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("secondIncOp-", i));
       const BinaryOperator *IncOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("incOp-", i));
 
-      int64_t LimitedValue;
+      int64_t LimitedValue = 0;
 
       //if for loop has guard use it
       if (GuardedCond || GuardCallInBody) {
@@ -311,17 +315,18 @@ public:
           CondBegLoc = GuardedCond->getBeginLoc();
         }
 
-        const Expr *GuardLimit = Result.Nodes.getNodeAs<Expr>(buildStr("guardLimit-", i));
-        Optional<llvm::APSInt> GuardLimitValue = GuardLimit->getIntegerConstantExpr(Context);
+        const Expr *GuardLimitExpr = Result.Nodes.getNodeAs<Expr>(buildStr("guardLimit-", i));
+        Optional<llvm::APSInt> GuardLimitValue = GuardLimitExpr->getIntegerConstantExpr(Context);
 
         if (GuardLimitValue) {
-          LimitedValue = GuardLimitValue->getExtValue();
+          int ThisIterationGuard = GuardLimitValue->getExtValue();
+          LimitedValue = ThisIterationGuard / GuardLimit - 1;
         }
       }
       //else calculate its limit using for condition, init value and increment
       else {
         CondBegLoc = CondOp->getBeginLoc();
-        bool condContainsEq = CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
+        bool CondContainsEq = CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
                                 CondOp->getOpcodeStr().str().find("!") == std::string::npos;
 
         Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
@@ -336,10 +341,10 @@ public:
             }
 
             Optional<llvm::APSInt> IncValueOpt = IncValue->getIntegerConstantExpr(Context);
-            std::string op = SecondIncOp ? SecondIncOp->getOpcodeStr().str() : IncOp->getOpcodeStr().str();
+            std::string Op = SecondIncOp ? SecondIncOp->getOpcodeStr().str() : IncOp->getOpcodeStr().str();
 
-            auto LimitedValueOpt = calculateLoopGuardLimit(op, ConstInitValue->getExtValue(), ConstLimitValue->getExtValue(), 
-                            IncValueOpt->getExtValue(), condContainsEq);
+            auto LimitedValueOpt = calculateLoopGuardLimit(Op, ConstInitValue->getExtValue(), ConstLimitValue->getExtValue(), 
+                            IncValueOpt->getExtValue(), CondContainsEq);
 
             if (!LimitedValueOpt) {
               Found = false;
@@ -350,11 +355,13 @@ public:
           //increment is a simple i++ or i--
           else {
             llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
-            LimitedValue = std::abs(Value.getExtValue()) + (condContainsEq ? 1 : 0);
+            LimitedValue = std::abs(Value.getExtValue()) + (CondContainsEq ? 1 : 0);
           }
         }
       }
-      fixLimitForSpecialCases(LimitedValue, CondOp, GuardedCond || GuardCallInBody, i);
+      if (i == 0) {
+        LimitedValue++;
+      }
 
       if (LimitedValue < MAX_FOR_LIMIT) {
         GuardLimit *= static_cast<int>(LimitedValue);

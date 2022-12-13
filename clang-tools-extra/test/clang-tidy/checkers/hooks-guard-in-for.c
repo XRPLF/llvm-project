@@ -55,7 +55,7 @@ int64_t hook(int64_t reserved)
 // CHECK-MESSAGES: :[[@LINE-1]]:25: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
 // CHECK-FIXES: GUARD(2)
         {
-            for (int k = 0; GUARD(3), k < 3; ++k)
+            for (int k = 0; GUARD(7), k < 3; ++k)
             {
                 for (int w = 0; w < 4; ++w)
 // CHECK-MESSAGES: :[[@LINE-1]]:33: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
