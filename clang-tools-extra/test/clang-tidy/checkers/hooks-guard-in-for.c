@@ -213,5 +213,28 @@ int64_t hook(int64_t reserved)
         trace_num("twenty one", 10, i);
     }
 
+    for (int i = 0; GUARD(reserved), i < 10; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' calls can only have const integers or literals as an argument [hooks-guard-in-for]
+    {
+        trace_num("twenty two", 10, i);
+    }
+
+    const int x = 5;
+    for (int i = 0; GUARD(x), i < 10; ++i)
+    {
+        trace_num("twenty three", 12, i);
+    }
+
+    for (int i = 0; GUARD(reserved), i < 10; ++i)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' calls can only have const integers or literals as an argument [hooks-guard-in-for]
+    {
+        for (int j = 0; j < 2; ++j)
+// CHECK-MESSAGES: :[[@LINE-1]]:25: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(29)
+        {
+            trace_num("twenty four", 11, j);
+        }
+    }
+
     return 0;
 }

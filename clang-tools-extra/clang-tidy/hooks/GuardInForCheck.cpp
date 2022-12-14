@@ -37,8 +37,27 @@ auto anyOfFromVector(const std::vector<StatementMatcher>& vec) {
     return anyOfFromVector(vec, std::make_index_sequence<size>());
 }
 
+auto guardCall() {
+  return callExpr(callee(functionDecl(hasName("_g"))));
+}
+
+auto unsupportedGuardCall() {
+  auto guardArg = anyOf(
+          ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified()))))), 
+          ignoringParenCasts(integerLiteral())
+        );
+
+  return callExpr(callee(functionDecl(
+      hasName("_g"))),
+      unless(hasArgument(1, anyOf(
+        binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
+        guardArg
+      )
+    )));
+}
+
 auto isUnguarded()  {
-  return unless(has(binaryOperator(has(callExpr(callee(functionDecl(hasName("_g"))))))));
+  return unless(has(binaryOperator(has(guardCall()))));
 }
 
 auto hasGuardCall(int nestingLevel) {
@@ -48,8 +67,8 @@ auto hasGuardCall(int nestingLevel) {
         hasArgument(1, expr().bind(buildStr("guardLimit-", nestingLevel)))
     )),
     unless(eachOf(
-      hasAnySubstatement(forStmt(hasCondition(binaryOperator(hasLHS(callExpr(callee(functionDecl(hasName("_g"))))))))), 
-      hasAnySubstatement(stmt(hasDescendant(callExpr(callee(functionDecl(hasName("_g"))))))) 
+      hasAnySubstatement(forStmt(hasCondition(binaryOperator(hasLHS(guardCall()))))), 
+      hasAnySubstatement(stmt(hasDescendant(guardCall()))) 
     ))
   ).bind(buildStr("guardCallInBody-", nestingLevel));
 }
@@ -59,8 +78,7 @@ auto conditionLimit(int nestingLevel) {
 }
 
 auto conditionVarName(int nestingLevel) {
-  return ignoringParenImpCasts(declRefExpr(
-          to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel))))));
+  return ignoringParenImpCasts(declRefExpr(to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel))))));
 }
 
 auto lessThanCondition(int nestingLevel) {
@@ -94,9 +112,16 @@ auto loopBooleanConditions(int nestingLevel) {
 
 //loops which are guarded are also processed to properly calculate guard limit for nested loops
 auto guardedCondition(int nestingLevel) {
+  auto guardArg = anyOf(
+          ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("guardLimitConst-", nestingLevel))))), 
+          ignoringParenCasts(integerLiteral().bind(buildStr("guardLimit-", nestingLevel)))
+        );
   return callExpr(callee(functionDecl(
       hasName("_g"))),
-      hasArgument(1, expr().bind(buildStr("guardLimit-", nestingLevel)))
+      hasArgument(1, anyOf(
+        binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
+        guardArg
+      ))//hasLHS(ignoringParenCasts(integerLiteral().bind(buildStr("guardLimit-", nestingLevel))))))
     ).bind(buildStr("guardedCond-", nestingLevel));
 }
 
@@ -104,27 +129,22 @@ template<int level>
 auto conditionWithOperator(int nestingLevel) {
   //will match any condition inside for() containing operators: , && || that could be nested up to 5 levels
   return binaryOperator(anyOf(hasOperatorName(","), hasOperatorName("&&"), hasOperatorName("||")),
-    anyOf(
-      hasLHS(guardedCondition(nestingLevel)),
-      hasEitherOperand(anyOf(conditionWithOperator<level + 1>(nestingLevel), loopBooleanConditions(nestingLevel)))
-    )
+      anyOf(hasLHS(guardedCondition(nestingLevel)),
+      hasEitherOperand(anyOf(conditionWithOperator<level + 1>(nestingLevel), loopBooleanConditions(nestingLevel))))
   );
 }
 
 template<>
 auto conditionWithOperator<MAX_LOOP_CONDITIONS>(int nestingLevel) {
   return binaryOperator(anyOf(hasOperatorName("&&"), hasOperatorName("||")),
-    anyOf(
-      hasLHS(guardedCondition(nestingLevel)),
-      hasEitherOperand(loopBooleanConditions(nestingLevel))
-    )
+      anyOf(hasLHS(guardedCondition(nestingLevel)),
+      hasEitherOperand(loopBooleanConditions(nestingLevel)))
   );
 }
 
 //e.g. for(int i = 0;...)
 auto loopVarInitInsideLoopExpr(int nestingLevel) {
-  const auto decl = varDecl(hasInitializer(ignoringParenImpCasts(expr().bind(buildStr("constInit-", nestingLevel)))))
-          .bind(buildStr("initVarName-", nestingLevel));
+  const auto decl = varDecl(hasInitializer(ignoringParenImpCasts(expr().bind(buildStr("constInit-", nestingLevel))))).bind(buildStr("initVarName-", nestingLevel));
 
   //handle cases where 'i' is from 0 up to 4th position in the initialization (e.g. int k = 0, i = 0)
   return declStmt(eachOf(
@@ -308,27 +328,45 @@ public:
       const BinaryOperator *IncOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("incOp-", i));
 
       int64_t LimitedValue = 0;
+      bool CalculatedLimitFromGuard = false;
 
       //if for loop has guard use it
       if (GuardedCond || GuardCallInBody) {
         if (GuardedCond) {
           CondBegLoc = GuardedCond->getBeginLoc();
         }
-
         const Expr *GuardLimitExpr = Result.Nodes.getNodeAs<Expr>(buildStr("guardLimit-", i));
-        Optional<llvm::APSInt> GuardLimitValue = GuardLimitExpr->getIntegerConstantExpr(Context);
+        const VarDecl *GuardLimitConstDecl = Result.Nodes.getNodeAs<VarDecl>(buildStr("guardLimitConst-", i));
 
-        if (GuardLimitValue) {
-          int ThisIterationGuard = GuardLimitValue->getExtValue();
-          LimitedValue = ThisIterationGuard / GuardLimit - 1;
+        Optional<int> GuardLimitValue;
+        if (GuardLimitConstDecl) {
+          //get guard value from integer constant
+          if (auto val = GuardLimitConstDecl->evaluateValue()) {
+            GuardLimitValue = val->getInt().getExtValue();
+          }
+        }
+        if (GuardLimitExpr) {
+          //get guard value from integer literal
+          if (auto val = GuardLimitExpr->getIntegerConstantExpr(Context)) {
+            GuardLimitValue = val->getExtValue();
+          }
+        }
+
+        if (GuardLimitValue.hasValue()) {
+          LimitedValue = *GuardLimitValue / GuardLimit;
+          CalculatedLimitFromGuard = true;
+        }
+        else {
+          Found = false;
+          return;
         }
       }
       //else calculate its limit using for condition, init value and increment
-      else {
+      if (!CalculatedLimitFromGuard) {
         CondBegLoc = CondOp->getBeginLoc();
         bool CondContainsEq = CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
                                 CondOp->getOpcodeStr().str().find("!") == std::string::npos;
-
+ 
         Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
         Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
 
@@ -411,10 +449,20 @@ void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
   StatementMatcher AnyLoopMatcher = forStmt(isUnguarded(), hasBody(unless(hasGuardCall(0))), isExpansionInMainFile()).bind("anyLoop");
 
   Finder->addMatcher(stmt(anyOf(NestedLoopsMatcher, StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
+  Finder->addMatcher(stmt(unsupportedGuardCall()).bind("unsupportedGuardedCall"), this);
 }
 
 void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
   assert(Result.Context);
+
+  const auto *UnsupportedGuardCall = Result.Nodes.getNodeAs<Stmt>("unsupportedGuardedCall");
+  if (UnsupportedGuardCall) {
+    auto StartLoc = UnsupportedGuardCall->getBeginLoc();
+    auto EndLoc = StartLoc.getLocWithOffset(sizeof("GUARD(x)") - 1);
+    diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' calls can only have const integers or literals as an argument") <<
+      SourceRange(StartLoc, EndLoc);
+    return;
+  }
 
   const auto *UngardedLoopMatched = Result.Nodes.getNodeAs<Stmt>("unguarded");
   assert(UngardedLoopMatched);
