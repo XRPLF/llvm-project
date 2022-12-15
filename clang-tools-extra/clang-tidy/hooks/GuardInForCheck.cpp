@@ -41,21 +41,6 @@ auto guardCall() {
   return callExpr(callee(functionDecl(hasName("_g"))));
 }
 
-auto unsupportedGuardCall() {
-  auto guardArg = anyOf(
-          ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified()))))), 
-          ignoringParenCasts(integerLiteral())
-        );
-
-  return callExpr(callee(functionDecl(
-      hasName("_g"))),
-      unless(hasArgument(1, anyOf(
-        binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
-        guardArg
-      )
-    )));
-}
-
 auto isUnguarded()  {
   return unless(has(binaryOperator(has(guardCall()))));
 }
@@ -129,16 +114,16 @@ template<int level>
 auto conditionWithOperator(int nestingLevel) {
   //will match any condition inside for() containing operators: , && || that could be nested up to 5 levels
   return binaryOperator(anyOf(hasOperatorName(","), hasOperatorName("&&"), hasOperatorName("||")),
-      anyOf(hasLHS(guardedCondition(nestingLevel)),
-      hasEitherOperand(anyOf(conditionWithOperator<level + 1>(nestingLevel), loopBooleanConditions(nestingLevel))))
+      hasLHS(anyOf(guardedCondition(nestingLevel), loopBooleanConditions(nestingLevel), expr())),
+      hasRHS(anyOf(conditionWithOperator<level + 1>(nestingLevel), loopBooleanConditions(nestingLevel), expr()))
   );
 }
 
 template<>
 auto conditionWithOperator<MAX_LOOP_CONDITIONS>(int nestingLevel) {
   return binaryOperator(anyOf(hasOperatorName("&&"), hasOperatorName("||")),
-      anyOf(hasLHS(guardedCondition(nestingLevel)),
-      hasEitherOperand(loopBooleanConditions(nestingLevel)))
+      hasLHS(anyOf(guardedCondition(nestingLevel), loopBooleanConditions(nestingLevel), expr())),
+      hasRHS(loopBooleanConditions(nestingLevel))
   );
 }
 
@@ -255,7 +240,7 @@ int sgn(int val) {
     return (0 < val) - (val < 0);
 }
 
-Optional<int64_t> calculateLoopGuardLimit(std::string op, int64_t initVal, int64_t condVal, int64_t incVal, bool condContainsEq) {
+Optional<int64_t> calculateLoopLimit(std::string op, int64_t initVal, int64_t condVal, int64_t incVal, bool condContainsEq) {
   if (op.find("+") != std::string::npos && incVal != 0 && sgn(condVal - initVal) == sgn(incVal)) {
     return std::ceil(static_cast<double>(condVal - initVal + (condContainsEq ? 1 : 0)) / static_cast<double>(incVal));
   }
@@ -316,7 +301,6 @@ public:
         Found = false;
         return;
       }
-      
       const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>(buildStr("constInit-", i));
       const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>(buildStr("constLimit-", i));
       const Expr *GuardedCond = Result.Nodes.getNodeAs<Expr>(buildStr("guardedCond-", i));
@@ -329,6 +313,38 @@ public:
 
       int64_t LimitedValue = 0;
       bool CalculatedLimitFromGuard = false;
+      if (CondOp) CondBegLoc = CondOp->getBeginLoc();
+      int LoopLimit = 0;
+
+      Optional<llvm::APSInt> ConstInitValue = ConstInit ? ConstInit->getIntegerConstantExpr(Context) : Optional<llvm::APSInt>();
+      Optional<llvm::APSInt> ConstLimitValue = ConstLimit ? ConstLimit->getIntegerConstantExpr(Context) : Optional<llvm::APSInt>();
+
+      bool CondContainsEq = CondOp && CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
+                              CondOp->getOpcodeStr().str().find("!") == std::string::npos;
+
+      if (ConstInitValue && ConstLimitValue) {
+        if (IncOp) {
+          if (!IncValue || !IncValue->getIntegerConstantExpr(Context).hasValue()) {
+            Found = false;
+            return;
+          }
+
+          Optional<llvm::APSInt> IncValueOpt = IncValue->getIntegerConstantExpr(Context);
+          std::string Op = SecondIncOp ? SecondIncOp->getOpcodeStr().str() : IncOp->getOpcodeStr().str();
+
+          auto LimitedValueOpt = calculateLoopLimit(Op, ConstInitValue->getExtValue(), ConstLimitValue->getExtValue(), 
+                          IncValueOpt->getExtValue(), CondContainsEq);
+
+          if (!LimitedValueOpt) {
+            Found = false;
+            return;
+          }
+          LoopLimit = *LimitedValueOpt;
+        }
+        else {
+          LoopLimit = std::abs(ConstLimitValue->getExtValue() - ConstInitValue->getExtValue()) + (CondContainsEq ? 1 : 0);
+        }
+      }
 
       //if for loop has guard use it
       if (GuardedCond || GuardCallInBody) {
@@ -353,7 +369,12 @@ public:
         }
 
         if (GuardLimitValue.hasValue()) {
-          LimitedValue = *GuardLimitValue / GuardLimit;
+          if (LoopLimit != 0) {
+            GuardLimit = (*GuardLimitValue + 1) / (LoopLimit + 1) * LoopLimit;
+          }
+          else {
+            GuardLimit = *GuardLimitValue;
+          }
           CalculatedLimitFromGuard = true;
         }
         else {
@@ -363,49 +384,19 @@ public:
       }
       //else calculate its limit using for condition, init value and increment
       if (!CalculatedLimitFromGuard) {
-        CondBegLoc = CondOp->getBeginLoc();
-        bool CondContainsEq = CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
-                                CondOp->getOpcodeStr().str().find("!") == std::string::npos;
- 
-        Optional<llvm::APSInt> ConstInitValue = ConstInit->getIntegerConstantExpr(Context);
-        Optional<llvm::APSInt> ConstLimitValue = ConstLimit->getIntegerConstantExpr(Context);
+        LimitedValue = LoopLimit;
 
-        if (ConstInitValue && ConstLimitValue) {
-          //increment is e.g. i += 2, i = i * 2, etc.
-          if (IncOp) {
-            if (!IncValue || !IncValue->getIntegerConstantExpr(Context).hasValue()) {
-              Found = false;
-              return;
-            }
+        if (i == 0) {
+          LimitedValue++;
+        }
 
-            Optional<llvm::APSInt> IncValueOpt = IncValue->getIntegerConstantExpr(Context);
-            std::string Op = SecondIncOp ? SecondIncOp->getOpcodeStr().str() : IncOp->getOpcodeStr().str();
-
-            auto LimitedValueOpt = calculateLoopGuardLimit(Op, ConstInitValue->getExtValue(), ConstLimitValue->getExtValue(), 
-                            IncValueOpt->getExtValue(), CondContainsEq);
-
-            if (!LimitedValueOpt) {
-              Found = false;
-              return;
-            }
-            LimitedValue = *LimitedValueOpt;
-          }
-          //increment is a simple i++ or i--
-          else {
-            llvm::APSInt Value = *ConstLimitValue - *ConstInitValue;
-            LimitedValue = std::abs(Value.getExtValue()) + (CondContainsEq ? 1 : 0);
-          }
+        if (LimitedValue < MAX_FOR_LIMIT) {
+          GuardLimit *= static_cast<int>(LimitedValue);
+          Found = (GuardLimit < MAX_FOR_LIMIT);
         }
       }
-      if (i == 0) {
-        LimitedValue++;
-      }
-
-      if (LimitedValue < MAX_FOR_LIMIT) {
-        GuardLimit *= static_cast<int>(LimitedValue);
-        Found = (GuardLimit < MAX_FOR_LIMIT);
-      }
-      else {
+      
+      if (GuardLimit >= MAX_FOR_LIMIT || GuardLimit <= 0) {
         Found = false;
         return;
       }
@@ -449,20 +440,10 @@ void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
   StatementMatcher AnyLoopMatcher = forStmt(isUnguarded(), hasBody(unless(hasGuardCall(0))), isExpansionInMainFile()).bind("anyLoop");
 
   Finder->addMatcher(stmt(anyOf(NestedLoopsMatcher, StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
-  Finder->addMatcher(stmt(unsupportedGuardCall()).bind("unsupportedGuardedCall"), this);
 }
 
 void GuardInForCheck::check(const MatchFinder::MatchResult &Result) {
   assert(Result.Context);
-
-  const auto *UnsupportedGuardCall = Result.Nodes.getNodeAs<Stmt>("unsupportedGuardedCall");
-  if (UnsupportedGuardCall) {
-    auto StartLoc = UnsupportedGuardCall->getBeginLoc();
-    auto EndLoc = StartLoc.getLocWithOffset(sizeof("GUARD(x)") - 1);
-    diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' calls can only have const integers or literals as an argument") <<
-      SourceRange(StartLoc, EndLoc);
-    return;
-  }
 
   const auto *UngardedLoopMatched = Result.Nodes.getNodeAs<Stmt>("unguarded");
   assert(UngardedLoopMatched);

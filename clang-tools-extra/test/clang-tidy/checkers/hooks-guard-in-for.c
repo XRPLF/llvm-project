@@ -213,26 +213,51 @@ int64_t hook(int64_t reserved)
         trace_num("twenty one", 10, i);
     }
 
-    for (int i = 0; GUARD(reserved), i < 10; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' calls can only have const integers or literals as an argument [hooks-guard-in-for]
+    const int x = 5;
+    for (int i = 0; GUARD(x), i < 10; ++i)
     {
         trace_num("twenty two", 10, i);
     }
 
-    const int x = 5;
-    for (int i = 0; GUARD(x), i < 10; ++i)
-    {
-        trace_num("twenty three", 12, i);
-    }
-
     for (int i = 0; GUARD(reserved), i < 10; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' calls can only have const integers or literals as an argument [hooks-guard-in-for]
     {
         for (int j = 0; j < 2; ++j)
 // CHECK-MESSAGES: :[[@LINE-1]]:25: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
 // CHECK-FIXES: GUARD(29)
         {
-            trace_num("twenty four", 11, j);
+            trace_num("twenty three", 12, j);
+        }
+    }
+
+    for (int i = 0; GUARD(10), i < 10; ++i) 
+    {
+        if (!i) 
+        {
+            for (int j = 0; GUARD(2), j < 2; ++j) 
+            {
+                for (int k = 0; k < 5; ++k) 
+// CHECK-MESSAGES: :[[@LINE-1]]:33: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(11)
+                {
+                    trace_num("twenty four", 11, k);
+                }
+            }
+        }
+    }
+
+    for (int i = 0; GUARD(10), i < 10; ++i) 
+    {
+        if (i % 2)
+        {
+            for (int j = 0; GUARD(29), j < 5; ++j) 
+            {
+                for (int k = 0; k < 10; ++k) 
+// CHECK-MESSAGES: :[[@LINE-1]]:33: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(274)
+                {
+                    trace_num("twenty five", 11, k);
+                }
+            }
         }
     }
 
