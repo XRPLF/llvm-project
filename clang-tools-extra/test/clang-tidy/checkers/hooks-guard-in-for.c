@@ -261,5 +261,15 @@ int64_t hook(int64_t reserved)
         }
     }
 
+    const a = 1;
+    const b = 5;
+    const c = 2;
+    for (int i = a; i < b; i *= c)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(3)
+    {
+        trace_num("twenty six", 10, i);
+    }
+
     return 0;
 }

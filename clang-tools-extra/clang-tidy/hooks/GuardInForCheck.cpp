@@ -9,6 +9,7 @@
 #include "GuardInForCheck.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include <assert.h>
+#include <iostream>
 
 using namespace clang::ast_matchers;
 
@@ -59,7 +60,11 @@ auto hasGuardCall(int nestingLevel) {
 }
 
 auto conditionLimit(int nestingLevel) {
-  return integerLiteral().bind(buildStr("constLimit-", nestingLevel));
+  return anyOf(
+      ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constLimitConstDecl-", nestingLevel))))),
+      ignoringParenCasts(expr().bind(buildStr("constLimit-", nestingLevel)))
+    );
+  // return ignoringParenCasts(expr().bind(buildStr("constLimit-", nestingLevel)));
 }
 
 auto conditionVarName(int nestingLevel) {
@@ -129,7 +134,10 @@ auto conditionWithOperator<MAX_LOOP_CONDITIONS>(int nestingLevel) {
 
 //e.g. for(int i = 0;...)
 auto loopVarInitInsideLoopExpr(int nestingLevel) {
-  const auto decl = varDecl(hasInitializer(ignoringParenImpCasts(expr().bind(buildStr("constInit-", nestingLevel))))).bind(buildStr("initVarName-", nestingLevel));
+  const auto decl = varDecl(hasInitializer(anyOf(
+      ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel))),
+      ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel)))))
+    ))).bind(buildStr("initVarName-", nestingLevel));
 
   //handle cases where 'i' is from 0 up to 4th position in the initialization (e.g. int k = 0, i = 0)
   return declStmt(eachOf(
@@ -145,7 +153,11 @@ auto loopVarInitInsideLoopExpr(int nestingLevel) {
 auto loopVarInitOutsideLoopExpr(int nestingLevel) {
   return binaryOperator(
           hasLHS(declRefExpr(to(varDecl().bind(buildStr("initVarName-", nestingLevel))))),
-          hasRHS(ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel)))));
+          hasRHS(anyOf(
+              ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel))),
+              ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel)))))
+            ))
+          );
 }
 
 template<int level>
@@ -196,17 +208,23 @@ auto loopIncrement(int nestingLevel) {
               hasUnaryOperand(declRefExpr(
                 to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel)))))
               )
-            ),
+            ).bind(buildStr("unaryIncOp-", nestingLevel)),
             //+=, -=, *=, /=, i = i + 1, i = i * 2, etc.
             binaryOperator(
               isAssignmentOperator(),
               hasLHS(declRefExpr(to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel)))))),
               hasRHS(anyOf(
                 binaryOperator( //i = i + 1, i = i * 2, etc.
-                  hasEitherOperand(integerLiteral().bind(buildStr("incValue-", nestingLevel))), 
+                  hasEitherOperand(anyOf(
+                    ignoringParenImpCasts(integerLiteral().bind(buildStr("incValue-", nestingLevel))),
+                    ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel)))))
+                  )), 
                   hasEitherOperand(ignoringParenImpCasts(declRefExpr(to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel)))))))
                 ).bind(buildStr("secondIncOp-", nestingLevel)),
-                expr().bind(buildStr("incValue-", nestingLevel)) //+=, -=, *=, /=
+                anyOf( //+=, -=, *=, /=
+                  ignoringParenImpCasts(integerLiteral().bind(buildStr("incValue-", nestingLevel))),
+                  ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel)))))
+                ) 
               ))
             ).bind(buildStr("incOp-", nestingLevel))
         )
@@ -218,6 +236,20 @@ auto loopBody(int nestingLevel) {
     hasGuardCall(nestingLevel),
     stmt()
   ));
+}
+
+Optional<int> getConstValue(const Expr *literal, const VarDecl *constDecl, ASTContext &context) {
+  if (literal) {
+    if (auto val = literal->getIntegerConstantExpr(context)) {
+      return val->getExtValue();
+    }
+  }
+  if (constDecl) {
+    if (auto val = constDecl->evaluateValue()) {
+      return val->getInt().getExtValue();
+    }
+  }
+  return {};
 }
 
 //creates nested loop statement recursively for the specified nesting level
@@ -302,38 +334,47 @@ public:
         return;
       }
       const Expr *ConstInit = Result.Nodes.getNodeAs<Expr>(buildStr("constInit-", i));
+      const VarDecl *ConstInitConstDecl = Result.Nodes.getNodeAs<VarDecl>(buildStr("constInitConstDecl-", i));
+
       const Expr *ConstLimit = Result.Nodes.getNodeAs<Expr>(buildStr("constLimit-", i));
+      const VarDecl *ConstLimitConstDecl = Result.Nodes.getNodeAs<VarDecl>(buildStr("constLimitConstDecl-", i));
+
+      const Expr *IncValue = Result.Nodes.getNodeAs<Expr>(buildStr("incValue-", i));
+      const VarDecl *IncValueConstDecl = Result.Nodes.getNodeAs<VarDecl>(buildStr("incValueConstDecl-", i));
+      
       const Expr *GuardedCond = Result.Nodes.getNodeAs<Expr>(buildStr("guardedCond-", i));
       const Expr *GuardCallInBody = Result.Nodes.getNodeAs<Expr>(buildStr("guardCallInBody-", i));
-      const Expr *IncValue = Result.Nodes.getNodeAs<Expr>(buildStr("incValue-", i));
 
       const BinaryOperator *CondOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("condOp-", i));
       const BinaryOperator *SecondIncOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("secondIncOp-", i));
       const BinaryOperator *IncOp = Result.Nodes.getNodeAs<BinaryOperator>(buildStr("incOp-", i));
+      const UnaryOperator *UnaryIncOp = Result.Nodes.getNodeAs<UnaryOperator>(buildStr("unaryIncOp-", i));
+
+      auto ConstLimitValue = getConstValue(ConstLimit, ConstLimitConstDecl, Context);
+      auto ConstInitValue = getConstValue(ConstInit, ConstInitConstDecl, Context);
 
       int64_t LimitedValue = 0;
       bool CalculatedLimitFromGuard = false;
-      if (CondOp) CondBegLoc = CondOp->getBeginLoc();
-      int LoopLimit = 0;
+      bool CalculcatedLimitFromCond = false;
 
-      Optional<llvm::APSInt> ConstInitValue = ConstInit ? ConstInit->getIntegerConstantExpr(Context) : Optional<llvm::APSInt>();
-      Optional<llvm::APSInt> ConstLimitValue = ConstLimit ? ConstLimit->getIntegerConstantExpr(Context) : Optional<llvm::APSInt>();
+      if (CondOp) CondBegLoc = CondOp->getBeginLoc();
+      Optional<int> LoopLimit;
 
       bool CondContainsEq = CondOp && CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
                               CondOp->getOpcodeStr().str().find("!") == std::string::npos;
 
       if (ConstInitValue && ConstLimitValue) {
         if (IncOp) {
-          if (!IncValue || !IncValue->getIntegerConstantExpr(Context).hasValue()) {
+          auto IncValueOpt = getConstValue(IncValue, IncValueConstDecl, Context);
+
+          if (!IncValueOpt) {
             Found = false;
             return;
           }
-
-          Optional<llvm::APSInt> IncValueOpt = IncValue->getIntegerConstantExpr(Context);
           std::string Op = SecondIncOp ? SecondIncOp->getOpcodeStr().str() : IncOp->getOpcodeStr().str();
 
-          auto LimitedValueOpt = calculateLoopLimit(Op, ConstInitValue->getExtValue(), ConstLimitValue->getExtValue(), 
-                          IncValueOpt->getExtValue(), CondContainsEq);
+          auto LimitedValueOpt = calculateLoopLimit(Op, *ConstInitValue, *ConstLimitValue, 
+                          *IncValueOpt, CondContainsEq);
 
           if (!LimitedValueOpt) {
             Found = false;
@@ -342,7 +383,13 @@ public:
           LoopLimit = *LimitedValueOpt;
         }
         else {
-          LoopLimit = std::abs(ConstLimitValue->getExtValue() - ConstInitValue->getExtValue()) + (CondContainsEq ? 1 : 0);
+          if (UnaryIncOp && 
+              UnaryIncOp->getOpcodeStr(UnaryIncOp->getOpcode()).str().find("-") != std::string::npos) {
+            LoopLimit = *ConstInitValue - *ConstLimitValue + (CondContainsEq ? 1 : 0);
+          }
+          else {
+            LoopLimit = *ConstLimitValue - *ConstInitValue + (CondContainsEq ? 1 : 0);
+          }
         }
       }
 
@@ -354,23 +401,11 @@ public:
         const Expr *GuardLimitExpr = Result.Nodes.getNodeAs<Expr>(buildStr("guardLimit-", i));
         const VarDecl *GuardLimitConstDecl = Result.Nodes.getNodeAs<VarDecl>(buildStr("guardLimitConst-", i));
 
-        Optional<int> GuardLimitValue;
-        if (GuardLimitConstDecl) {
-          //get guard value from integer constant
-          if (auto val = GuardLimitConstDecl->evaluateValue()) {
-            GuardLimitValue = val->getInt().getExtValue();
-          }
-        }
-        if (GuardLimitExpr) {
-          //get guard value from integer literal
-          if (auto val = GuardLimitExpr->getIntegerConstantExpr(Context)) {
-            GuardLimitValue = val->getExtValue();
-          }
-        }
+        auto GuardLimitValue = getConstValue(GuardLimitExpr, GuardLimitConstDecl, Context);
 
         if (GuardLimitValue.hasValue()) {
-          if (LoopLimit != 0) {
-            GuardLimit = (*GuardLimitValue + 1) / (LoopLimit + 1) * LoopLimit;
+          if (LoopLimit && *LoopLimit != 0) {
+            GuardLimit = (*GuardLimitValue + 1) / (*LoopLimit + 1) * *LoopLimit;
           }
           else {
             GuardLimit = *GuardLimitValue;
@@ -383,8 +418,8 @@ public:
         }
       }
       //else calculate its limit using for condition, init value and increment
-      if (!CalculatedLimitFromGuard) {
-        LimitedValue = LoopLimit;
+      if (!CalculatedLimitFromGuard && LoopLimit) {
+        LimitedValue = *LoopLimit;
 
         if (i == 0) {
           LimitedValue++;
@@ -393,10 +428,12 @@ public:
         if (LimitedValue < MAX_FOR_LIMIT) {
           GuardLimit *= static_cast<int>(LimitedValue);
           Found = (GuardLimit < MAX_FOR_LIMIT);
+          CalculcatedLimitFromCond = true;
         }
       }
       
-      if (GuardLimit >= MAX_FOR_LIMIT || GuardLimit <= 0) {
+      if ((!CalculatedLimitFromGuard && !CalculcatedLimitFromCond) ||
+          (GuardLimit >= MAX_FOR_LIMIT || GuardLimit <= 0)) {
         Found = false;
         return;
       }
