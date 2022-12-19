@@ -271,5 +271,12 @@ int64_t hook(int64_t reserved)
         trace_num("twenty six", 10, i);
     }
 
+    for (int i = 0; i > -5; i = i + -1)
+// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: for loop does not call 'GUARD' [hooks-guard-in-for]
+// CHECK-FIXES: GUARD(5)
+    {
+        trace_num("twenty seven", 12, i);
+    }
+
     return 0;
 }

@@ -62,9 +62,9 @@ auto hasGuardCall(int nestingLevel) {
 auto conditionLimit(int nestingLevel) {
   return anyOf(
       ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constLimitConstDecl-", nestingLevel))))),
-      ignoringParenCasts(expr().bind(buildStr("constLimit-", nestingLevel)))
+      ignoringParenCasts(integerLiteral().bind(buildStr("constLimit-", nestingLevel))),
+      ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("constLimit-", nestingLevel)))
     );
-  // return ignoringParenCasts(expr().bind(buildStr("constLimit-", nestingLevel)));
 }
 
 auto conditionVarName(int nestingLevel) {
@@ -111,7 +111,7 @@ auto guardedCondition(int nestingLevel) {
       hasArgument(1, anyOf(
         binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
         guardArg
-      ))//hasLHS(ignoringParenCasts(integerLiteral().bind(buildStr("guardLimit-", nestingLevel))))))
+      ))
     ).bind(buildStr("guardedCond-", nestingLevel));
 }
 
@@ -135,8 +135,9 @@ auto conditionWithOperator<MAX_LOOP_CONDITIONS>(int nestingLevel) {
 //e.g. for(int i = 0;...)
 auto loopVarInitInsideLoopExpr(int nestingLevel) {
   const auto decl = varDecl(hasInitializer(anyOf(
+      ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel))))),
       ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel))),
-      ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel)))))
+      ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("constInit-", nestingLevel)))
     ))).bind(buildStr("initVarName-", nestingLevel));
 
   //handle cases where 'i' is from 0 up to 4th position in the initialization (e.g. int k = 0, i = 0)
@@ -154,8 +155,9 @@ auto loopVarInitOutsideLoopExpr(int nestingLevel) {
   return binaryOperator(
           hasLHS(declRefExpr(to(varDecl().bind(buildStr("initVarName-", nestingLevel))))),
           hasRHS(anyOf(
+              ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel))))),
               ignoringParenImpCasts(integerLiteral().bind(buildStr("constInit-", nestingLevel))),
-              ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constInitConstDecl-", nestingLevel)))))
+              ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("constInit-", nestingLevel)))
             ))
           );
 }
@@ -216,14 +218,16 @@ auto loopIncrement(int nestingLevel) {
               hasRHS(anyOf(
                 binaryOperator( //i = i + 1, i = i * 2, etc.
                   hasEitherOperand(anyOf(
+                    ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel))))),
                     ignoringParenImpCasts(integerLiteral().bind(buildStr("incValue-", nestingLevel))),
-                    ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel)))))
+                    ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("incValue-", nestingLevel)))
                   )), 
                   hasEitherOperand(ignoringParenImpCasts(declRefExpr(to(varDecl(equalsBoundNode(buildStr("initVarName-", nestingLevel)))))))
                 ).bind(buildStr("secondIncOp-", nestingLevel)),
                 anyOf( //+=, -=, *=, /=
+                  ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel))))),
                   ignoringParenImpCasts(integerLiteral().bind(buildStr("incValue-", nestingLevel))),
-                  ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("incValueConstDecl-", nestingLevel)))))
+                  ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("incValue-", nestingLevel)))
                 ) 
               ))
             ).bind(buildStr("incOp-", nestingLevel))
@@ -357,7 +361,9 @@ public:
       bool CalculatedLimitFromGuard = false;
       bool CalculcatedLimitFromCond = false;
 
-      if (CondOp) CondBegLoc = CondOp->getBeginLoc();
+      if (CondOp) {
+        CondBegLoc = CondOp->getBeginLoc();
+      }
       Optional<int> LoopLimit;
 
       bool CondContainsEq = CondOp && CondOp->getOpcodeStr().str().find("=") != std::string::npos && 
@@ -392,6 +398,7 @@ public:
           }
         }
       }
+
 
       //if for loop has guard use it
       if (GuardedCond || GuardCallInBody) {
