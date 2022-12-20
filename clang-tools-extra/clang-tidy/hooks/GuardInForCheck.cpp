@@ -9,7 +9,6 @@
 #include "GuardInForCheck.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include <assert.h>
-#include <iostream>
 
 using namespace clang::ast_matchers;
 
@@ -47,23 +46,36 @@ auto isUnguarded()  {
 }
 
 auto hasGuardCall(int nestingLevel) {
-  return compoundStmt(
-    hasDescendant(callExpr(
-      callee(functionDecl(hasName("_g"))), 
-        hasArgument(1, expr().bind(buildStr("guardLimit-", nestingLevel)))
-    )),
-    unless(eachOf(
-      hasAnySubstatement(forStmt(hasCondition(binaryOperator(hasLHS(guardCall()))))), 
-      hasAnySubstatement(stmt(hasDescendant(guardCall()))) 
-    ))
-  ).bind(buildStr("guardCallInBody-", nestingLevel));
+
+  auto guardArg = anyOf(
+          ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("guardLimitConst-", nestingLevel))))), 
+          ignoringParenCasts(integerLiteral().bind(buildStr("guardLimit-", nestingLevel)))
+        );
+
+  return hasDescendant(
+      callExpr(callee(functionDecl(
+      hasName("_g"))),
+      hasArgument(1, anyOf(
+        binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
+        guardArg
+      )),
+      hasParent(compoundStmt(hasParent(forStmt(anyOf(
+        hasIncrement(anyOf(
+          unaryOperator(equalsBoundNode(buildStr("unaryIncOp-", nestingLevel))),
+          binaryOperation(equalsBoundNode(buildStr("incOp-", nestingLevel)))
+        )),
+        stmt(equalsBoundNode("anyStmt"))    //this is for any loop matcher to ignore loops which have guard call in a body
+      )))))
+    ).bind(buildStr("guardCallInBody-", nestingLevel))
+  );
 }
 
 auto conditionLimit(int nestingLevel) {
   return anyOf(
       ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified())).bind(buildStr("constLimitConstDecl-", nestingLevel))))),
       ignoringParenCasts(integerLiteral().bind(buildStr("constLimit-", nestingLevel))),
-      ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("constLimit-", nestingLevel)))
+      ignoringParenCasts(unaryOperator(hasOperatorName("-"), hasUnaryOperand(integerLiteral())).bind(buildStr("constLimit-", nestingLevel))),
+      binaryOperator()
     );
 }
 
@@ -398,8 +410,6 @@ public:
           }
         }
       }
-
-
       //if for loop has guard use it
       if (GuardedCond || GuardCallInBody) {
         if (GuardedCond) {
@@ -412,7 +422,7 @@ public:
 
         if (GuardLimitValue.hasValue()) {
           if (LoopLimit && *LoopLimit != 0) {
-            GuardLimit = (*GuardLimitValue + 1) / (*LoopLimit + 1) * *LoopLimit;
+            GuardLimit = double((*GuardLimitValue + 1)) / double(*LoopLimit + 1) * *LoopLimit;
           }
           else {
             GuardLimit = *GuardLimitValue;
@@ -481,7 +491,12 @@ void GuardInForCheck::registerMatchers(MatchFinder *Finder) {
   StatementMatcher NestedLoopsMatcher = stmt(anyOfFromVector<MAX_NESTED_LOOP_LEVEL>(NestedLoopMatcherArray));
 
   //matches e.g. for(;;), for(int i = 0; 1; ++i), etc. Basically any "non standard" loop that is not matched by the StrictLoopMatcher
-  StatementMatcher AnyLoopMatcher = forStmt(isUnguarded(), hasBody(unless(hasGuardCall(0))), isExpansionInMainFile()).bind("anyLoop");
+  StatementMatcher AnyLoopMatcher = 
+    forStmt(isUnguarded(), 
+      isExpansionInMainFile(),
+      stmt().bind("anyStmt"),         //to ignore loops which has guard call in a body
+      hasBody(unless(hasGuardCall(0)))
+    ).bind("anyLoop");
 
   Finder->addMatcher(stmt(anyOf(NestedLoopsMatcher, StrictLoopMatcher, AnyLoopMatcher)).bind("unguarded"), this);
 }
