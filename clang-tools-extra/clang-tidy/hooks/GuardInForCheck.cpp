@@ -422,7 +422,7 @@ public:
 
         if (GuardLimitValue.hasValue()) {
           if (LoopLimit && *LoopLimit != 0) {
-            GuardLimit = double((*GuardLimitValue + 1)) / double(*LoopLimit + 1) * *LoopLimit;
+            GuardLimit = ((*GuardLimitValue + 1) * *LoopLimit) / (*LoopLimit + 1);
           }
           else {
             GuardLimit = *GuardLimitValue;
