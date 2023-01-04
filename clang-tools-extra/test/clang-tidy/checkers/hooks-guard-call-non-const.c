@@ -38,7 +38,7 @@ int64_t hook(int64_t reserved)
     }
 
     for (int i = 0; _g(1 + w, 3), i < 3; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' call guard ID argument must be compile-time constant [hooks-guard-call-non-const]
+// CHECK-MESSAGES: :[[@LINE-1]]:24: warning: 'GUARD' call guard ID argument must be compile-time constant [hooks-guard-call-non-const]
     {
         trace_num("five", 4, i);
     }
@@ -49,7 +49,7 @@ int64_t hook(int64_t reserved)
     }
 
     for (int i = 0; _g(3, 3), i < 3; ++i)
-// CHECK-MESSAGES: :[[@LINE-1]]:21: warning: 'GUARD' call guard ID argument must be unique [hooks-guard-call-non-const]
+// CHECK-MESSAGES: :[[@LINE-1]]:24: warning: 'GUARD' call guard ID argument must be unique [hooks-guard-call-non-const]
     {
         trace_num("seven", 5, i);
     }
