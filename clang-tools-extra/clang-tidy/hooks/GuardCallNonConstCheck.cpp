@@ -16,19 +16,27 @@ namespace clang {
 namespace tidy {
 namespace hooks {
 
-auto unsupportedGuardCall() {
-  auto guardArg = anyOf(
-        ignoringParenImpCasts(declRefExpr(to(varDecl(hasType(isConstQualified()))))), 
-        ignoringParenCasts(integerLiteral())
-      );
 
+auto unsupportedGuardCall() {
   return callExpr(callee(functionDecl(
       hasName("_g"))),
-      unless(hasArgument(1, anyOf(
-        binaryOperator(hasOperatorName("+"), hasLHS(guardArg)),
-        guardArg
-      )
-  )));
+      hasArgument(0, expr().bind("guardIdExpr")),
+      hasArgument(1, expr().bind("guardLimitExpr"))
+  );
+}
+
+Optional<int> getConstValue(const Expr *literal, const VarDecl *constDecl, ASTContext &context) {
+  if (literal) {
+    if (auto val = literal->getIntegerConstantExpr(context)) {
+      return val->getExtValue();
+    }
+  }
+  if (constDecl) {
+    if (auto val = constDecl->evaluateValue()) {
+      return val->getInt().getExtValue();
+    }
+  }
+  return {};
 }
 
 void GuardCallNonConstCheck::registerMatchers(MatchFinder *Finder) {
@@ -36,12 +44,39 @@ void GuardCallNonConstCheck::registerMatchers(MatchFinder *Finder) {
 }
 
 void GuardCallNonConstCheck::check(const MatchFinder::MatchResult &Result) {
+  ASTContext &Context = *(Result.Context);
   const auto *UnsupportedGuardCall = Result.Nodes.getNodeAs<Stmt>("unsupportedGuardedCall");
   if (UnsupportedGuardCall) {
-    auto StartLoc = UnsupportedGuardCall->getBeginLoc();
-    auto EndLoc = UnsupportedGuardCall->getEndLoc();//StartLoc.getLocWithOffset(sizeof("GUARD(x)") - 1);
-    diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' calls can only have const integers or literals as an argument") <<
-      SourceRange(StartLoc, EndLoc);
+    const Expr *GuardLimitExpr = Result.Nodes.getNodeAs<Expr>("guardLimitExpr");
+    const Expr *GuardIdExpr = Result.Nodes.getNodeAs<Expr>("guardIdExpr");
+
+    bool NonConstExpr = !GuardLimitExpr || !GuardLimitExpr->isEvaluatable(Context);
+    if (NonConstExpr) {
+      auto StartLoc = UnsupportedGuardCall->getBeginLoc();
+      auto EndLoc = UnsupportedGuardCall->getEndLoc();
+      diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' calls can only have compile-time constant as an argument") <<
+        SourceRange(StartLoc, EndLoc);
+    }
+    if (GuardIdExpr && GuardIdExpr->isEvaluatable(Context)) {
+      Expr::EvalResult Result;
+      GuardIdExpr->EvaluateAsRValue(Result, Context, true);
+
+      int value = Result.Val.getInt().getExtValue();
+
+      if (GuardIds.find(value) != GuardIds.end()) {
+        auto StartLoc = UnsupportedGuardCall->getBeginLoc();
+        auto EndLoc = UnsupportedGuardCall->getEndLoc();
+        diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' call guard ID argument must be unique") <<
+          SourceRange(StartLoc, EndLoc);
+      }
+      GuardIds.insert(value);
+    }
+    else {
+      auto StartLoc = UnsupportedGuardCall->getBeginLoc();
+      auto EndLoc = UnsupportedGuardCall->getEndLoc();
+      diag(UnsupportedGuardCall->getBeginLoc(), "'GUARD' call guard ID argument must be compile-time constant") <<
+        SourceRange(StartLoc, EndLoc);
+    }
   }
 }
 
