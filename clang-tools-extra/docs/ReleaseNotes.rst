@@ -248,6 +248,11 @@ New checks
 
   FIXME: add release notes.
 
+- New :doc:`hooks-guard-call-non-const
+  <clang-tidy/checks/hooks-guard-call-non-const>` check.
+
+  FIXME: add release notes.
+
 - New :doc:`hooks-guard-called
   <clang-tidy/checks/hooks-guard-called>` check.
 

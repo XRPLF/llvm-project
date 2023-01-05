@@ -33,6 +33,7 @@
 #include "FloatOnePureCheck.h"
 #include "FloatPureCheck.h"
 #include "FuncAddrTakenCheck.h"
+#include "GuardCallNonConstCheck.h"
 #include "GuardCalledCheck.h"
 #include "GuardInForCheck.h"
 #include "GuardInWhileCheck.h"
@@ -112,6 +113,8 @@ public:
         "hooks-float-pure");
     CheckFactories.registerCheck<FuncAddrTakenCheck>(
         "hooks-func-addr-taken");
+    CheckFactories.registerCheck<GuardCallNonConstCheck>(
+        "hooks-guard-call-non-const");
     CheckFactories.registerCheck<GuardCalledCheck>(
 	"hooks-guard-called");
     CheckFactories.registerCheck<GuardInForCheck>(

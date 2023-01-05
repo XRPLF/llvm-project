@@ -58,8 +58,6 @@ namespace hooks {
 /// - for loop init, condition limit and increment values must be either integer literals or
 ///   const int variables, so that their values can be evaluated during compile time - they 
 ///   cannot be expressions like i = 5 + 4, etc.
-
-
 class GuardInForCheck : public ClangTidyCheck {
 public:
   GuardInForCheck(StringRef Name, ClangTidyContext *Context)

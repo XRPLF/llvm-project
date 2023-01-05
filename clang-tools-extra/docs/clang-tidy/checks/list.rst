@@ -226,6 +226,7 @@ Clang-Tidy Checks
    `hooks-float-one-pure <hooks-float-one-pure.html>`_, "Yes"
    `hooks-float-pure <hooks-float-pure.html>`_, "Yes"
    `hooks-func-addr-taken <hooks-func-addr-taken.html>`_,
+   `hooks-guard-call-non-const <hooks-guard-call-non-const.html>`_, "Yes"
    `hooks-guard-called <hooks-guard-called.html>`_,
    `hooks-guard-in-for <hooks-guard-in-for.html>`_, "Yes"
    `hooks-guard-in-while <hooks-guard-in-while.html>`_,
