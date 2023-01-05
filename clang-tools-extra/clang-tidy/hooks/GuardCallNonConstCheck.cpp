@@ -29,20 +29,21 @@ auto guardCall() {
 }
 
 void GuardCallNonConstCheck::registerMatchers(MatchFinder *Finder) {
-  Finder->addMatcher(expr(guardCall()).bind("unsupportedGuardedCall"), this);
+  Finder->addMatcher(guardCall().bind("guardedCall"), this);
 }
 
 void GuardCallNonConstCheck::check(const MatchFinder::MatchResult &Result) {
   ASTContext &Context = *(Result.Context);
-  const auto *UnsupportedGuardCall = Result.Nodes.getNodeAs<Stmt>("unsupportedGuardedCall");
-  if (UnsupportedGuardCall) {
+  const auto *GuardCall = Result.Nodes.getNodeAs<Stmt>("guardedCall");
+  if (GuardCall) {
     const Expr *GuardLimitExpr = Result.Nodes.getNodeAs<Expr>("guardLimitExpr");
     const Expr *GuardIdExpr = Result.Nodes.getNodeAs<Expr>("guardIdExpr");
 
     bool NonConstExpr = !GuardLimitExpr || !GuardLimitExpr->isEvaluatable(Context);
     if (NonConstExpr) {
-      auto StartLoc = GuardLimitExpr ? GuardLimitExpr->getBeginLoc() : UnsupportedGuardCall->getBeginLoc();
-      auto EndLoc = GuardLimitExpr ? GuardLimitExpr->getEndLoc() : UnsupportedGuardCall->getEndLoc();
+      auto StartLoc = GuardLimitExpr ? GuardLimitExpr->getBeginLoc() : GuardCall->getBeginLoc();
+      auto EndLoc = GuardLimitExpr ? GuardLimitExpr->getEndLoc() : GuardCall->getEndLoc();
+
       diag(StartLoc, "'GUARD' calls can only have compile-time constant as an argument") <<
         SourceRange(StartLoc, EndLoc);
     }
@@ -61,8 +62,8 @@ void GuardCallNonConstCheck::check(const MatchFinder::MatchResult &Result) {
       GuardIds.insert(value);
     }
     else {
-      auto StartLoc = GuardIdExpr ? GuardIdExpr->getBeginLoc() : UnsupportedGuardCall->getBeginLoc();
-      auto EndLoc = GuardIdExpr ? GuardIdExpr->getEndLoc() : UnsupportedGuardCall->getEndLoc();
+      auto StartLoc = GuardIdExpr ? GuardIdExpr->getBeginLoc() : GuardCall->getBeginLoc();
+      auto EndLoc = GuardIdExpr ? GuardIdExpr->getEndLoc() : GuardCall->getEndLoc();
       diag(StartLoc, "'GUARD' call guard ID argument must be compile-time constant") <<
         SourceRange(StartLoc, EndLoc);
     }
